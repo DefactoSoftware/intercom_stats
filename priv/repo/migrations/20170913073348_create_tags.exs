@@ -5,6 +5,5 @@ defmodule IntercomStats.Repo.Migrations.CreateTags do
     create table(:tags) do
       add :name, :string
     end
-
   end
 end

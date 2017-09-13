@@ -3,8 +3,7 @@ defmodule IntercomStats.Repo.Migrations.CreateSegments do
 
   def change do
     create table(:segments) do
-
+      add :name, :string
     end
-
   end
 end
