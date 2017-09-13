@@ -3,8 +3,7 @@ defmodule IntercomStats.Repo.Migrations.CreateTags do
 
   def change do
     create table(:tags) do
-
-      timestamps()
+      add :name, :string
     end
 
   end

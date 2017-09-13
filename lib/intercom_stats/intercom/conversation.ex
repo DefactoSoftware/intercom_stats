@@ -2,9 +2,12 @@ defmodule IntercomStats.Intercom.Conversation do
   use Ecto.Schema
   import Ecto.Changeset
   alias IntercomStats.Intercom.Conversation
-
+  alias IntercomStats.Intercom.Segment
+  alias IntercomStats.Intercom.Tag
 
   schema "conversations" do
+    belongs_to :segments, Segment
+    has_many :tags, Tag
 
     timestamps()
   end
