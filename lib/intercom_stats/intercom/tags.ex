@@ -14,7 +14,7 @@ defmodule IntercomStats.Intercom.Tags do
   end
 
   defp convert_to_tag_list(%{"tags" => tag_list}) do
-    list = tag_list
-      |> Enum.map(fn(%{"name" => name}) ->  %{name: name} end)
+    tag_list
+    |> Enum.map(fn(%{"name" => name}) -> %{name: name} end)
   end
 end
