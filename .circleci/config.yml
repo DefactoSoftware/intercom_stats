@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/elixir:latest
+      - image: postgres:9.6
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: intercom_stats_test
+    steps:
+      - checkout
+      - run: mix local.hex --force
+      - run: mix deps.get
+      - run: mix local.rebar --force
+      - run: mix ecto.create
+      - run: mix test
