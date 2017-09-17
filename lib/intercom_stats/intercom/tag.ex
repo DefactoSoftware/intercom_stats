@@ -4,8 +4,11 @@ defmodule IntercomStats.Intercom.Tag do
   alias IntercomStats.Intercom.Tag
   alias IntercomStats.Intercom.Conversation
 
+  @primary_key {:id, :string, []}
   schema "tags" do
     field :name, :string
+
+    timestamps()
   end
 
   @doc false
