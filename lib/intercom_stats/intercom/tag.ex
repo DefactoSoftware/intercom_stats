@@ -7,6 +7,7 @@ defmodule IntercomStats.Intercom.Tag do
   @primary_key {:id, :string, []}
   schema "tags" do
     field :name, :string
+    many_to_many :conversations, Conversation, join_through: "conversations_tags"
 
     timestamps()
   end
