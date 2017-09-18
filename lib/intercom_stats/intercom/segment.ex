@@ -4,9 +4,13 @@ defmodule IntercomStats.Intercom.Segment do
   alias IntercomStats.Intercom.Segment
   alias IntercomStats.Intercom.Conversation
 
+  @primary_key{:id, :string, []}
   schema "segments" do
     field :name, :string
+    field :person_type, :string
     has_many :conversations, Conversation
+
+    timestamps()
   end
 
   @doc false
