@@ -5,16 +5,27 @@ defmodule IntercomStats.Intercom.Tags do
 
   def save_from_api do
     {:ok, %{body: body}} = API.get("/tags")
-    tags =
-      body
-      |> API.decode_json
-      |> convert_to_tag_list
 
-    Repo.insert_all(Tag, tags)
+    body
+    |> API.decode_json
+    |> save_tag_list
   end
 
-  defp convert_to_tag_list(%{"tags" => tag_list}) do
+  defp save_tag_list(%{"tags" => tag_list}) do
     tag_list
-    |> Enum.map(fn(%{"name" => name}) -> %{name: name} end)
+    |> Enum.map(
+      fn(%{"name" => name, "id" => id}) ->
+        insert_or_update_tag(id, %{name: name})
+      end
+    )
+  end
+
+  defp insert_or_update_tag(id, changes) do
+    case Repo.get(Tag, id) do
+      nil -> %Tag{id: id}
+      tag -> tag
+    end
+    |> Tag.changeset(changes)
+    |> Repo.insert_or_update
   end
 end

@@ -8,12 +8,12 @@ defmodule IntercomStats.IntercomAPIAdapter do
           {
             "tags": [{
               "id": "17513",
-              "name": "independent",
+              "name": "bug",
               "type": "tag"
               },
               {
               "id": "17523",
-              "name": "independent2",
+              "name": "consultancy",
               "type": "tag"
             }]
           }
