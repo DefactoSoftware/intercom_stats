@@ -68,5 +68,5 @@ config :intercom_stats, IntercomStats.Repo,
   ssl: true
 
 config :intercom_stats, IntercomStats.Intercom.API,
-  adapter: Intercom.Client
+  adapter: IntercomStats.Intercom.Adapter,
   token: System.get_env("INTERCOM_API_ACCESS_TOKEN")
