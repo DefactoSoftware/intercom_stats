@@ -6,16 +6,26 @@ defmodule IntercomStats.Intercom.Segments do
   def save_from_api do
     {:ok, %{body: body}} = API.get("/segments")
 
-    segments =
-      body
-      |> API.decode_json
-      |> convert_to_segment_list
-
-    Repo.insert_all(Segment, segments)
+    body
+    |> API.decode_json
+    |> save_segment_list
   end
 
-  defp convert_to_segment_list(%{"segments" => segment_list}) do
+  defp save_segment_list(%{"segments" => segment_list}) do
     segment_list
-    |> Enum.map(fn(%{"name" => name}) -> %{name: name} end)
+    |> Enum.map(
+      fn(%{"id" => id, "name" => name, "person_type" => person_type}) ->
+        save_or_update_segment(id, %{name: name, person_type: person_type})
+      end
+    )
+  end
+
+  defp save_or_update_segment(id, changes) do
+    case Repo.get(Segment, id) do
+      nil -> %Segment{id: id}
+      segment -> segment
+    end
+    |> Segment.changeset(changes)
+    |> Repo.insert_or_update
   end
 end

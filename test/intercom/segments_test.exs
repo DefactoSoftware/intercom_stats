@@ -10,4 +10,11 @@ defmodule IntercomStats.SegmentsTest do
 
     assert Enum.count(Repo.all(Segment)) == 2
   end
+
+  test "only unique segments are saved" do
+    Segments.save_from_api
+    Segments.save_from_api
+
+    assert Enum.count(Repo.all(Segment)) == 2
+  end
 end
