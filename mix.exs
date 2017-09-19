@@ -45,6 +45,7 @@ defmodule IntercomStats.Mixfile do
       {:httpoison, "~> 0.13"},
       {:quantum, ">= 2.1.0"},
       {:timex, "~> 3.0"},
+      {:ex_machina, "~> 2.1", only: :test},
     ]
   end
 
