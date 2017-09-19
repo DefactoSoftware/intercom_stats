@@ -3,7 +3,7 @@ defmodule IntercomStats.SegmentFactory do
     quote do
       def segment_factory do
         %IntercomStats.Intercom.Segment{
-          id: sequence("id"),
+          id: sequence("segment_id"),
           name: sequence("segmentname"),
           person_type: sequence("persontype")
         }

@@ -4,7 +4,7 @@ defmodule IntercomStats.Intercom.Segment do
   alias IntercomStats.Intercom.Segment
   alias IntercomStats.Intercom.Conversation
 
-  @primary_key{:id, :string, []}
+  @primary_key {:id, :string, []}
   schema "segments" do
     field :name, :string
     field :person_type, :string
@@ -16,7 +16,7 @@ defmodule IntercomStats.Intercom.Segment do
   @doc false
   def changeset(%Segment{} = segment, attrs) do
     segment
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :person_type])
     |> validate_required([])
   end
 end
