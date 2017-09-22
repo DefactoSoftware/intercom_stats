@@ -20,8 +20,8 @@ defmodule IntercomStats.Intercom.Conversation do
   @doc false
   def changeset(%Conversation{} = conversation, attrs) do
     conversation
-    |> cast(attrs, [:segment_id, :time_to_first_response, :total_response_time,
-            :average_response_time, :closing_time])
+    |> cast(attrs, [:id, :time_to_first_response])
+    |> put_assoc(:tags, attrs.tags)
     |> validate_required([])
   end
 end
