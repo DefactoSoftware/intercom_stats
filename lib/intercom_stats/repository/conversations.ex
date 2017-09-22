@@ -33,15 +33,9 @@ defmodule IntercomStats.Repository.Conversations do
     |> Repo.all()
   end
 
-  def list_conversations_by_segments_and_tags(:or, segments_list, tags_list) do
+  def list_conversations_by_segments_and_tags(operator, segments_list, tags_list) do
     seg_list = list_conversations_by_segments(segments_list)
-    tag_list = list_conversations_by_tags(:or, tags_list)
-    seg_list -- (seg_list -- tag_list)
-  end
-
-  def list_conversations_by_segments_and_tags(:and, segments_list, tags_list) do
-    seg_list = list_conversations_by_segments(segments_list)
-    tag_list = list_conversations_by_tags(:and, tags_list)
+    tag_list = list_conversations_by_tags(operator, tags_list)
     seg_list -- (seg_list -- tag_list)
   end
 
