@@ -9,6 +9,9 @@
 
     <title>Hello IntercomStats!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <%# <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script> %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.14/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartkick/2.2.4/chartkick.min.js"></script>
   </head>
 
   <body>
