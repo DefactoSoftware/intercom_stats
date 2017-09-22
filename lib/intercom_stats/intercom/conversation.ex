@@ -7,7 +7,7 @@ defmodule IntercomStats.Intercom.Conversation do
 
   @primary_key {:id, :string, []}
   schema "conversations" do
-    belongs_to :segment, Segment
+    belongs_to :segment, Segment, foreign_key: :segment_id, type: :string
     many_to_many :tags, Tag, join_through: "conversations_tags"
     field :time_to_first_response, :integer
     field :closing_time, :integer
@@ -20,7 +20,8 @@ defmodule IntercomStats.Intercom.Conversation do
   @doc false
   def changeset(%Conversation{} = conversation, attrs) do
     conversation
-    |> cast(attrs, [:title, :time_to_first_response, :total_response_time])
+    |> cast(attrs, [:segment_id, :time_to_first_response, :total_response_time,
+            :average_response_time, :closing_time])
     |> validate_required([])
   end
 end

@@ -3,7 +3,7 @@ defmodule IntercomStats.ConversationFactory do
     quote do
       def conversation_factory do
         %IntercomStats.Intercom.Conversation{
-          segment_id: insert(:segment).id,
+          id: sequence("conversation_id"),
           tags: insert_list(2, :tag),
           time_to_first_response: 10,
           closing_time: 10,

@@ -3,7 +3,7 @@ defmodule IntercomStats.TagFactory do
     quote do
       def tag_factory do
         %IntercomStats.Intercom.Tag{
-          id: sequence("id"),
+          id: sequence("tag_id"),
           name: sequence("tagname")
         }
       end
