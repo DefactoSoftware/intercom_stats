@@ -78,7 +78,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
               "type": "conversation_message",
               "id": "126542917",
               "subject": "",
-              "body": "<p>Hallo,</p>\n<p>We krijgen diverse meldingen dat het e-learning resultaat blijft onthouden na het opnieuw inschrijven terwijl in de instellingen onder e-learning staat aangevinkt dat resultaten worden gereset. </p>\n<p>ik heb 2 voorbeelden:<br>dhr HJ. vd Bos (112600) <br>heeft zich opnieuw ingeschreven voor Inleiding Ritmestoornissen en heeft al een 10 bij het starten.</p>\n<p>Mw. Y. Durinck (127600)<br>Heeft zich opnieuw ingeschreven voor Basic Life Support en heeft al een 10 bij het starten.</p>\n<p>Bij Henk-Jan heb ik al geprobeerd om te verwijderen van de e-learning cursus maar zodra hij zich inschrijft verschijnt weer het cijfer 10 en in de e-learning staat alles gemarkeerd met een vinkje.</p>\n<p>Het zijn beide modules van ExpertCollege. </p>\n<p>Weten jullie hoe we dit op kunnen lossen? </p>\n<p>gr<br>Roxanne Manuhutu</p>",
+              "body": "<p>Hallo</p>
               "author": {
                 "type": "user",
                 "id": "56cdc8bb6fffd49c040007fe"
@@ -109,7 +109,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
                   "type": "conversation_part",
                   "id": "761402413",
                   "part_type": "comment",
-                  "body": "<p>Hallo Roxanne, <br>Kunnen we die modules op staging testen? Dan kijken we even mee.</p>",
+                  "body": "<p>Hallo</p>",
                   "created_at": 1503927996,
                   "updated_at": 1503927996,
                   "notified_at": 1503927996,
@@ -128,7 +128,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
                   "type": "conversation_part",
                   "id": "800552307",
                   "part_type": "comment",
-                  "body": "<p>andere modules waarbij niet iets bij de leverancier worden bijgehouden resetten wel door onze functionaliteit</p>",
+                  "body": "<p>Groet'n</p>",
                   "created_at": 1505723126,
                   "updated_at": 1505723126,
                   "notified_at": 1505723126,
