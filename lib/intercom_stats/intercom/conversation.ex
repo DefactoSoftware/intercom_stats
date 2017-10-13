@@ -14,6 +14,9 @@ defmodule IntercomStats.Intercom.Conversation do
     field :total_response_time, :integer
     field :average_response_time, :integer
 
+    field :open_timestamp, :timestamp
+    field :closed_timestamp, :timestamp
+
     timestamps()
   end
 
