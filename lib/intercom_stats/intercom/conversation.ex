@@ -5,17 +5,15 @@ defmodule IntercomStats.Intercom.Conversation do
   alias IntercomStats.Intercom.Segment
   alias IntercomStats.Intercom.Tag
 
-  @primary_key {:id, :string, []}
   schema "conversations" do
-    belongs_to :segment, Segment, foreign_key: :segment_id, type: :string
     many_to_many :tags, Tag, join_through: "conversations_tags"
     field :time_to_first_response, :integer
     field :closing_time, :integer
     field :total_response_time, :integer
     field :average_response_time, :integer
 
-    field :open_timestamp, :timestamp
-    field :closed_timestamp, :timestamp
+    field :open_timestamp, :naive_datetime
+    field :closed_timestamp, :naive_datetime
 
     timestamps()
   end

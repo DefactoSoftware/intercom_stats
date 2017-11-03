@@ -4,7 +4,6 @@ defmodule IntercomStats.Intercom.IntercomConversation do
 
   @primary_key {:id, :string, []}
   schema "intercom_conversation" do
-    field :id, :string
     field :last_update, :naive_datetime
   end
 end

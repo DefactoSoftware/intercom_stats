@@ -4,12 +4,32 @@ defmodule IntercomStats.Intercom.Conversations do
   alias IntercomStats.Intercom.Conversation
   alias IntercomStats.Intercom.Tag
 
-  def save_from_api do
-    {:ok, %{body: body}} = API.get("/conversations", [], params: %{per_page: "50"})
+  @conversation_properties [
+    "id", 
+    "created_at",
+    "updated_at",
+    "company_name"
+  ]
 
-    body
-    |> API.decode_json
-    |> save_conversations_list
+  def save_from_api do
+    {:ok, %{body: body}} = API.get("/conversations", params: %{per_page: "60"})
+    attrs = %{}
+    result =
+      body
+      |> API.decode_json
+      |> Map.get("conversations")
+      |> Enum.filter(fn %{"state" => value} -> value == "closed" end)
+      |> Enum.reduce([], fn (item, acc) -> [get_conversation_properties(item) | acc] end)
+      #|> Enum.reduce([], fn (item, acc) -> [Map.take(item, @conversation_properties) | acc] end)
+    
+    IO.inspect result
+    IO.puts Enum.count(result)
+  end
+
+  defp get_conversation_properties(item) do
+    item
+    |> Map.put("company_name", "kaas")
+    |> Map.take(@conversation_properties)
   end
 
   defp save_conversations_list(%{"conversations" => conv_list}) do
