@@ -2,7 +2,7 @@ defmodule IntercomStats.Intercom.API do
   @adapter Application.get_env(:intercom_stats, __MODULE__)[:adapter]
   @token Application.get_env(:intercom_stats, __MODULE__)[:token]
 
-  def get(url, params) do
+  def get(url, params \\ []) do
     @adapter.start
     @adapter.get(
       url,

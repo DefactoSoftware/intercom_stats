@@ -8,66 +8,77 @@ defmodule IntercomStats.Intercom.Conversations do
     "id", 
     "created_at",
     "updated_at",
-    "company_name"
+    "company_name",
   ]
 
   def save_from_api do
     {:ok, %{body: body}} = API.get("/conversations", params: %{per_page: "60"})
-    attrs = %{}
     result =
       body
       |> API.decode_json
       |> Map.get("conversations")
       |> Enum.filter(fn %{"state" => value} -> value == "closed" end)
       |> Enum.reduce([], fn (item, acc) -> [get_conversation_properties(item) | acc] end)
-      #|> Enum.reduce([], fn (item, acc) -> [Map.take(item, @conversation_properties) | acc] end)
-    
+      |> Enum.reduce([], fn (item, acc) -> [get_conversation_specific_properties(item) | acc] end)   
     IO.inspect result
-    IO.puts Enum.count(result)
+
+    #Enum.each(result, fn(c) -> save_conversation(c) end)
   end
+
+  #retrieve conversations list from the API up to last_update
+  #retrieve other properties from initial conversation list
+  #retrieve specific conversation using the conversation id from the API
+  #retrieve tags from specific conversation
+  #retrieve time_to_first_response from conversation using conversation parts
+  #save obtained values into database
+  #update last_update field
 
   defp get_conversation_properties(item) do
     item
-    |> Map.put("company_name", "kaas")
+    |> Map.put("company_name", "company_name_from_CAPP")
     |> Map.take(@conversation_properties)
+    #Note: As soon as the company name is provided, the Map.Put can be removed
   end
 
-  defp save_conversations_list(%{"conversations" => conv_list}) do
-    conv_list
-    |> Enum.map(
-      fn(%{"id" => id}) ->
-        request_conversation(id)
-      end
-    )
+  defp get_conversation_specific_properties(item) do
+    conversation = request_conversation(item)
+
+    tags = retrieve_tags_for_conversation(conversation)
+    time_to_first_response = calculate_time_to_first_response(conversation)
+    closing_time = calculate_closing_time(conversation)
+
+    item
+    |> Map.put("tags", tags)
+    |> Map.put("time_to_first_response", time_to_first_response)
+    |> Map.put("closing_time", closing_time)
   end
 
-  defp request_conversation(id) do
+  defp request_conversation(%{"id" => id}) do
     {:ok, %{body: body}} = API.get("/conversations/#{id}")
-
-    body
-    |> API.decode_json
-    |> save_conversation
+    API.decode_json(body)
   end
 
-  defp save_conversation(c) do
-    %{"id" => id} = c
-    changes = %{id: id, time_to_first_response: calc_first_time(c), tags: retrieve_tags(c)}
-    %Conversation{}
-    |> Conversation.changeset(changes)
-    |> Repo.insert_or_update
+  defp retrieve_tags_for_conversation(conversation) do
+    %{"tags" => %{"tags" => tags}} = conversation
+
+    tags 
+    |> Enum.map(fn(%{"id" => id}) -> Repo.get(Tag, id) end)
   end
 
-  defp calc_first_time(conv) do
-    %{"created_at" => created } = conv
-    %{"conversation_parts" => %{"conversation_parts" => [%{"created_at" => part_created}| _]}} = conv
+  defp calculate_time_to_first_response(conversation) do
+    %{"created_at" => created } = conversation
+    %{"conversation_parts" => %{"conversation_parts" => [%{"created_at" => part_created}| _]}} = conversation
     part_created - created
   end
 
-  defp retrieve_tags(conv) do
-    %{"tags" => %{"tags" => tags}} = conv
-    tags
-    |> Enum.map(fn(%{"id" => id}) ->
-      Repo.get(Tag, id)
-    end)
+  defp calculate_closing_time(conversation) do
+    %{"created_at" => created, "updated_at" => updated} = conversation
+    updated - created
+  end
+
+  defp save_conversation(c) do
+    %Conversation{}
+    |> Conversation.changeset(c)
+    |> Repo.insert_or_update
   end
 end

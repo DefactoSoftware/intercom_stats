@@ -5,6 +5,7 @@ defmodule IntercomStats.Intercom.Conversation do
   alias IntercomStats.Intercom.Segment
   alias IntercomStats.Intercom.Tag
 
+  @primary_key {:id, :string, []}
   schema "conversations" do
     many_to_many :tags, Tag, join_through: "conversations_tags"
     field :time_to_first_response, :integer
@@ -21,8 +22,7 @@ defmodule IntercomStats.Intercom.Conversation do
   @doc false
   def changeset(%Conversation{} = conversation, attrs) do
     conversation
-    |> cast(attrs, [:id, :time_to_first_response])
-    |> put_assoc(:tags, attrs.tags)
+    |> cast(attrs, [:id, :time_to_first_response, :closing_time])
     |> validate_required([])
   end
 end
