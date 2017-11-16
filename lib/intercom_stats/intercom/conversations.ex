@@ -1,8 +1,7 @@
 defmodule IntercomStats.Intercom.Conversations do
   alias IntercomStats.Intercom.API
   alias IntercomStats.Repo
-  alias IntercomStats.Intercom.Conversation
-  alias IntercomStats.Intercom.Tag
+  alias IntercomStats.Intercom.{Conversation, Tag, IntercomConversation}
 
   @conversation_properties [
     "id", 
@@ -11,8 +10,9 @@ defmodule IntercomStats.Intercom.Conversations do
     "company_name",
   ]
 
-  def save_from_api do
-    {:ok, %{body: body}} = API.get("/conversations", params: %{per_page: "60"})
+  def save_from_api(page \\ 1) do
+    {:ok, %{body: body}} = API.get("/conversations", params: %{per_page: "60", page: page})
+
     result =
       body
       |> API.decode_json
@@ -20,18 +20,9 @@ defmodule IntercomStats.Intercom.Conversations do
       |> Enum.filter(fn %{"state" => value} -> value == "closed" end)
       |> Enum.reduce([], fn (item, acc) -> [get_conversation_properties(item) | acc] end)
       |> Enum.reduce([], fn (item, acc) -> [get_conversation_specific_properties(item) | acc] end)   
-    IO.inspect result
 
-    #Enum.each(result, fn(c) -> save_conversation(c) end)
+    Repo.insert %IntercomConversation{last_update: DateTime.utc_now}
   end
-
-  #retrieve conversations list from the API up to last_update
-  #retrieve other properties from initial conversation list
-  #retrieve specific conversation using the conversation id from the API
-  #retrieve tags from specific conversation
-  #retrieve time_to_first_response from conversation using conversation parts
-  #save obtained values into database
-  #update last_update field
 
   defp get_conversation_properties(item) do
     item

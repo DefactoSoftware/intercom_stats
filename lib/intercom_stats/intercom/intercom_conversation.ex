@@ -1,16 +1,16 @@
 defmodule IntercomStats.Intercom.IntercomConversation do
   use Ecto.Schema
   import Ecto.Changeset
+  alias IntercomStats.Intercom.IntercomConversation
 
-  @primary_key {:id, :string, []}
-  schema "intercom_conversation" do
+  schema "intercom_conversations" do
     field :last_update, :naive_datetime
   end
 
   @doc false
   def changeset(%IntercomConversation{} = intercom_conversation, attrs) do
     intercom_conversation
-    |> cast(attrs, [:id, :last_update])
+    |> cast(attrs, [:last_update])
     |> validate_required([])
   end
 end
