@@ -1,1 +1,7 @@
 /* This file is for your main application css. */
+
+/* Header */
+.logo {
+  font-size: 30px;
+  font-weight: 600;
+}
