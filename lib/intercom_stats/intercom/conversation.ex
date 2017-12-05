@@ -1,9 +1,7 @@
 defmodule IntercomStats.Intercom.Conversation do
   use Ecto.Schema
   import Ecto.Changeset
-  alias IntercomStats.Intercom.Conversation
-  alias IntercomStats.Intercom.Segment
-  alias IntercomStats.Intercom.Tag
+  alias IntercomStats.Intercom.{Tag, Conversation}
 
   @primary_key {:id, :string, []}
   schema "conversations" do
@@ -29,6 +27,5 @@ defmodule IntercomStats.Intercom.Conversation do
       :company_name,
       :total_response_time
     ])
-    |> validate_required([])
   end
 end

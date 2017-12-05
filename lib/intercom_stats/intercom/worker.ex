@@ -33,8 +33,8 @@ defmodule IntercomStats.Intercom.Worker do
     process_api_records(page)
   end
 
-  def handle_cast(:stop, _state) do
-    {:stop, :normal, _state}
+  def handle_cast(:stop, state) do
+    {:stop, :normal, state}
   end
 
   def terminate(reason, _state) do
@@ -112,12 +112,8 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   defp calculate_closing_time(conversation) do
-    %{"created_at" => created, "updated_at" => updated} = conversation
+    %{"created_at" => created, "updated_at" => updated} = _conversation
     updated - created
-  end
-
-  defp calculate_average_response_time(conversation) do
-    2
   end
 
   defp retrieve_last_update() do
