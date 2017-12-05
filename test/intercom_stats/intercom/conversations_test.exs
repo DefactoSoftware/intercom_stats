@@ -21,12 +21,4 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     [conversation] = Repo.all(from(p in Conversation, where: p.id == "11480005803", preload: :tags))
     assert Enum.count(conversation.tags) == 1
   end
-
-  test "save segment of conversation" do
-    Segments.save_from_api
-    Conversations.save_from_api
-
-    [conversation] = Repo.all(from(p in Conversation, where: p.id == "11480005803", preload: :segments))
-    assert conversation.segment_id == "5891fa4df75e473c03fb28a6"
-  end
 end
