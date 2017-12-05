@@ -9,3 +9,17 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+# add default user
+IntercomStats.Repo.delete_all(IntercomStats.Coherence.User)
+
+IntercomStats.Coherence.User.changeset(
+  %IntercomStats.Coherence.User{},
+  %{
+    name: "Admin",
+    email: "admin@defacto.nl",
+    password: System.get_env("DEFAULT_USER_PASSWORD"),
+    password_confirmation: System.get_env("DEFAULT_USER_PASSWORD")
+  }
+)
+|> IntercomStats.Repo.insert!

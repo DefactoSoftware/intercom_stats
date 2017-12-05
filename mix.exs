@@ -20,7 +20,7 @@ defmodule IntercomStats.Mixfile do
   def application do
     [
       mod: {IntercomStats.Application, []},
-      extra_applications: [:logger, :runtime_tools, :httpoison]
+      extra_applications: [:logger, :runtime_tools, :httpoison, :coherence]
     ]
   end
 
@@ -46,6 +46,7 @@ defmodule IntercomStats.Mixfile do
       {:quantum, ">= 2.1.0"},
       {:timex, "~> 3.0"},
       {:ex_machina, "~> 2.1", only: :test},
+      {:coherence, "~> 0.5"},
     ]
   end
 
