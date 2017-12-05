@@ -43,4 +43,16 @@ defmodule IntercomStatsWeb.Router do
 
     get "/", PageController, :index
   end
+
+  scope "/" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: IntercomStatsWeb.Schema,
+      interface: :simple,
+      socket: IntercomStatsWeb.UserSocket
+
+    forward "/", Absinthe.Plug,
+      schema: IntercomStatsWeb.Schema
+  end
 end
