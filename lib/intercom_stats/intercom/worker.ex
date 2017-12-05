@@ -74,7 +74,6 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   defp get_conversation_properties(item) do item
-    |> Map.put("company_name", "company_name_from_CAPP")
     |> Map.take(@conversation_properties)
     #Note: As soon as the company name is provided, the Map.Put can be removed
   end
@@ -83,6 +82,7 @@ defmodule IntercomStats.Intercom.Worker do
     conversation = request_conversation(item)
 
     item
+    |> Map.put("company_name", retrieve_company_name(conversation))
     |> Map.put("tags", retrieve_tags_for_conversation(conversation))
     |> Map.put("time_to_first_response", calculate_time_to_first_response(conversation))
     |> Map.put("closing_time", calculate_closing_time(conversation))
@@ -92,6 +92,14 @@ defmodule IntercomStats.Intercom.Worker do
   defp request_conversation(%{"id" => id}) do
     {:ok, %{body: body}} = API.get("/conversations/#{id}")
     API.decode_json(body)
+  end
+
+  def retrieve_company_name(%{"user" => %{"id" => id}}) do
+    {:ok, %{body: body}} = API.get("/users/#{id}")
+    case API.decode_json(body) do
+      %{"companies" => %{"companies" => [%{"name" => name} | _]}} -> name
+      _ -> "Unknown"
+    end
   end
 
   defp retrieve_tags_for_conversation(conversation) do
