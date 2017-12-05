@@ -8,9 +8,10 @@ defmodule IntercomStats.Repo.Migrations.CreateConversations do
       add :closing_time, :integer
       add :total_response_time, :integer
       add :average_response_time, :integer
-      add :segment_id, references(:segments, type: :string)
+      add :company_name, :string
 
-      timestamps()
+      add :closed_timestamp, :naive_datetime
+      add :open_timestamp, :naive_datetime
     end
   end
 end

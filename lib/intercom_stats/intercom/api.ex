@@ -2,12 +2,13 @@ defmodule IntercomStats.Intercom.API do
   @adapter Application.get_env(:intercom_stats, __MODULE__)[:adapter]
   @token Application.get_env(:intercom_stats, __MODULE__)[:token]
 
-  def get(url) do
+  def get(url, params \\ []) do
+    options = params ++ [timeout: 50000, recv_timeout: 50000]
     @adapter.start
     @adapter.get(
       url,
       [Authorization: "Bearer #{@token}"],
-      []
+      options
     )
   end
 

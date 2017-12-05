@@ -1,4 +1,4 @@
-defmodule IntercomStats.TagsTest do
+defmodule IntercomStats.Intercom.TagsTest do
   use IntercomStatsWeb.ConnCase
 
   alias IntercomStats.Intercom.Tag

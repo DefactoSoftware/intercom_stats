@@ -42,6 +42,7 @@ defmodule IntercomStats.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:json, "~> 1.0"},
+      {:poison, "~> 3.0", override: true},
       {:httpoison, "~> 0.13"},
       {:quantum, ">= 2.1.0"},
       {:timex, "~> 3.0"},
