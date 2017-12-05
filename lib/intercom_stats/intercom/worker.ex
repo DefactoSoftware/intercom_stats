@@ -75,7 +75,6 @@ defmodule IntercomStats.Intercom.Worker do
 
   defp get_conversation_properties(item) do item
     |> Map.take(@conversation_properties)
-    #Note: As soon as the company name is provided, the Map.Put can be removed
   end
 
   defp get_conversation_specific_properties(item) do
@@ -86,7 +85,6 @@ defmodule IntercomStats.Intercom.Worker do
     |> Map.put("tags", retrieve_tags_for_conversation(conversation))
     |> Map.put("time_to_first_response", calculate_time_to_first_response(conversation))
     |> Map.put("closing_time", calculate_closing_time(conversation))
-    |> Map.put("average_response_time", calculate_average_response_time(conversation))
   end
 
   defp request_conversation(%{"id" => id}) do
@@ -120,7 +118,7 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   defp calculate_closing_time(conversation) do
-    %{"created_at" => created, "updated_at" => updated} = _conversation
+    %{"created_at" => created, "updated_at" => updated} = conversation
     updated - created
   end
 
