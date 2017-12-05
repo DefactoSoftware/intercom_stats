@@ -35,7 +35,7 @@ defmodule IntercomStatsWeb.Router do
   end
 
   scope "/", IntercomStatsWeb do
-    pipe_through :browse
+    pipe_through :browser
   end
 
   scope "/", IntercomStatsWeb do
