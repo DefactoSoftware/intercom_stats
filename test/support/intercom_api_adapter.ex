@@ -52,6 +52,9 @@ defmodule IntercomStats.IntercomAPIAdapter do
           status_code: 200,
           body: """
           {
+            "pages": {
+              "total_pages": 1,
+            },
             "conversations": [
               {
                 "type": "conversation",

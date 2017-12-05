@@ -2,6 +2,6 @@ defmodule IntercomStatsWeb.PageController do
   use IntercomStatsWeb, :controller
 
   def index(conn, _params) do
-    conn
+    render conn, "index.html"
   end
 end
