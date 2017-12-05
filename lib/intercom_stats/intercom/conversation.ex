@@ -12,17 +12,23 @@ defmodule IntercomStats.Intercom.Conversation do
     field :closing_time, :integer
     field :total_response_time, :integer
     field :average_response_time, :integer
+    field :company_name, :string
 
     field :open_timestamp, :naive_datetime
     field :closed_timestamp, :naive_datetime
-
-    timestamps()
   end
 
   @doc false
   def changeset(%Conversation{} = conversation, attrs) do
     conversation
-    |> cast(attrs, [:id, :time_to_first_response, :closing_time])
+    |> cast(attrs, [
+      :id,
+      :time_to_first_response,
+      :closing_time,
+      :average_response_time,
+      :company_name,
+      :total_response_time
+    ])
     |> validate_required([])
   end
 end
