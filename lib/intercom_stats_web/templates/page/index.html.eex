@@ -1,0 +1,8 @@
+<div class="container">
+  <div>
+    <%= button "Get conversations",
+        to: "/get_from_api",
+        method: "get",
+        class: "btn btn-primary pull-right" %>
+  </div>
+</div>
