@@ -82,13 +82,16 @@ defmodule IntercomStats.Intercom.Worker do
   defp get_conversation_specific_properties(item) do
     conversation = request_conversation(item)
     response_times = calculate_response_times(conversation)
+    {total_response_time, average_response_time} =
+      average_response_time(response_times)
 
     item
     |> Map.put("company_name", retrieve_company_name(conversation))
     |> Map.put("tags", retrieve_tags_for_conversation(conversation))
     |> Map.put("time_to_first_response", first_response_time(response_times))
     |> Map.put("closing_time", calculate_closing_time(conversation))
-    |> Map.put("average_response_time", average_response_time(response_times))
+    |> Map.put("average_response_time", average_response_time)
+    |> Map.put("total_response_time", total_response_time)
   end
 
   defp request_conversation(%{"id" => id}) do
@@ -117,9 +120,10 @@ defmodule IntercomStats.Intercom.Worker do
 
   defp average_response_time(response_times) do
     with [_ | _] <- response_times do
-      round(Enum.sum(response_times) / Enum.count(response_times))
+      {Enum.sum(response_times),
+       round(Enum.sum(response_times) / Enum.count(response_times))}
     else
-      _ -> nil
+      _ -> {nil, nil}
     end
   end
 
@@ -148,7 +152,7 @@ defmodule IntercomStats.Intercom.Worker do
 
     response_times
   end
-  
+
   defp is_response_type(conversation_part, type) do
     case conversation_part do
       %{"author" => %{"type" => ^type}, "body" => body} when is_binary(body) -> :ok
@@ -158,7 +162,7 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   defp calculate_response_time(%{"created_at" => new_time}, %{"created_at" => old_time}) do
-    new_time - old_time 
+    new_time - old_time
   end
 
   defp retrieve_last_update() do
