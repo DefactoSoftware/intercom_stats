@@ -32,8 +32,8 @@ defmodule IntercomStats.Intercom.Worker do
     process_api_records(page)
   end
 
-  def handle_cast(:stop, state) do
-    {:stop, :normal, state}
+  def handle_cast(:stop, _state) do
+    {:stop, :normal, _state}
   end
 
   def terminate(reason, _state) do
@@ -54,18 +54,20 @@ defmodule IntercomStats.Intercom.Worker do
       |> API.decode_json
       |> Map.get("conversations")
       |> Enum.filter(fn %{"state" => value} -> value == "closed" end)
-      |> Enum.filter(fn %{"updated_at" => value} ->
-        NaiveDateTime.compare(last_update,
-                              from_unix_to_datetime(value)) == :lt end)
-      |> Enum.reduce([], fn (item, acc) -> [get_conversation_properties(item) | acc] end)
-      |> Enum.reduce([], fn (item, acc) -> [get_conversation_specific_properties(item) | acc] end)
+      |> Enum.filter(fn %{"updated_at" => value} -> NaiveDateTime.compare(
+           last_update, from_unix_to_datetime(value)) == :lt end)
+      |> Enum.reduce([], fn (item, acc) ->
+           [get_conversation_properties(item) | acc] end)
+      |> Enum.reduce([], fn (item, acc) ->
+           [get_conversation_specific_properties(item) | acc] end)
       |> Enum.filter(fn %{"tags" => tags} -> Enum.any?(tags) end)
 
     Enum.each(result, fn conversation -> insert_conversation(conversation) end)
 
     case List.last(result) do
       %{"updated_at" => last_update_in_list} ->
-        case NaiveDateTime.compare(last_update, from_unix_to_datetime(last_update_in_list)) do
+        case NaiveDateTime.compare(
+               last_update, from_unix_to_datetime(last_update_in_list)) do
           :lt -> {:reply, {page, :not_done}, page}
           _ -> {:reply, {page, :done}, page}
         end
@@ -77,15 +79,16 @@ defmodule IntercomStats.Intercom.Worker do
     item
     |> Map.take(@conversation_properties)
   end
-
   defp get_conversation_specific_properties(item) do
     conversation = request_conversation(item)
+    response_times = calculate_response_times(conversation)
 
     item
     |> Map.put("company_name", retrieve_company_name(conversation))
     |> Map.put("tags", retrieve_tags_for_conversation(conversation))
-    |> Map.put("time_to_first_response", calculate_time_to_first_response(conversation))
+    |> Map.put("time_to_first_response", first_response_time(response_times))
     |> Map.put("closing_time", calculate_closing_time(conversation))
+    |> Map.put("average_response_time", average_response_time(response_times))
   end
 
   defp request_conversation(%{"id" => id}) do
@@ -108,19 +111,54 @@ defmodule IntercomStats.Intercom.Worker do
     |> Enum.map(fn(%{"id" => id}) -> Repo.get(Tag, id) end)
   end
 
-  defp calculate_time_to_first_response(conversation) do
-    %{"created_at" => created } = conversation
-    %{"conversation_parts" => %{"conversation_parts" => parts}} = conversation
+  defp first_response_time(response_times) do
+    with [head | _] <- response_times, do: head, else: (_ -> nil)
+  end
 
-    case parts do
-      [%{"created_at" => part_created}| _] -> part_created - created
-      [] -> 1
+  defp average_response_time(response_times) do
+    with [_ | _] <- response_times do
+      round(Enum.sum(response_times) / Enum.count(response_times))
+    else
+      _ -> nil
     end
   end
 
   defp calculate_closing_time(conversation) do
     %{"created_at" => created, "updated_at" => updated} = conversation
     updated - created
+  end
+
+  defp calculate_response_times(
+      %{"created_at" => created_at,
+        "conversation_message" => %{"author" => author, "body" => body},
+        "conversation_parts" => %{"conversation_parts" => parts}}) do
+
+    {response_times, _} = Enum.flat_map_reduce(
+                            [%{"created_at" => created_at, "author" => author,
+                               "body" => body } | parts],
+                            %{}, fn(i, acc) ->
+      with :ok <- is_response_type(i, "admin"),
+           :ok <- is_response_type(acc, "user") do
+        {[calculate_response_time(i, acc)], i}
+      else
+        :empty_response -> {[], acc}
+        _ -> {[], i}
+      end
+    end)
+
+    response_times
+  end
+  
+  defp is_response_type(conversation_part, type) do
+    case conversation_part do
+      %{"author" => %{"type" => ^type}, "body" => body} when is_binary(body) -> :ok
+      %{"author" => %{"type" => ^type}, "body" => body} when is_nil(body) -> :empty_response
+      _ -> :not_found
+    end
+  end
+
+  defp calculate_response_time(%{"created_at" => new_time}, %{"created_at" => old_time}) do
+    new_time - old_time 
   end
 
   defp retrieve_last_update() do
