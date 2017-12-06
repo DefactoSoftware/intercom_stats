@@ -20,33 +20,6 @@ defmodule IntercomStats.IntercomAPIAdapter do
           """
         }
       }
-      "/segments" -> {:ok,
-        %{
-          status_code: 200,
-          body: """
-            {
-              "segments": [
-                {
-                  "type": "segment",
-                  "id": "5891fa4df75e473c03fb28a6",
-                  "name": "ASZ",
-                  "created_at": 1485961805,
-                  "updated_at": 1500300558,
-                  "person_type": "user"
-                },
-                {
-                  "type": "segment",
-                  "id": "5587d8fc1756993f30002377",
-                  "name": "Active",
-                  "created_at": 1434966268,
-                  "updated_at": 1505459141,
-                  "person_type": "user"
-                }
-              ]
-            }
-          """
-        }
-      }
       "/conversations" -> {:ok,
         %{
           status_code: 200,
@@ -54,54 +27,75 @@ defmodule IntercomStats.IntercomAPIAdapter do
           {
             "pages": {
               "total_pages": 1,
+              "page": 1
             },
             "conversations": [
               {
                 "type": "conversation",
-                "id": "147"
+                "id": "1",
+                "created_at" : 1500001000,
+                "updated_at" : 1500008000,
+                "user" : {
+                  "type": "user",
+                  "id" : "1"
+                },
+                "state": "open"
+              },
+              {
+                "type": "conversation",
+                "id": "2",
+                "created_at" : 1500001000,
+                "updated_at" : 1500008000,
+                "user" : {
+                  "type": "user",
+                  "id" : "1"
+                },
+                "state": "closed"
+              },
+              {
+                "type": "conversation",
+                "id": "3",
+                "created_at" : 1500002000,
+                "updated_at" : 1500009000,
+                "user" : {
+                  "type": "user",
+                  "id" : "2"
+                },
+                "state": "closed"
+              },
+              {
+                "type": "conversation",
+                "id": "4",
+                "created_at" : 1400000000,
+                "updated_at" : 1400000000,
+                "user" : {
+                  "type": "user",
+                  "id" : "3"
+                },
+                "state": "closed"
               }
             ]
           }
           """
         }
       }
-      "/conversations/147" -> {:ok,
+      "/conversations/3" -> {:ok,
         %{
           status_code: 200,
           body: """
           {
             "type": "conversation",
-            "id": "11480005803",
-            "created_at": 1503925687,
-            "updated_at": 1505727522,
-            "waiting_since": 64619627100,
-            "snoozed_until": null,
-            "conversation_message":
-            {
+            "id": "3",
+            "created_at": 1500002000,
+            "updated_at": 1500009000,
+            "conversation_message": {
               "type": "conversation_message",
-              "id": "126542917",
-              "subject": "",
-              "body": "<p>Hallo</p>
-              "author": {
+              "id": "31",
+              "body": "<p> closed status </p>"
+              "author" {
                 "type": "user",
-                "id": "56cdc8bb6fffd49c040007fe"
+                "id": "2"
               },
-              "attachments": [],
-              "url": "https://asz.capp.nl/Administration/ManageELearningModules.aspx"
-            },
-            "user": {
-              "type": "user",
-              "id": "56cdc8bb6fffd49c040007fe"
-            },
-            "customers": [
-              {
-                "type": "user",
-                "id": "56cdc8bb6fffd49c040007fe"
-              }
-            ],
-            "assignee": {
-              "type": "admin",
-              "id": "262560"
             },
             "conversation_parts":
             {
@@ -110,70 +104,137 @@ defmodule IntercomStats.IntercomAPIAdapter do
               [
                 {
                   "type": "conversation_part",
-                  "id": "761402413",
+                  "id": "32",
                   "part_type": "comment",
-                  "body": "<p>Hallo</p>",
-                  "created_at": 1503927996,
-                  "updated_at": 1503927996,
-                  "notified_at": 1503927996,
-                  "assigned_to": {
-                    "type": "admin",
-                    "id": "111791"
-                  },
-                  "author": {
-                    "type": "admin",
-                    "id": "111791"
-                  },
-                  "attachments": [],
-                  "external_id": null
-                },
-                {
-                  "type": "conversation_part",
-                  "id": "800552307",
-                  "part_type": "comment",
-                  "body": "<p>Groet'n</p>",
-                  "created_at": 1505723126,
-                  "updated_at": 1505723126,
-                  "notified_at": 1505723126,
-                  "assigned_to": null,
-                  "author": {
-                    "type": "admin",
-                    "id": "262560"
-                  },
-                  "attachments": [],
-                  "external_id": null
-                },
-                {
-                  "type": "conversation_part",
-                  "id": "800702774",
-                  "part_type": "close",
                   "body": null,
-                  "created_at": 1505727522,
-                  "updated_at": 1505727522,
-                  "notified_at": 1505727523,
-                  "assigned_to": null,
+                  "created_at": 1500020001,
+                  "updated_at": 1500020002,
                   "author": {
                     "type": "admin",
-                    "id": "262560"
-                  },
-                  "attachments": [],
-                  "external_id": null
+                    "id": "100"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "33",
+                  "part_type": "comment",
+                  "body": "reply",
+                  "created_at": 1500020006,
+                  "updated_at": 1500020007,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "34",
+                  "part_type": "comment",
+                  "body": "user reply",
+                  "created_at": 1500030000,
+                  "updated_at": 1500030001,
+                  "author": {
+                    "type": "user",
+                    "id": "2"
+                  }
+                }
+                {
+                  "type": "conversation_part",
+                  "id": "35",
+                  "part_type": "comment",
+                  "body": "admin reply",
+                  "created_at": 1500030008,
+                  "updated_at": 1500030009,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
                 }
               ],
-              "total_count": 3
+              "total_count": 4
             },
-            "open": false,
             "state": "closed",
-            "read": true,
             "tags":
             {
               "type": "tag.list",
               "tags": [
                   {
-                      "type": "tag",
-                      "id": "17523",
-                      "name": "yo"
-                  }
+                    "type": "tag",
+                    "id": "17513",
+                    "name": "bug"
+                  },
+                  {
+                    "type": "tag",
+                    "id": "17523",
+                    "name": "consultancy"
+                }
+              ]
+            }
+          }
+          """
+        }
+      }
+      "/conversations/2" -> {:ok,
+        %{
+          status_code: 200,
+          body: """
+          {
+            "type": "conversation",
+            "id": "2",
+            "created_at": 1500001000,
+            "updated_at": 1500008003,
+            "conversation_message": {
+              "type": "conversation_message",
+              "id": "21",
+              "body": "<p> closed status, no tags </p>"
+              "author" {
+                "type": "user",
+                "id": "1"
+              },
+            },
+            "conversation_parts":
+            {
+              "type": "conversation_part.list",
+              "conversation_parts":
+              [
+                {
+                  "type": "conversation_part",
+                  "id": "22",
+                  "part_type": "comment",
+                  "body": "<p> part 1 </p>",
+                  "created_at": 1500020000,
+                  "updated_at": 1500020001,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  },
+                },
+              ],
+              "total_count": 1
+            },
+            "state": "closed",
+            "tags":
+            {
+              "type": "tag.list",
+              "tags": []
+            }
+          }
+          """
+        }
+      }
+      "/users/2" -> {:ok,
+        %{
+          status_code: 200,
+          body: """
+          {
+            "type": "user",
+            "id": "2",
+            "companies": {
+              "type": "company.list",
+              "companies": [
+                {
+                  "name": "company_name"
+                }
               ]
             }
           }
