@@ -1,7 +1,2 @@
-defmodule IntercomStats.Repository.ConversationsTest do
-  use IntercomStatsWeb.ConnCase
-  import Ecto.Query
-  alias IntercomStats.Repo
-
-  
+defmodule IntercomStats.Repository.ConversationsTest do  
 end

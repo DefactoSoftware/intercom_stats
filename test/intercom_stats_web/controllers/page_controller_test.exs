@@ -1,9 +1,9 @@
 defmodule IntercomStatsWeb.PageControllerTest do
   use IntercomStatsWeb.ConnCase
+  import IntercomStats.Factory
 
   alias IntercomStats.Coherence.User
   alias IntercomStats.Repo
-  alias Coherence.Controller
 
   @user_attrs %{name: "some name", email: "some@email.com", "password": "secret", "password_confirmation": "secret"}
 
@@ -30,6 +30,7 @@ defmodule IntercomStatsWeb.PageControllerTest do
     end
 
     test "GET /get_from_api", %{conn: conn} do
+      insert :intercom_conversation
       conn = conn
             |> post(session_path(conn, :create), %{session: @user_attrs})
             |> get("/get_from_api")

@@ -1,11 +1,5 @@
 <div class="container">
-  <div>
-    <h2 class="h2 pull-left">
-      Conversation data
-    </h2>
-    <%= button "Get conversations",
-        to: "/get_from_api",
-        method: "get",
-        class: "btn btn-primary pull-right" %>
-  </div>
+  <h2>
+    Conversation data
+  </h2>
 </div>
