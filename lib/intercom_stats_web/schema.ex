@@ -1,5 +1,6 @@
 defmodule IntercomStatsWeb.Schema do
   use Absinthe.Schema
+  use Absinthe.Ecto, repo: IntercomStats.Repo
 
   import Ecto.Query
 
@@ -32,6 +33,7 @@ defmodule IntercomStatsWeb.Schema do
   object :tag do
     field :id, :string
     field :name, :string
+    field :conversations, list_of(:conversation), resolve: assoc(:conversations)
   end
 
   @desc "Conversation data"
@@ -42,6 +44,7 @@ defmodule IntercomStatsWeb.Schema do
     field :total_response_time, :integer
     field :average_response_time, :integer
     field :company_name, :string
+    field :tags, list_of(:tag), resolve: assoc(:tags)
   end
 
   @desc "A user"
