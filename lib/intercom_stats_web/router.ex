@@ -52,6 +52,7 @@ defmodule IntercomStatsWeb.Router do
     pipe_through :protected
 
     get "/", PageController, :index
+    get "/get_from_api", PageController, :get_from_api
   end
 
   scope "/" do
