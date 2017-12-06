@@ -128,11 +128,15 @@ defmodule IntercomStats.Intercom.Worker do
     updated - created
   end
 
-  defp calculate_response_times(conversation) do
-    %{"conversation_parts" => %{"conversation_parts" => parts}} = conversation
-    parts = [Map.take(conversation, ["author", "body", "created_at"]) | parts]
+  defp calculate_response_times(
+      %{"created_at" => created_at,
+        "conversation_message" => %{"author" => author, "body" => body},
+        "conversation_parts" => %{"conversation_parts" => parts}}) do
 
-    {response_times, _} = Enum.flat_map_reduce(parts, %{}, fn(i, acc) ->
+    {response_times, _} = Enum.flat_map_reduce(
+                            [%{"created_at" => created_at, "author" => author,
+                               "body" => body } | parts],
+                            %{}, fn(i, acc) ->
       with :ok <- is_response_type(i, "admin"),
            :ok <- is_response_type(acc, "user") do
         {[calculate_response_time(i, acc)], i}
