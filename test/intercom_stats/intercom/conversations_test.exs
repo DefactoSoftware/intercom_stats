@@ -23,8 +23,11 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     Conversations.save_from_api
 
     conversation = Repo.get(Conversation, "3")
+
     assert conversation.id == "3"
     assert conversation.company_name == "company_name_2"
     assert conversation.closing_time == 7000
+    assert conversation.time_to_first_response == 18006
+    assert conversation.average_response_time == 9007
   end
 end
