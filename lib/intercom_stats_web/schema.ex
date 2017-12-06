@@ -6,8 +6,14 @@ defmodule IntercomStatsWeb.Schema do
   alias IntercomStatsWeb.Resolvers
 
   query do
+    @desc "Get all tags"
     field :tags, list_of(:tag) do
       resolve authorize(&Resolvers.Tag.get_tags/3)
+    end
+
+    @desc "Get all conversations"
+    field :conversations, list_of(:conversation) do
+      resolve authorize(&Resolvers.Conversation.get_conversations/3)
     end
 
     @desc "Get an App User by ID"
@@ -22,10 +28,20 @@ defmodule IntercomStatsWeb.Schema do
     end
   end
 
-@desc "Tags for converations"
+  @desc "Tags for converations"
   object :tag do
     field :id, :string
     field :name, :string
+  end
+
+  @desc "Conversation data"
+  object :conversation do
+    field :id, :string
+    field :time_to_first_response, :integer
+    field :closing_time, :integer
+    field :total_response_time, :integer
+    field :average_response_time, :integer
+    field :company_name, :string
   end
 
   @desc "A user"
