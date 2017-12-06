@@ -1,16 +1,29 @@
 defmodule IntercomStatsWeb.PageController do
   use IntercomStatsWeb, :controller
 
-  alias IntercomStats.Intercom.Tags
-  alias IntercomStats.Intercom.Conversations
-
-  alias IntercomStats.Repository.{Tags, Conversations}
+  alias IntercomStats.Intercom
+  alias IntercomStats.Repository
 
   def index(conn, _params) do
-    [%{conversations: bugs}] = Tags.list_all_tags(%{name: "bug"})
+    conn
+    |> assign(:model, model)
+    |> render("index.html")
+  end
+
+  def get_from_api(conn, _params) do
+    Intercom.Tags.save_from_api
+    Intercom.Conversations.save_from_api
+
+    conn
+    |> assign(:model, model)
+    |> render("index.html")
+  end
+
+  defp model() do
+    [%{conversations: bugs}] = Repository.Tags.list_all_tags(%{name: "bug"})
     [%{conversations: user_support}] =
-      Tags.list_all_tags(%{name: "gebruikersondersteuning"})
-      
+      Repository.Tags.list_all_tags(%{name: "gebruikersondersteuning"})
+
     model = %{
       bugs: %{
         average_first_response: get_average_first_to_respond_time(bugs)
@@ -19,15 +32,6 @@ defmodule IntercomStatsWeb.PageController do
         average_first_response: get_average_first_to_respond_time(user_support)
       }
     }
-
-    render conn, "index.html", model: model
-  end
-
-  def get_from_api(conn, _params) do
-    Tags.save_from_api
-    Conversations.save_from_api
-
-    render conn, "index.html"
   end
 
   defp get_average_first_to_respond_time(list) do

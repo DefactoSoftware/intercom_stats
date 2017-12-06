@@ -20,9 +20,15 @@ defmodule IntercomStatsWeb.PageControllerTest do
   end
 
   describe "Route to pages when logged in" do
-    setup [:create_user]
+    setup do
+      create_user
+      insert :conversation_support
+
+      :ok
+    end
 
     test "GET /", %{conn: conn} do
+      insert :conversation_bug
       conn = conn
             |> post(session_path(conn, :create), %{session: @user_attrs})
             |> get("/")
@@ -38,7 +44,7 @@ defmodule IntercomStatsWeb.PageControllerTest do
     end
   end
 
-  defp create_user(_) do
+  defp create_user do
     user = User.changeset(%User{}, @user_attrs)
                   |> Repo.insert!
     {:ok, user: user}
