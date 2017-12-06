@@ -60,6 +60,7 @@ defmodule IntercomStats.Intercom.Worker do
                               from_unix_to_datetime(value)) == :lt end)
       |> Enum.reduce([], fn (item, acc) -> [get_conversation_properties(item) | acc] end)
       |> Enum.reduce([], fn (item, acc) -> [get_conversation_specific_properties(item) | acc] end)
+      |> Enum.filter(fn %{"tags" => tags} -> Enum.any?(tags) end)
 
     Enum.each(result, fn conversation -> insert_conversation(conversation) end)
 
@@ -73,7 +74,8 @@ defmodule IntercomStats.Intercom.Worker do
     end
   end
 
-  defp get_conversation_properties(item) do item
+  defp get_conversation_properties(item) do
+    item
     |> Map.take(@conversation_properties)
   end
 
@@ -136,6 +138,12 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   def insert_conversation(attrs) do
-    Repo.insert(Conversation.changeset(%Conversation{}, attrs))
+    {:ok, conversation} = Repo.insert(Conversation.changeset(%Conversation{}, attrs))
+
+    conversation
+    |> Repo.preload(:tags)
+    |> Ecto.Changeset.change
+    |> Ecto.Changeset.put_assoc(:tags, attrs["tags"])
+    |> Repo.update!
   end
 end
