@@ -29,5 +29,6 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     assert conversation.closing_time == 7000
     assert conversation.time_to_first_response == 18006
     assert conversation.average_response_time == 9007
+    assert conversation.total_response_time == 18014
   end
 end
