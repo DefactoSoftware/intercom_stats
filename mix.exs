@@ -48,6 +48,10 @@ defmodule IntercomStats.Mixfile do
       {:timex, "~> 3.0"},
       {:ex_machina, "~> 2.1", only: :test},
       {:coherence, "~> 0.5"},
+      {:absinthe, "~> 1.4.0-beta", override: true},
+      {:absinthe_plug, "~> 1.4.0-beta", override: true},
+      {:absinthe_phoenix, "~> 1.4.0-beta", override: true},
+      {:absinthe_ecto, ">= 0.0.0"},
     ]
   end
 
