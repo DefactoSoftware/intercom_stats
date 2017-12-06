@@ -20,6 +20,16 @@ defmodule IntercomStatsWeb.Router do
     plug Coherence.Authentication.Session, protected: true
   end
 
+  pipeline :graphql do
+    plug Plug.Parsers,
+      parsers: [:urlencoded, :multipart, :json],
+      pass: ["*/*"],
+      json_decoder: Poison
+    plug :fetch_session
+    plug Coherence.Authentication.Session
+    plug IntercomStatsWeb.Context
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -45,7 +55,7 @@ defmodule IntercomStatsWeb.Router do
   end
 
   scope "/" do
-    pipe_through :api
+    pipe_through :graphql
 
     forward "/graphiql", Absinthe.Plug.GraphiQL,
       schema: IntercomStatsWeb.Schema,

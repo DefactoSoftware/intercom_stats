@@ -1,4 +1,4 @@
-defmodule IntercomStatsWeb.Resolvers.Tags do
+defmodule IntercomStatsWeb.Resolvers.Tag do
   alias IntercomStats.Repository.Tags
 
   def get_tags(_, _, _) do
