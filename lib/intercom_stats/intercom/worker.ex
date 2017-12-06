@@ -9,8 +9,7 @@ defmodule IntercomStats.Intercom.Worker do
   @conversation_properties [
     "id",
     "created_at",
-    "updated_at",
-    "company_name",
+    "updated_at"
   ]
 
   def start_link(opts \\ []) do
