@@ -32,8 +32,8 @@ defmodule IntercomStats.Intercom.Worker do
     process_api_records(page)
   end
 
-  def handle_cast(:stop, state) do
-    {:stop, :normal, state}
+  def handle_cast(:stop, _state) do
+    {:stop, :normal, _state}
   end
 
   def terminate(reason, _state) do
@@ -80,12 +80,14 @@ defmodule IntercomStats.Intercom.Worker do
 
   defp get_conversation_specific_properties(item) do
     conversation = request_conversation(item)
+    time_to_first_response = calculate_time_to_first_response(conversation)
 
     item
     |> Map.put("company_name", retrieve_company_name(conversation))
     |> Map.put("tags", retrieve_tags_for_conversation(conversation))
-    |> Map.put("time_to_first_response", calculate_time_to_first_response(conversation))
+    |> Map.put("time_to_first_response", time_to_first_response)
     |> Map.put("closing_time", calculate_closing_time(conversation))
+    |> Map.put("average_response_time", calculate_average_response_time(conversation, time_to_first_response))
   end
 
   defp request_conversation(%{"id" => id}) do
@@ -121,6 +123,40 @@ defmodule IntercomStats.Intercom.Worker do
   defp calculate_closing_time(conversation) do
     %{"created_at" => created, "updated_at" => updated} = conversation
     updated - created
+  end
+
+  defp calculate_average_response_time(%{"conversation_parts" => %{"conversation_parts" => parts}}, time_to_first_response) do
+    {response_times, _} = Enum.flat_map_reduce(parts, %{}, fn(i, acc) ->
+      with :ok <- is_admin_response(i),
+           :ok <- is_user_response(acc) do
+        {[calculate_response_time(i, acc)], i}
+      else
+        :empty_response -> {[], acc}
+        _ -> {[], i}
+      end
+    end)
+
+    response_times = [time_to_first_response | response_times]
+  end
+  
+  def is_admin_response(conversation_part) do
+    case conversation_part do
+      %{"author" => %{"type" => "admin"}, "body" => body} when is_binary(body) -> :ok
+      %{"author" => %{"type" => "admin"}, "body" => body} when is_nil(body) -> :empty_response
+      _ -> :not_found
+    end
+  end
+
+  def is_user_response(conversation_part) do
+    case conversation_part do
+      %{"author" => %{"type" => "user"}, "body" => body} when is_binary(body) -> :ok
+      %{"author" => %{"type" => "user"}, "body" => body} when is_nil(body) -> :empty_response
+      _ -> :not_found
+    end
+  end
+
+  def calculate_response_time(%{"created_at" => new_time}, %{"created_at" => old_time}) do
+    new_time - old_time 
   end
 
   defp retrieve_last_update() do
