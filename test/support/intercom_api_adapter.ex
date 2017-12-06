@@ -91,11 +91,15 @@ defmodule IntercomStats.IntercomAPIAdapter do
             "conversation_message": {
               "type": "conversation_message",
               "id": "31",
-              "body": "<p> closed status </p>"
-              "author" {
+              "body": "<p> closed status </p>",
+              "author": {
                 "type": "user",
                 "id": "2"
-              },
+              }
+            },
+            "user": {
+              "type": "user",
+              "id": "2"
             },
             "conversation_parts":
             {
@@ -167,8 +171,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
                     "type": "tag",
                     "id": "17523",
                     "name": "consultancy"
-                }
-              ]
+                  }]
             }
           }
           """
@@ -186,11 +189,15 @@ defmodule IntercomStats.IntercomAPIAdapter do
             "conversation_message": {
               "type": "conversation_message",
               "id": "21",
-              "body": "<p> closed status, no tags </p>"
-              "author" {
+              "body": "<p> closed status, no tags </p>",
+              "author": {
                 "type": "user",
                 "id": "1"
-              },
+              }
+            },
+            "user": {
+              "type": "user",
+              "id": "1"
             },
             "conversation_parts":
             {
@@ -222,6 +229,25 @@ defmodule IntercomStats.IntercomAPIAdapter do
           """
         }
       }
+      "/users/1" -> {:ok,
+        %{
+          status_code: 200,
+          body: """
+          {
+            "type": "user",
+            "id": "1",
+            "companies": {
+              "type": "company.list",
+              "companies": [
+                {
+                  "name": "company_name_1"
+                }
+              ]
+            }
+          }
+          """
+        }
+      }
       "/users/2" -> {:ok,
         %{
           status_code: 200,
@@ -233,7 +259,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
               "type": "company.list",
               "companies": [
                 {
-                  "name": "company_name"
+                  "name": "company_name_2"
                 }
               ]
             }
