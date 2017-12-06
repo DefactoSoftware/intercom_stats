@@ -9,11 +9,13 @@ defmodule IntercomStatsWeb.Schema do
   query do
     @desc "Get all tags"
     field :tags, list_of(:tag) do
+      arg :name, :string
       resolve authorize(&Resolvers.Tag.get_tags/3)
     end
 
     @desc "Get all conversations"
     field :conversations, list_of(:conversation) do
+      arg :company_name, :string
       resolve authorize(&Resolvers.Conversation.get_conversations/3)
     end
 

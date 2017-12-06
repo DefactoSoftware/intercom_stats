@@ -5,8 +5,13 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Repository.Segments
   import Ecto.Query
 
-  def list_all_conversations() do
+  def list_all_conversations(%{}) do
     Repo.all(Conversation)
+  end
+
+  def list_all_conversations(%{company_name: company_name}) do
+    company = "%#{company_name}%"
+    Repo.all(from c in Conversation, where: like(c.company_name, ^company))
   end
 
   def list_conversations_by_tags(:or, tags_list) do
