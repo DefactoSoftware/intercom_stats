@@ -92,6 +92,8 @@ defmodule IntercomStats.Intercom.Worker do
     |> Map.put("closing_time", calculate_closing_time(conversation))
     |> Map.put("average_response_time", average_response_time)
     |> Map.put("total_response_time", total_response_time)
+    |> Map.put("closed_timestamp", item["updated_at"])
+    |> Map.put("open_timestamp", item["created_at"])
   end
 
   defp request_conversation(%{"id" => id}) do

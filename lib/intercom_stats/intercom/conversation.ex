@@ -12,8 +12,8 @@ defmodule IntercomStats.Intercom.Conversation do
     field :average_response_time, :integer
     field :company_name, :string
 
-    field :open_timestamp, :naive_datetime
-    field :closed_timestamp, :naive_datetime
+    field :open_timestamp, :integer
+    field :closed_timestamp, :integer
   end
 
   @doc false
@@ -25,7 +25,9 @@ defmodule IntercomStats.Intercom.Conversation do
       :closing_time,
       :average_response_time,
       :company_name,
-      :total_response_time
+      :total_response_time,
+      :closed_timestamp,
+      :open_timestamp
     ])
   end
 end
