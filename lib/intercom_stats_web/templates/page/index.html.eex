@@ -2,4 +2,23 @@
   <h2>
     Conversation data
   </h2>
+
+  <table>
+    <tr>
+      <td>
+        Gemiddelde eerste reactietijd voor bugs
+      </td>
+      <td>
+        <%= @model.bugs.average_first_response %> minuten
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Gemiddelde eerste reactietijd voor gebruikersondersteuning
+      </td>
+      <td>
+        <%= @model.support.average_first_response %> minuten
+      </td>
+    </tr>
+  </table>
 </div>
