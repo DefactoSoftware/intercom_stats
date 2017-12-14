@@ -20,10 +20,21 @@ defmodule IntercomStatsWeb.PageController do
     |> render("index.html")
   end
 
-  defp model() do
+  def search(conn, %{"search" => %{"from_date" => from_date, "to_date" => to_date}}) do
+    conn
+    |> assign(:model, model(from_date, to_date))
+    |> render("index.html")
+  end
+
+  defp model(), do: model("", "")
+  defp model(from_date, to_date) do
     conversations = Repository.Conversations.list_all_conversations(%{})
 
     %{
+      search: %{
+        from_date: from_date,
+        to_date: to_date
+      },
       average_response_time:
         Repository.Conversations.get_average(:time_to_first_response, conversations),
       average_closing_time:

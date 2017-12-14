@@ -5,7 +5,20 @@
         to: page_path(Endpoint, :get_from_api),
         class: "btn btn-sm btn-primary float-right" %>
   </h2>
-
+  
+  <div>
+    <%= form_for @conn, page_path(@conn, :search), [as: :search], fn f -> %>
+      <label>
+        van
+        <%= text_input f, :from_date, type: :date, value: @model.search.from_date %>
+      </label>
+      <label>
+        tot
+        <%= text_input f, :to_date, type: :date, value: @model.search.to_date %>
+      </label>
+      <%= submit "Search" %>
+    <% end %>
+  </div>
 
   <div class="content">
     <div class="card">
