@@ -1,5 +1,6 @@
 defmodule IntercomStatsWeb.PageController do
   use IntercomStatsWeb, :controller
+  use Timex
 
   alias IntercomStats.Intercom
   alias IntercomStats.Repository
@@ -20,31 +21,33 @@ defmodule IntercomStatsWeb.PageController do
   end
 
   defp model() do
-    [%{conversations: bugs}] = Repository.Tags.list_all_tags(%{name: "bug"})
-    [%{conversations: user_support}] =
-      Repository.Tags.list_all_tags(%{name: "gebruikersondersteuning"})
+    conversations = Repository.Conversations.list_all_conversations(%{})
 
     model = %{
-      bugs: %{
-        average_first_response: get_average_first_to_respond_time(bugs)
-      },
-      support: %{
-        average_first_response: get_average_first_to_respond_time(user_support)
-      }
+      average_response_time: get_average_time(:first_response, conversations),
+      average_closing_time: get_average_time(:closing_time, conversations)
     }
   end
 
-  defp get_average_first_to_respond_time(list) do
-    total = Enum.map(list, fn(%{time_to_first_response: time}) ->
+  defp get_average_time(:first_response, list) do
+    Enum.map(list, fn(%{time_to_first_response: time}) ->
       time
     end)
     |> Enum.sum
+    |> to_readable_time(list)
+  end
 
-    {val, _} =
-      (total / Enum.count(list)) / 60
-      |> Kernel.inspect
-      |> Integer.parse
+  defp get_average_time(:closing_time, list) do
+    Enum.map(list, fn(%{closing_time: time}) ->
+      time
+    end)
+    |> Enum.sum
+    |> to_readable_time(list)
+  end
 
-    val
+  defp to_readable_time(total, list) do
+    (total / Enum.count(list))
+      |> Duration.from_seconds
+      |> Timex.format_duration(:humanized)
   end
 end

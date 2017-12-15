@@ -5,3 +5,10 @@
   font-size: 30px;
   font-weight: 600;
 }
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 10px;
+  grid-auto-rows: minmax(200px, auto);
+}
