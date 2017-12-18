@@ -6,25 +6,25 @@
   <div class="content">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Gemiddelde eerste reactietijd</h4>
+        <h4 class="card-title"><%= gettext("Gemiddelde eerste reactietijd") %></h4>
         <h6 class="card-subtitle mb-2 text-muted"><%= @model.average_response_time %></h6>
         <p class="card-text">
-          De gemiddelde eerste reactietijd voor alle gesprekken.
-          Door op "Details" te klikken kan er per klant bekeken worden wat de gemiddelde eerste reactietijd is.
+          <%= gettext("De gemiddelde eerste reactietijd voor alle gesprekken.
+          Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde eerste reactietijd is.") %>
         </p>
-        <a href="#" class="btn btn-primary">Details</a>
+        <%= link(gettext("Details"), to: "/conversations/first_response", class: "btn btn-primary") %>
       </div>
     </div>
 
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Gemiddelde sluittijd</h4>
+        <h4 class="card-title"><%= gettext("Gemiddelde sluittijd") %></h4>
         <h6 class="card-subtitle mb-2 text-muted"><%= @model.average_closing_time %></h6>
         <p class="card-text">
-          De gemiddelde sluittijd voor alle gesprekken.
-          Door op "details" te klikken kan er per klant bekeken worden wat de gemiddelde sluittijd is.
+          <%= gettext("De gemiddelde sluittijd voor alle gesprekken.
+          Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde sluittijd is.") %>
         </p>
-        <a href="#" class="btn btn-primary">Details</a>
+        <%= link(gettext("Details"), to: "/conversations/closing_time", class: "btn btn-primary") %>
       </div>
     </div>
   </div>

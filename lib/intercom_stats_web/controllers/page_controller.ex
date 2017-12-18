@@ -30,7 +30,8 @@ defmodule IntercomStatsWeb.PageController do
   end
 
   defp get_average_time(:first_response, list) do
-    Enum.map(list, fn(%{time_to_first_response: time}) ->
+    list
+    |> Enum.map(fn(%{time_to_first_response: time}) ->
       time
     end)
     |> Enum.sum
@@ -38,7 +39,8 @@ defmodule IntercomStatsWeb.PageController do
   end
 
   defp get_average_time(:closing_time, list) do
-    Enum.map(list, fn(%{closing_time: time}) ->
+    list
+    |> Enum.map(fn(%{closing_time: time}) ->
       time
     end)
     |> Enum.sum
