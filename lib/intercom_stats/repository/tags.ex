@@ -6,9 +6,7 @@ defmodule IntercomStats.Repository.Tags do
 
   def list_all_tags(%{name: name}) do
     Repo.all(from tag in Tag,
-            where: tag.name == ^name,
-            join: conversations in assoc(tag, :conversations),
-            preload: [conversations: conversations])
+            where: tag.name == ^name)
   end
 
   def list_all_tags(%{}) do
