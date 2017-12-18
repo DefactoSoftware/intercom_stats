@@ -5,7 +5,6 @@
 
   <div class="content">
     <div class="card">
-      <img class="card-img-top" src="..." alt="average first response">
       <div class="card-body">
         <h4 class="card-title">Gemiddelde eerste reactietijd</h4>
         <h6 class="card-subtitle mb-2 text-muted"><%= @model.average_response_time %></h6>
@@ -18,7 +17,6 @@
     </div>
 
     <div class="card">
-      <img class="card-img-top" src="..." alt="average closing time">
       <div class="card-body">
         <h4 class="card-title">Gemiddelde sluittijd</h4>
         <h6 class="card-subtitle mb-2 text-muted"><%= @model.average_closing_time %></h6>

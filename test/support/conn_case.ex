@@ -15,6 +15,9 @@ defmodule IntercomStatsWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias IntercomStats.Coherence.User
+  alias IntercomStats.Repo
+
   using do
     quote do
       # Import conveniences for testing with connections
@@ -23,6 +26,18 @@ defmodule IntercomStatsWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint IntercomStatsWeb.Endpoint
+
+      @user_attrs %{name: "some name", email: "some@email.com", "password": "secret", "password_confirmation": "secret"}
+      def login(conn) do
+        create_user
+        post(conn, session_path(conn, :create), %{session: @user_attrs})
+      end
+
+      defp create_user do
+        user = User.changeset(%User{}, @user_attrs)
+               |> Repo.insert!
+        {:ok, user: user}
+      end
     end
   end
 
@@ -34,5 +49,4 @@ defmodule IntercomStatsWeb.ConnCase do
     end
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
-
 end

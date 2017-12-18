@@ -2,9 +2,6 @@ defmodule IntercomStatsWeb.PageControllerTest do
   use IntercomStatsWeb.ConnCase
   import IntercomStats.Factory
 
-  alias IntercomStats.Coherence.User
-  alias IntercomStats.Repo
-
   @user_attrs %{name: "some name", email: "some@email.com", "password": "secret", "password_confirmation": "secret"}
 
   describe "Route to pages when not logged in" do
@@ -21,32 +18,21 @@ defmodule IntercomStatsWeb.PageControllerTest do
 
   describe "Route to pages when logged in" do
     setup do
-      create_user
+      conn = login(conn)
       insert :conversation_support
 
-      :ok
+      {:ok, conn: conn}
     end
 
     test "GET /", %{conn: conn} do
-      insert :conversation_bug
-      conn = conn
-            |> post(session_path(conn, :create), %{session: @user_attrs})
-            |> get("/")
+      conn = get(conn, "/")
       assert html_response(conn, 200) =~ "Conversation data"
     end
 
     test "GET /get_from_api", %{conn: conn} do
       insert :intercom_conversation
-      conn = conn
-            |> post(session_path(conn, :create), %{session: @user_attrs})
-            |> get("/get_from_api")
+      conn = get(conn, "/get_from_api")
       assert html_response(conn, 200) =~ "Conversation data"
     end
-  end
-
-  defp create_user do
-    user = User.changeset(%User{}, @user_attrs)
-                  |> Repo.insert!
-    {:ok, user: user}
   end
 end
