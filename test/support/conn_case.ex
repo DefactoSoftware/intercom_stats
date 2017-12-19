@@ -29,7 +29,7 @@ defmodule IntercomStatsWeb.ConnCase do
 
       @user_attrs %{name: "some name", email: "some@email.com", "password": "secret", "password_confirmation": "secret"}
       def login(conn) do
-        create_user
+        create_user()
         post(conn, session_path(conn, :create), %{session: @user_attrs})
       end
 

@@ -48,8 +48,13 @@ defmodule IntercomStatsWeb.PageController do
   end
 
   defp to_readable_time(total, list) do
-    (total / Enum.count(list))
-      |> Duration.from_seconds
-      |> Timex.format_duration(:humanized)
+    case Enum.count(list) do
+      0 -> nil
+      count ->
+        (total / count)
+        |> Duration.from_seconds
+        |> Timex.format_duration(:humanized)
+    end
+
   end
 end

@@ -3,7 +3,9 @@ defmodule IntercomStatsWeb.ConversationsControllerTest do
   import IntercomStats.Factory
 
   setup do
-    conn = login(conn)
+    conn = build_conn()
+           |> login()
+
     {:ok, conn: conn}
   end
 
