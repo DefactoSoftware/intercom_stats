@@ -31,18 +31,14 @@ defmodule IntercomStatsWeb.PageController do
 
   defp get_average_time(:first_response, list) do
     list
-    |> Enum.map(fn(%{time_to_first_response: time}) ->
-      time
-    end)
+    |> Enum.map(fn(%{time_to_first_response: time}) -> time end)
     |> Enum.sum
     |> to_readable_time(list)
   end
 
   defp get_average_time(:closing_time, list) do
     list
-    |> Enum.map(fn(%{closing_time: time}) ->
-      time
-    end)
+    |> Enum.map(fn(%{closing_time: time}) -> time end)
     |> Enum.sum
     |> to_readable_time(list)
   end
@@ -52,9 +48,9 @@ defmodule IntercomStatsWeb.PageController do
       0 -> nil
       count ->
         (total / count)
+        |> Float.floor
         |> Duration.from_seconds
         |> Timex.format_duration(:humanized)
     end
-
   end
 end
