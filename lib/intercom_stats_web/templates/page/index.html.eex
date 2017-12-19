@@ -3,24 +3,42 @@
     Conversation data
   </h2>
 
-  <table class="table">
-    <tbody>
-      <tr>
-        <th>
-          Gemiddelde eerste reactietijd voor bugs
-        </th>
-        <td>
-          <%= @model.bugs.average_first_response %> minuten
-        </td>
-      </tr>
-      <tr>
-        <th>
-          Gemiddelde eerste reactietijd voor gebruikersondersteuning
-        </th>
-        <td>
-          <%= @model.support.average_first_response %> minuten
-        </td>
-      </tr>
-    </tbody>
-  </table>
+
+    <div class="content">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"><%= gettext("Gemiddelde eerste reactetijd") %></h4>
+          <h6 class="card-subtitle mb-2 text-muted">
+            <%= if @model.average_response_time do %>
+              <%= @model.average_response_time %>
+            <% else %>
+              <%= gettext("Er zijn geen gesprekken beschikbaar") %>
+            <% end %>
+          </h6>
+          <p class="card-text">
+            <%= gettext("De gemiddelde eerste reactietijd voor alle gesprekken.
+            Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde eerste reactietijd is.") %>
+          </p>
+          <%= link(gettext("Details"), to: "/conversations/first_response", class: "btn btn-primary") %>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"><%= gettext("Gemiddelde sluittijd") %></h4>
+          <h6 class="card-subtitle mb-2 text-muted">
+            <%= if @model.average_closing_time do %>
+              <%= @model.average_closing_time %>
+            <% else %>
+              <%= gettext("Er zijn geen gesprekken beschikbaar") %>
+            <% end %>
+          </h6>
+          <p class="card-text">
+            <%= gettext("De gemiddelde sluittijd voor alle gesprekken.
+            Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde sluittijd is.") %>
+          </p>
+          <%= link(gettext("Details"), to: "/conversations/closing_time", class: "btn btn-primary") %>
+        </div>
+      </div>
+    </div>
 </div>
