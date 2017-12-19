@@ -8,19 +8,11 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">MUMC</th>
-      <td>5 minutes, 2seconds</td>
-    </tr>
-    <tr>
-      <th scope="row">trajectum</th>
-      <td>20 minutes</td>
-
-    </tr>
-    <tr>
-      <th scope="row">ZINN</th>
-      <td>3 minutes</td>
-
-    </tr>
+    <%= for group <- @model do %>
+      <tr>
+        <th scope="row"><%= group.company_name %></th>
+        <td><%= group.average_first_response %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>

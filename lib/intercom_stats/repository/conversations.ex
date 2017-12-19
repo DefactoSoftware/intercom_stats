@@ -4,6 +4,7 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Repository.Tags
   alias IntercomStats.Repository.Segments
   import Ecto.Query
+  use Timex
 
   def list_all_conversations(%{}) do
     Repo.all(Conversation)
@@ -32,11 +33,12 @@ defmodule IntercomStats.Repository.Conversations do
               |> Enum.map(fn(%{time_to_first_response: first}) ->
                 first
               end)
+              |> Enum.filter(fn(time) -> time != nil end)
               |> Enum.sum
 
       %{
         company_name: key,
-        average_first_response: round(total / Enum.count(value))
+        average_first_response: round(total / Enum.count(value)) |> Duration.from_seconds |> Timex.format_duration(:humanized)
       }
     end)
   end

@@ -3,7 +3,7 @@ defmodule IntercomStats.Repository.ConversationsTest do
 
   import IntercomStats.Factory
 
-  alias IntercomStats.Repository.{Conversations}
+  alias IntercomStats.Repository.Conversations
 
   setup do
     insert :conversation, company_name: "STMR", time_to_first_response: 5
@@ -15,7 +15,7 @@ defmodule IntercomStats.Repository.ConversationsTest do
 
   describe "conversation_first_response_by_company" do
     test "returns a list of grouped conversations" do
-      assert [%{company_name: "STMR", average_first_response: 20 }] =
+      assert [%{company_name: "STMR", average_first_response: "20 seconds" }] =
         Conversations.conversation_first_response_by_company()
     end
   end
