@@ -32,8 +32,8 @@ defmodule IntercomStats.Intercom.Worker do
     process_api_records(page)
   end
 
-  def handle_cast(:stop, _state) do
-    {:stop, :normal, _state}
+  def handle_cast(:stop, state) do
+    {:stop, :normal, state}
   end
 
   def terminate(reason, _state) do
@@ -81,7 +81,8 @@ defmodule IntercomStats.Intercom.Worker do
   end
   defp get_conversation_specific_properties(item) do
     conversation = request_conversation(item)
-    {response_times, closed_timestamp} = calculate_response_times(conversation)
+    response_times = calculate_response_times(conversation)
+    closed_timestamp = determine_closed_timestamp(conversation)
     {total_response_time, average_response_time} =
       average_response_time(response_times)
 
@@ -141,10 +142,8 @@ defmodule IntercomStats.Intercom.Worker do
 
     {response_times, _} = Enum.flat_map_reduce(
                             [%{"created_at" => created_at, "author" => author,
-                               "body" => body, "part_type" => "open"} | parts],
+                               "body" => body} | parts],
                             %{}, fn(i, acc) ->
-      %{"part_type" => part_type, "created_at" => created_at} = i
-      if part_type == "close" do closing_time = created_at end
       with :ok <- is_response_type(i, "admin"),
            :ok <- is_response_type(acc, "user") do
         {[calculate_response_time(i, acc)], i}
@@ -154,7 +153,7 @@ defmodule IntercomStats.Intercom.Worker do
       end
     end)
 
-    {response_times, created_at}
+    response_times
   end
 
   defp is_response_type(conversation_part, type) do
@@ -167,6 +166,18 @@ defmodule IntercomStats.Intercom.Worker do
 
   defp calculate_response_time(%{"created_at" => new_time}, %{"created_at" => old_time}) do
     new_time - old_time
+  end
+
+  defp determine_closed_timestamp(
+      %{"conversation_parts" => %{"conversation_parts" => parts}}) do
+    closing_part =
+      parts
+      |> Enum.filter(fn(%{"part_type" => type}) ->
+           type == "close"
+         end)
+      |> List.first
+
+    closing_part["created_at"]
   end
 
   defp retrieve_last_update() do
