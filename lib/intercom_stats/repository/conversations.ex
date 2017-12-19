@@ -7,7 +7,9 @@ defmodule IntercomStats.Repository.Conversations do
   use Timex
 
   def list_all_conversations(%{}) do
-    Repo.all(Conversation)
+    Conversation
+    |> order_by(asc: :company_name)
+    |> Repo.all
   end
 
   def list_all_conversations(%{company_name: company_name}) do
@@ -40,6 +42,9 @@ defmodule IntercomStats.Repository.Conversations do
         company_name: key,
         average_first_response: round(total / Enum.count(value)) |> Duration.from_seconds |> Timex.format_duration(:humanized)
       }
+    end)
+    |> Enum.sort(fn(%{company_name: a}, %{company_name: b}) ->
+      String.first(a) <= String.first(b)
     end)
   end
 end
