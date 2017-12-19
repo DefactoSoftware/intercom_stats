@@ -7,7 +7,7 @@ defmodule IntercomStatsWeb.PageController do
 
   def index(conn, _params) do
     conn
-    |> assign(:model, model)
+    |> assign(:model, model())
     |> render("index.html")
   end
 
@@ -16,40 +16,18 @@ defmodule IntercomStatsWeb.PageController do
     Intercom.Conversations.save_from_api
 
     conn
-    |> assign(:model, model)
+    |> assign(:model, model())
     |> render("index.html")
   end
 
   defp model() do
     conversations = Repository.Conversations.list_all_conversations(%{})
 
-    model = %{
-      average_response_time: get_average_time(:first_response, conversations),
-      average_closing_time: get_average_time(:closing_time, conversations)
+    %{
+      average_response_time:
+        Repository.Conversations.average_first_response(conversations),
+      average_closing_time:
+        Repository.Conversations.average_closing_time(conversations)
     }
-  end
-
-  defp get_average_time(:first_response, list) do
-    list
-    |> Enum.map(fn(%{time_to_first_response: time}) -> time end)
-    |> Enum.filter(fn(time) -> time != nil end)
-    |> Enum.sum
-    |> to_readable_time(list)
-  end
-
-  defp get_average_time(:closing_time, list) do
-    list
-    |> Enum.map(fn(%{closing_time: time}) -> time end)
-    |> Enum.filter(fn(time) -> time != nil end)
-    |> Enum.sum
-    |> to_readable_time(list)
-  end
-
-  defp to_readable_time(_, list) when list == [], do: nil
-  defp to_readable_time(total, list) do
-    (total / Enum.count(list))
-    |> Float.floor
-    |> Duration.from_seconds
-    |> Timex.format_duration(:humanized)
   end
 end

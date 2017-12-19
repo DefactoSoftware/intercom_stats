@@ -5,10 +5,10 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Repository.Segments
   import Ecto.Query
   use Timex
+  import IntercomStatsWeb.Gettext
 
   def list_all_conversations(%{}) do
     Conversation
-    |> order_by(asc: :company_name)
     |> Repo.all
   end
 
@@ -31,20 +31,41 @@ defmodule IntercomStats.Repository.Conversations do
     list_all_conversations(%{})
     |> Enum.group_by(&(&1.company_name))
     |> Enum.map(fn {key, value} ->
-      total = value
-              |> Enum.map(fn(%{time_to_first_response: first}) ->
-                first
-              end)
-              |> Enum.filter(fn(time) -> time != nil end)
-              |> Enum.sum
-
       %{
         company_name: key,
-        average_first_response: round(total / Enum.count(value)) |> Duration.from_seconds |> Timex.format_duration(:humanized)
+        average_first_response: average_first_response(value)
       }
     end)
     |> Enum.sort(fn(%{company_name: a}, %{company_name: b}) ->
       String.first(a) <= String.first(b)
     end)
+  end
+
+  def average_first_response(conversations) do
+    conversations
+    |> Enum.map(fn(%{time_to_first_response: time}) ->
+      time
+    end)
+    |> Enum.filter(fn(time) -> time != nil end)
+    |> Enum.sum
+    |> to_readable_time(conversations)
+  end
+
+  def average_closing_time(conversations) do
+    conversations
+    |> Enum.map(fn(%{closing_time: time}) ->
+      time
+    end)
+    |> Enum.filter(fn(time) -> time != nil end)
+    |> Enum.sum
+    |> to_readable_time(conversations)
+  end
+
+  defp to_readable_time(_, list) when list == [],
+    do: gettext("Er zijn geen gesprekken beschikbaar")
+  defp to_readable_time(total, list) do
+    round(total / Enum.count(list))
+    |> Duration.from_seconds
+    |> Timex.format_duration(:humanized)
   end
 end

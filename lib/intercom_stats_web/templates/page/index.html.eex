@@ -12,11 +12,7 @@
       <div class="card-body">
         <h4 class="card-title"><%= gettext("Gemiddelde eerste reactetijd") %></h4>
         <h6 class="card-subtitle mb-2 text-muted">
-          <%= if @model.average_response_time do %>
-            <%= @model.average_response_time %>
-          <% else %>
-            <%= gettext("Er zijn geen gesprekken beschikbaar") %>
-          <% end %>
+          <%= @model.average_response_time %>
         </h6>
         <p class="card-text">
           <%= gettext("De gemiddelde eerste reactietijd voor alle gesprekken.
@@ -32,11 +28,7 @@
       <div class="card-body">
         <h4 class="card-title"><%= gettext("Gemiddelde sluittijd") %></h4>
         <h6 class="card-subtitle mb-2 text-muted">
-          <%= if @model.average_closing_time do %>
-            <%= @model.average_closing_time %>
-          <% else %>
-            <%= gettext("Er zijn geen gesprekken beschikbaar") %>
-          <% end %>
+          <%= @model.average_closing_time %>
         </h6>
         <p class="card-text">
           <%= gettext("De gemiddelde sluittijd voor alle gesprekken.
