@@ -145,7 +145,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
                 {
                   "type": "conversation_part",
                   "id": "35",
-                  "part_type": "comment",
+                  "part_type": "close",
                   "body": "admin reply",
                   "created_at": 1500030008,
                   "updated_at": 1500030009,
