@@ -1,1 +1,26 @@
 <h2>First response</h2>
+
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col"><%= gettext("Klant") %></th>
+      <th scope="col"><%= gettext("gemiddelde") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">MUMC</th>
+      <td>5 minutes, 2seconds</td>
+    </tr>
+    <tr>
+      <th scope="row">trajectum</th>
+      <td>20 minutes</td>
+
+    </tr>
+    <tr>
+      <th scope="row">ZINN</th>
+      <td>3 minutes</td>
+
+    </tr>
+  </tbody>
+</table>
