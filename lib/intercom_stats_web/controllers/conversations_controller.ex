@@ -2,6 +2,7 @@ defmodule IntercomStatsWeb.ConversationsController do
   use IntercomStatsWeb, :controller
 
   def first_response(conn, _) do
+    
     render(conn, "first_response.html")
   end
 

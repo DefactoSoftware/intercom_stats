@@ -24,28 +24,20 @@ defmodule IntercomStats.Repository.Conversations do
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
-  def list_conversations_by_tags(:and, tags_list) do
+  def conversation_first_response_by_company() do
+    list_all_conversations(%{})
+    |> Enum.group_by(&(&1.company_name))
+    |> Enum.map(fn {key, value} ->
+      total = value
+              |> Enum.map(fn(%{time_to_first_response: first}) ->
+                first
+              end)
+              |> Enum.sum
 
-    initial_query_tags(tags_list)
-    |> Repo.all()
-  end
-
-  defp initial_query_tags([head | tail]) do
-    query = from c in "conversations",
-            join: ct in "conversations_tags", on: c.id == ct.conversation_id,
-            where: ct.tag_id == ^head
-    initial_query_tags(tail, query)
-  end
-
-  defp initial_query_tags([], query) do
-    from q in query,
-    select: %Conversation{id: q.id}
-  end
-
-  defp initial_query_tags([head | tail], query) do
-    query = from c in query,
-            join: ct in "conversations_tags", on: c.id == ct.conversation_id,
-            where: ct.tag_id == ^head
-    initial_query_tags(tail, query)
+      %{
+        company_name: key,
+        average_first_response: round(total / Enum.count(value))
+      }
+    end)
   end
 end
