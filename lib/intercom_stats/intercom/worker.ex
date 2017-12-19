@@ -81,7 +81,7 @@ defmodule IntercomStats.Intercom.Worker do
   end
   defp get_conversation_specific_properties(item) do
     conversation = request_conversation(item)
-    response_times = calculate_response_times(conversation)
+    {response_times, closed_timestamp} = calculate_response_times(conversation)
     {total_response_time, average_response_time} =
       average_response_time(response_times)
 
@@ -92,7 +92,7 @@ defmodule IntercomStats.Intercom.Worker do
     |> Map.put("closing_time", calculate_closing_time(conversation))
     |> Map.put("average_response_time", average_response_time)
     |> Map.put("total_response_time", total_response_time)
-    |> Map.put("closed_timestamp", item["updated_at"])
+    |> Map.put("closed_timestamp", closed_timestamp)
     |> Map.put("open_timestamp", item["created_at"])
   end
 
@@ -141,8 +141,10 @@ defmodule IntercomStats.Intercom.Worker do
 
     {response_times, _} = Enum.flat_map_reduce(
                             [%{"created_at" => created_at, "author" => author,
-                               "body" => body } | parts],
+                               "body" => body, "part_type" => "open"} | parts],
                             %{}, fn(i, acc) ->
+      %{"part_type" => part_type, "created_at" => created_at} = i
+      if part_type == "close" do closing_time = created_at end
       with :ok <- is_response_type(i, "admin"),
            :ok <- is_response_type(acc, "user") do
         {[calculate_response_time(i, acc)], i}
@@ -152,7 +154,7 @@ defmodule IntercomStats.Intercom.Worker do
       end
     end)
 
-    response_times
+    {response_times, created_at}
   end
 
   defp is_response_type(conversation_part, type) do
