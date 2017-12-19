@@ -1,44 +1,51 @@
 <div class="container">
-  <h2>
+  <h2 class="w-100">
     Conversation data
+    <%= link gettext("Import conversations"),
+        to: page_path(Endpoint, :get_from_api),
+        class: "btn btn-sm btn-primary float-right" %>
   </h2>
 
 
-    <div class="content">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title"><%= gettext("Gemiddelde eerste reactetijd") %></h4>
-          <h6 class="card-subtitle mb-2 text-muted">
-            <%= if @model.average_response_time do %>
-              <%= @model.average_response_time %>
-            <% else %>
-              <%= gettext("Er zijn geen gesprekken beschikbaar") %>
-            <% end %>
-          </h6>
-          <p class="card-text">
-            <%= gettext("De gemiddelde eerste reactietijd voor alle gesprekken.
-            Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde eerste reactietijd is.") %>
-          </p>
-          <%= link(gettext("Details"), to: "/conversations/first_response", class: "btn btn-primary") %>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title"><%= gettext("Gemiddelde sluittijd") %></h4>
-          <h6 class="card-subtitle mb-2 text-muted">
-            <%= if @model.average_closing_time do %>
-              <%= @model.average_closing_time %>
-            <% else %>
-              <%= gettext("Er zijn geen gesprekken beschikbaar") %>
-            <% end %>
-          </h6>
-          <p class="card-text">
-            <%= gettext("De gemiddelde sluittijd voor alle gesprekken.
-            Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde sluittijd is.") %>
-          </p>
-          <%= link(gettext("Details"), to: "/conversations/closing_time", class: "btn btn-primary") %>
-        </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title"><%= gettext("Gemiddelde eerste reactetijd") %></h4>
+        <h6 class="card-subtitle mb-2 text-muted">
+          <%= if @model.average_response_time do %>
+            <%= @model.average_response_time %>
+          <% else %>
+            <%= gettext("Er zijn geen gesprekken beschikbaar") %>
+          <% end %>
+        </h6>
+        <p class="card-text">
+          <%= gettext("De gemiddelde eerste reactietijd voor alle gesprekken.
+          Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde eerste reactietijd is.") %>
+        </p>
+        <%= link(gettext("Details"),
+            to: conversations_path(Endpoint, :first_response),
+            class: "btn btn-primary") %>
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title"><%= gettext("Gemiddelde sluittijd") %></h4>
+        <h6 class="card-subtitle mb-2 text-muted">
+          <%= if @model.average_closing_time do %>
+            <%= @model.average_closing_time %>
+          <% else %>
+            <%= gettext("Er zijn geen gesprekken beschikbaar") %>
+          <% end %>
+        </h6>
+        <p class="card-text">
+          <%= gettext("De gemiddelde sluittijd voor alle gesprekken.
+          Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde sluittijd is.") %>
+        </p>
+        <%= link(gettext("Details"),
+            to: conversations_path(Endpoint, :closing_time),
+            class: "btn btn-primary") %>
+      </div>
+    </div>
+  </div>
 </div>
