@@ -26,13 +26,13 @@ defmodule IntercomStatsWeb.PageControllerTest do
     test "GET /", %{conn: conn} do
       insert :conversation_support
       conn = get(conn, "/")
-      assert html_response(conn, 200) =~ "Conversation data"
+      assert html_response(conn, 200) =~ gettext("Intercom gegevens")
     end
 
     test "GET /get_from_api", %{conn: conn} do
       insert :intercom_conversation
       conn = get(conn, "/get_from_api")
-      assert html_response(conn, 200) =~ "Conversation data"
+      assert html_response(conn, 200) =~ gettext("Intercom gegevens")
     end
 
     test "GET / without conversations", %{conn: conn} do

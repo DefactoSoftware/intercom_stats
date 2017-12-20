@@ -1,7 +1,7 @@
 <div class="container">
   <h2 class="w-100">
-    Conversation data
-    <%= link gettext("Import conversations"),
+    <%= gettext("Intercom gegevens") %>
+    <%= link gettext("Importeer Intercom gesprekken"),
         to: page_path(Endpoint, :get_from_api),
         class: "btn btn-sm btn-primary float-right" %>
   </h2>
@@ -10,7 +10,7 @@
   <div class="content">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title"><%= gettext("Gemiddelde eerste reactetijd") %></h4>
+        <h4 class="card-title"><%= gettext("Gemiddelde eerste reactietijd") %></h4>
         <h6 class="card-subtitle mb-2 text-muted">
           <%= @model.average_response_time %>
         </h6>

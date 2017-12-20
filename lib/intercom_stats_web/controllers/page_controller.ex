@@ -25,9 +25,9 @@ defmodule IntercomStatsWeb.PageController do
 
     %{
       average_response_time:
-        Repository.Conversations.average_first_response(conversations),
+        Repository.Conversations.get_average(:time_to_first_response, conversations),
       average_closing_time:
-        Repository.Conversations.average_closing_time(conversations)
+        Repository.Conversations.get_average(:closing_time, conversations)
     }
   end
 end
