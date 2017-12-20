@@ -5,7 +5,8 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Repository.Segments
   import Ecto.Query
 
-  def list_all_conversations(%{}) do
+  def list_all_conversations(%{}), do: list_all_conversations
+  def list_all_conversations() do
     Repo.all(Conversation)
   end
 
