@@ -198,8 +198,15 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   def insert_conversation(attrs) do
-    {:ok, conversation} =
-      Repo.insert(Conversation.changeset(%Conversation{}, attrs))
+    result =
+      case Repo.get(Conversation, attrs["id"]) do
+        nil -> %Conversation{}
+        conversation -> conversation
+      end
+      |> Conversation.changeset(attrs)
+      |> Repo.insert_or_update
+
+    {:ok, conversation} = result
 
     conversation
     |> Repo.preload(:tags)
