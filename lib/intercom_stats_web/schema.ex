@@ -15,7 +15,7 @@ defmodule IntercomStatsWeb.Schema do
 
     @desc "Get all conversations"
     field :conversations, list_of(:conversation) do
-      arg :company_name, :string
+      arg :filter, :conversation_filter
       resolve authorize(&Resolvers.Conversation.get_conversations/3)
     end
 
@@ -35,7 +35,14 @@ defmodule IntercomStatsWeb.Schema do
   object :tag do
     field :id, :string
     field :name, :string
-    field :conversations, list_of(:conversation), resolve: assoc(:conversations)
+    field :conversations, list_of(:conversation) do
+      arg :filter, :conversation_filter
+      resolve assoc(:conversations, fn conversation_query, %{filter: %{company_name: company_name}}, _context ->
+        company_name = "%#{company_name}%"
+        conversation_query
+        |> where([c], like(c.company_name, ^company_name))
+      end)
+    end
   end
 
   @desc "Conversation data"
@@ -54,6 +61,11 @@ defmodule IntercomStatsWeb.Schema do
     field :id, :id
     field :name, :string
     field :email, :string
+  end
+
+  # Filter objects
+  input_object :conversation_filter do
+    field :company_name, :string
   end
 
   # Authorization

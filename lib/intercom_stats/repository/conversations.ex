@@ -5,7 +5,8 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Repository.Segments
   import Ecto.Query
 
-  def list_all_conversations(%{}) do
+  def list_all_conversations(%{}), do: list_all_conversations
+  def list_all_conversations() do
     Repo.all(Conversation)
   end
 
@@ -14,12 +15,16 @@ defmodule IntercomStats.Repository.Conversations do
     Repo.all(from c in Conversation, where: like(c.company_name, ^company))
   end
 
-  def list_conversations_by_tags(:or, tags_list) do
+  def list_conversations_by_tags(tag_id, %{company_name: company_name}) do
+    company = "%#{company_name}%"
     query = from t in "tags",
             join: ct in "conversations_tags", on: t.id == ct.tag_id,
             join: c in "conversations", on: ct.conversation_id == c.id,
-            where: t.id in ^tags_list,
-            select: %Conversation{id: c.id}
+            where: t.id == ^tag_id and like(c.company_name, ^company),
+            select: %Conversation{
+              id: c.id,
+              time_to_first_response: c.time_to_first_response
+            }
     Repo.all(query)
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end

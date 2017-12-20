@@ -21,7 +21,7 @@ defmodule IntercomStatsWeb.PageController do
   end
 
   defp model() do
-    conversations = Repository.Conversations.list_all_conversations(%{})
+    conversations = Repository.Conversations.list_all_conversations()
 
     model = %{
       average_response_time: get_average_time(:first_response, conversations),
