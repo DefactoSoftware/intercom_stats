@@ -1,20 +1,19 @@
 defmodule IntercomStats.Repository.Conversations do
-  alias IntercomStats.Intercom.Conversation
-  alias IntercomStats.Repo
-  alias IntercomStats.Repository.Tags
-  alias IntercomStats.Repository.Segments
-  import Ecto.Query
   use Timex
+
+  import Ecto.Query
   import IntercomStatsWeb.Gettext
 
-  def list_all_conversations(%{}), do: list_all_conversations
-  def list_all_conversations() do
-    Repo.all(Conversation)
-  end
+  alias IntercomStats.Intercom.Conversation
+  alias IntercomStats.Repo
 
   def list_all_conversations(%{company_name: company_name}) do
     company = "%#{company_name}%"
     Repo.all(from c in Conversation, where: like(c.company_name, ^company))
+  end
+  def list_all_conversations(%{}), do: list_all_conversations()
+  def list_all_conversations() do
+    Repo.all(Conversation)
   end
 
   def list_conversations_by_tags(:or, tags_list) do
@@ -27,13 +26,14 @@ defmodule IntercomStats.Repository.Conversations do
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
-  def conversation_first_response_by_company() do
+  def conversation_averages_by_company() do
     list_all_conversations()
     |> Enum.group_by(&(&1.company_name))
     |> Enum.map(fn {key, value} ->
       %{
         company_name: key,
-        average_first_response: get_average(:time_to_first_response, value)
+        average_first_response: get_average(:time_to_first_response, value),
+        average_closing_time: get_average(:closing_time, value)
       }
     end)
     |> Enum.sort(fn(%{company_name: a}, %{company_name: b}) ->
@@ -47,12 +47,12 @@ defmodule IntercomStats.Repository.Conversations do
         Map.get(conversation, key)
       end)
     |> Enum.filter(fn(time) -> time != nil end)
-    |> Enum.sum
+    |> Enum.sum()
     |> calculate_average(conversations)
     |> to_readable_time()
   end
 
-  def calculate_average(_, [] = list), do: nil
+  def calculate_average(_, []), do: nil
   def calculate_average(total, list) do
     round(total / Enum.count(list))
   end
