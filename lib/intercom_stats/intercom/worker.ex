@@ -90,7 +90,8 @@ defmodule IntercomStats.Intercom.Worker do
     |> Map.put("company_name", retrieve_company_name(conversation))
     |> Map.put("tags", retrieve_tags_for_conversation(conversation))
     |> Map.put("time_to_first_response", first_response_time(response_times))
-    |> Map.put("closing_time", calculate_closing_time(conversation))
+    |> Map.put("closing_time",
+               calculate_closing_time(conversation, closed_timestamp))
     |> Map.put("average_response_time", average_response_time)
     |> Map.put("total_response_time", total_response_time)
     |> Map.put("closed_timestamp", closed_timestamp)
@@ -130,9 +131,8 @@ defmodule IntercomStats.Intercom.Worker do
     end
   end
 
-  defp calculate_closing_time(conversation) do
-    %{"created_at" => created, "updated_at" => updated} = conversation
-    updated - created
+  defp calculate_closing_time(%{"created_at" => created}, close_timestamp) do
+    close_timestamp - created
   end
 
   defp calculate_response_times(
@@ -144,8 +144,8 @@ defmodule IntercomStats.Intercom.Worker do
                             [%{"created_at" => created_at, "author" => author,
                                "body" => body} | parts],
                             %{}, fn(i, acc) ->
-      with :ok <- is_response_type(i, "admin"),
-           :ok <- is_response_type(acc, "user") do
+    with :ok <- is_response_type(i, ["admin", "bot"]),
+         :ok <- is_response_type(acc, ["user"]) do
         {[calculate_response_time(i, acc)], i}
       else
         :empty_response -> {[], acc}
@@ -156,13 +156,17 @@ defmodule IntercomStats.Intercom.Worker do
     response_times
   end
 
-  defp is_response_type(conversation_part, type) do
-    case conversation_part do
-      %{"author" => %{"type" => ^type}, "body" => body} when is_binary(body) -> :ok
-      %{"author" => %{"type" => ^type}, "body" => body} when is_nil(body) -> :empty_response
-      _ -> :not_found
+  defp is_response_type(%{"author" => %{"type" => type}, "body" => body}, types) do
+    cond do
+      type in types ->
+        case body do
+          nil -> :empty_response
+          _ -> :ok
+        end
+      true -> :not_found
     end
   end
+  defp is_response_type(%{}, _), do: :not_found
 
   defp calculate_response_time(%{"created_at" => new_time}, %{"created_at" => old_time}) do
     new_time - old_time
@@ -175,7 +179,7 @@ defmodule IntercomStats.Intercom.Worker do
       |> Enum.filter(fn(%{"part_type" => type}) ->
            type == "close"
          end)
-      |> List.first
+      |> List.last
 
     closing_part["created_at"]
   end
@@ -194,7 +198,8 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   def insert_conversation(attrs) do
-    {:ok, conversation} = Repo.insert(Conversation.changeset(%Conversation{}, attrs))
+    {:ok, conversation} =
+      Repo.insert(Conversation.changeset(%Conversation{}, attrs))
 
     conversation
     |> Repo.preload(:tags)
