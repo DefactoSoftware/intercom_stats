@@ -7,14 +7,13 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Intercom.Conversation
   alias IntercomStats.Repo
 
-  def list_all_conversations(%{}), do: list_all_conversations
-  def list_all_conversations() do
-    Repo.all(Conversation)
-  end
-
   def list_all_conversations(%{company_name: company_name}) do
     company = "%#{company_name}%"
     Repo.all(from c in Conversation, where: like(c.company_name, ^company))
+  end
+  def list_all_conversations(%{}), do: list_all_conversations()
+  def list_all_conversations() do
+    Repo.all(Conversation)
   end
 
   def list_conversations_by_tags(:or, tags_list) do
@@ -48,12 +47,12 @@ defmodule IntercomStats.Repository.Conversations do
         Map.get(conversation, key)
       end)
     |> Enum.filter(fn(time) -> time != nil end)
-    |> Enum.sum
+    |> Enum.sum()
     |> calculate_average(conversations)
     |> to_readable_time()
   end
 
-  def calculate_average(_, [] = list), do: nil
+  def calculate_average(_, []), do: nil
   def calculate_average(total, list) do
     round(total / Enum.count(list))
   end
