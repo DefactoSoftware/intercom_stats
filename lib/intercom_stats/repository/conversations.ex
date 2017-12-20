@@ -4,18 +4,12 @@ defmodule IntercomStats.Repository.Conversations do
   import Ecto.Query
   import IntercomStatsWeb.Gettext
 
-<<<<<<< HEAD
-  def list_all_conversations(%{}), do: list_all_conversations
-  def list_all_conversations() do
-    Repo.all(Conversation)
-=======
   alias IntercomStats.Intercom.Conversation
   alias IntercomStats.Repo
 
-  def list_all_conversations(%{}) do
-    Conversation
-    |> Repo.all
->>>>>>> Refactor the get average lists
+  def list_all_conversations(%{}), do: list_all_conversations
+  def list_all_conversations() do
+    Repo.all(Conversation)
   end
 
   def list_all_conversations(%{company_name: company_name}) do
