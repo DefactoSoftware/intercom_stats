@@ -1,8 +1,8 @@
 defmodule IntercomStats.Repository.Tags do
+  import Ecto.Query
 
   alias IntercomStats.Intercom.Tag
   alias IntercomStats.Repo
-  import Ecto.Query
 
   def list_all_tags(%{name: name}) do
     Repo.all(from tag in Tag,

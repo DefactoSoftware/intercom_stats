@@ -1,15 +1,21 @@
 defmodule IntercomStats.Repository.Conversations do
-  alias IntercomStats.Intercom.Conversation
-  alias IntercomStats.Repo
-  alias IntercomStats.Repository.Tags
-  alias IntercomStats.Repository.Segments
-  import Ecto.Query
   use Timex
+
+  import Ecto.Query
   import IntercomStatsWeb.Gettext
 
+<<<<<<< HEAD
   def list_all_conversations(%{}), do: list_all_conversations
   def list_all_conversations() do
     Repo.all(Conversation)
+=======
+  alias IntercomStats.Intercom.Conversation
+  alias IntercomStats.Repo
+
+  def list_all_conversations(%{}) do
+    Conversation
+    |> Repo.all
+>>>>>>> Refactor the get average lists
   end
 
   def list_all_conversations(%{company_name: company_name}) do
@@ -27,13 +33,14 @@ defmodule IntercomStats.Repository.Conversations do
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
-  def conversation_first_response_by_company() do
+  def conversation_averages_by_company() do
     list_all_conversations()
     |> Enum.group_by(&(&1.company_name))
     |> Enum.map(fn {key, value} ->
       %{
         company_name: key,
-        average_first_response: get_average(:time_to_first_response, value)
+        average_first_response: get_average(:time_to_first_response, value),
+        average_closing_time: get_average(:closing_time, value)
       }
     end)
     |> Enum.sort(fn(%{company_name: a}, %{company_name: b}) ->

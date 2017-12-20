@@ -6,17 +6,34 @@ defmodule IntercomStats.Repository.ConversationsTest do
   alias IntercomStats.Repository.Conversations
 
   setup do
-    insert :conversation, company_name: "STMR", time_to_first_response: 5
-    insert :conversation, company_name: "STMR", time_to_first_response: 20
-    insert :conversation, company_name: "STMR", time_to_first_response: 35
+    insert(
+      :conversation,
+      company_name: "STMR",
+      time_to_first_response: 5,
+      closing_time: 120)
+    insert(
+      :conversation,
+      company_name: "STMR",
+      time_to_first_response: 20,
+      closing_time: 180)
+    insert(
+      :conversation,
+      company_name: "STMR",
+      time_to_first_response: 35,
+      closing_time: 60)
 
     :ok
   end
 
-  describe "conversation_first_response_by_company" do
-    test "returns a list of grouped conversations" do
+  describe "conversation_averages_by_company" do
+    test "returns the first response average" do
       assert [%{company_name: "STMR", average_first_response: "20 seconds" }] =
-        Conversations.conversation_first_response_by_company()
+        Conversations.conversation_averages_by_company()
+    end
+
+    test "returns closing time average" do
+      assert [%{company_name: "STMR", average_closing_time: "2 minutes" }] =
+        Conversations.conversation_averages_by_company()
     end
   end
 
