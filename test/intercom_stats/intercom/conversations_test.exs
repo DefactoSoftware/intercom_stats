@@ -12,11 +12,11 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     Conversations.save_from_api
 
     result = Repo.all(Conversation)
-    assert Enum.count(result) == 1
+    assert Enum.count(result) == 3
     assert List.first(result).id == "3"
   end
 
-  test "correct values are stored for conversations" do
+  test "correct values are stored for conversation/3" do
     insert :intercom_conversation
 
     Tags.save_from_api
@@ -26,10 +26,46 @@ defmodule IntercomStats.Intercom.ConversationsTest do
 
     assert conversation.id == "3"
     assert conversation.company_name == "company_name_2"
-    assert conversation.closing_time == 7000
+    assert conversation.closing_time == 28008
     assert conversation.time_to_first_response == 18006
     assert conversation.average_response_time == 9007
     assert conversation.total_response_time == 18014
+    assert conversation.closed_timestamp == 1500030008
+    assert conversation.open_timestamp == 1500002000
+  end
+
+  test "correct values are stored for conversation/5" do
+    insert :intercom_conversation
+
+    Tags.save_from_api
+    Conversations.save_from_api
+
+    conversation = Repo.get(Conversation, "5")
+
+    assert conversation.id == "5"
+    assert conversation.company_name == "company_name_2"
+    assert conversation.closing_time == 28008
+    assert conversation.time_to_first_response == 18001
+    assert conversation.average_response_time == 9005
+    assert conversation.total_response_time == 18009
+    assert conversation.closed_timestamp == 1500030008
+    assert conversation.open_timestamp == 1500002000
+  end
+
+  test "correct values are stored for conversation/6" do
+    insert :intercom_conversation
+
+    Tags.save_from_api
+    Conversations.save_from_api
+
+    conversation = Repo.get(Conversation, "6")
+
+    assert conversation.id == "6"
+    assert conversation.company_name == "company_name_2"
+    assert conversation.closing_time == 28008
+    assert conversation.time_to_first_response == 18006
+    assert conversation.average_response_time == 18006
+    assert conversation.total_response_time == 18006
     assert conversation.closed_timestamp == 1500030008
     assert conversation.open_timestamp == 1500002000
   end
