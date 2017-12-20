@@ -1,1 +1,1 @@
-<h2>Closing time</h2>
+<h2><%= gettext("Gemiddelde sluittijd") %></h2>

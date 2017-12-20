@@ -19,18 +19,13 @@
           <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="navbar-brand" href="#">Defacto intercom statistics</a>
+          <a class="navbar-brand" href="/">Defacto intercom statistics</a>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <%= if Coherence.current_user_name(@conn) do %>
                 <li class="nav-item">
                   <%= link "Check api",
                       to: "/graphiql",
-                      class: "nav-link" %>
-                </li>
-                <li class="nav-item">
-                  <%= link "Get conversations",
-                      to: "/get_from_api",
                       class: "nav-link" %>
                 </li>
                 <li class="nav-item"><%= link("Logout", to: "/sessions", method: :delete, class: "nav-link") %>

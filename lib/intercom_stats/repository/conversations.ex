@@ -4,8 +4,11 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Repository.Tags
   alias IntercomStats.Repository.Segments
   import Ecto.Query
+  use Timex
+  import IntercomStatsWeb.Gettext
 
-  def list_all_conversations(%{}) do
+  def list_all_conversations(%{}), do: list_all_conversations
+  def list_all_conversations() do
     Repo.all(Conversation)
   end
 
@@ -24,28 +27,41 @@ defmodule IntercomStats.Repository.Conversations do
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
-  def list_conversations_by_tags(:and, tags_list) do
-
-    initial_query_tags(tags_list)
-    |> Repo.all()
+  def conversation_first_response_by_company() do
+    list_all_conversations()
+    |> Enum.group_by(&(&1.company_name))
+    |> Enum.map(fn {key, value} ->
+      %{
+        company_name: key,
+        average_first_response: get_average(:time_to_first_response, value)
+      }
+    end)
+    |> Enum.sort(fn(%{company_name: a}, %{company_name: b}) ->
+      String.capitalize(a) <= String.capitalize(b)
+    end)
   end
 
-  defp initial_query_tags([head | tail]) do
-    query = from c in "conversations",
-            join: ct in "conversations_tags", on: c.id == ct.conversation_id,
-            where: ct.tag_id == ^head
-    initial_query_tags(tail, query)
+  def get_average(key, conversations) do
+    conversations
+    |> Enum.map(fn(conversation) ->
+        Map.get(conversation, key)
+      end)
+    |> Enum.filter(fn(time) -> time != nil end)
+    |> Enum.sum
+    |> calculate_average(conversations)
+    |> to_readable_time()
   end
 
-  defp initial_query_tags([], query) do
-    from q in query,
-    select: %Conversation{id: q.id}
+  def calculate_average(_, [] = list), do: nil
+  def calculate_average(total, list) do
+    round(total / Enum.count(list))
   end
 
-  defp initial_query_tags([head | tail], query) do
-    query = from c in query,
-            join: ct in "conversations_tags", on: c.id == ct.conversation_id,
-            where: ct.tag_id == ^head
-    initial_query_tags(tail, query)
+  defp to_readable_time(seconds) when seconds == nil,
+    do: gettext("Er zijn geen gesprekken beschikbaar")
+  defp to_readable_time(seconds) do
+    seconds
+    |> Duration.from_seconds
+    |> Timex.format_duration(:humanized)
   end
 end
