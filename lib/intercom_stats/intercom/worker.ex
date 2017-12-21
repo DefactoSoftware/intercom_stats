@@ -114,8 +114,11 @@ defmodule IntercomStats.Intercom.Worker do
   defp retrieve_tags_for_conversation(conversation) do
     %{"tags" => %{"tags" => tags}} = conversation
 
-    tags
-    |> Enum.map(fn(%{"id" => id}) -> Repo.get(Tag, id) end)
+    [{"tags", available_tags}] = :ets.lookup(:tags_list, "tags")
+
+    Enum.map(tags, fn(%{"id" => id}) ->
+      Enum.find(available_tags, fn(tag) -> tag.id == id end)
+    end)
   end
 
   defp first_response_time(response_times) do

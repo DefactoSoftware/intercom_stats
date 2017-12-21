@@ -1,8 +1,11 @@
 defmodule IntercomStats.Intercom.Conversations do
   alias IntercomStats.Repo
-  alias IntercomStats.Intercom.{Conversation, API, Worker, IntercomConversation}
+  alias IntercomStats.Intercom.{Conversation, API, Worker, IntercomConversation, Tag}
 
   def save_from_api() do
+    :ets.new(:tags_list, [:named_table])
+    :ets.insert(:tags_list, {"tags", Repo.all(Tag)})
+
     {:ok, pid} = Worker.start_link()
 
     {:ok, %{body: body}} = API.get("/conversations",
