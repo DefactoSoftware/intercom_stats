@@ -26,19 +26,22 @@ defmodule IntercomStatsWeb.PageController do
     |> render("index.html")
   end
 
-  defp model(), do: model("", "")
+  defp model(), do: model("2017-07-01", Date.to_string(Date.utc_today()))
   defp model(from_date, to_date) do
-    conversations = Repository.Conversations.list_all_conversations(%{})
+    filter = %{
+      from_date: from_date,
+      to_date: to_date
+    }
+    conversations = Repository.Conversations.list_all_conversations(filter)
 
     %{
-      search: %{
-        from_date: from_date,
-        to_date: to_date
-      },
+      search: filter,
       average_response_time:
         Repository.Conversations.get_average(:time_to_first_response, conversations),
       average_closing_time:
-        Repository.Conversations.get_average(:closing_time, conversations)
+        Repository.Conversations.get_average(:closing_time, conversations),
+      averages_per_company:
+        Repository.Conversations.conversation_averages_by_company(filter)
     }
   end
 end

@@ -5,18 +5,27 @@
         to: page_path(Endpoint, :get_from_api),
         class: "btn btn-sm btn-primary float-right" %>
   </h2>
-  
+
   <div>
     <%= form_for @conn, page_path(@conn, :search), [as: :search], fn f -> %>
       <label>
-        van
-        <%= text_input f, :from_date, type: :date, value: @model.search.from_date %>
+        <%= gettext("Van") %>
+        <%= text_input f,
+          :from_date,
+          type: :date,
+          min: "2017-07-01",
+          value: @model.search.from_date,
+          class: "form-control" %>
       </label>
       <label>
-        tot
-        <%= text_input f, :to_date, type: :date, value: @model.search.to_date %>
+        <%= gettext("tot") %>
+        <%= text_input f,
+          :to_date,
+          type: :date,
+          value: @model.search.to_date,
+          class: "form-control" %>
       </label>
-      <%= submit "Search" %>
+      <%= submit gettext("Search"), class: "btn btn-primary" %>
     <% end %>
   </div>
 
@@ -27,13 +36,6 @@
         <h6 class="card-subtitle mb-2 text-muted">
           <%= @model.average_response_time %>
         </h6>
-        <p class="card-text">
-          <%= gettext("De gemiddelde eerste reactietijd voor alle gesprekken.
-          Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde eerste reactietijd is.") %>
-        </p>
-        <%= link(gettext("Details"),
-            to: conversations_path(Endpoint, :first_response),
-            class: "btn btn-primary") %>
       </div>
     </div>
 
@@ -43,14 +45,26 @@
         <h6 class="card-subtitle mb-2 text-muted">
           <%= @model.average_closing_time %>
         </h6>
-        <p class="card-text">
-          <%= gettext("De gemiddelde sluittijd voor alle gesprekken.
-          Door op \"Details\" te klikken kan er per klant bekeken worden wat de gemiddelde sluittijd is.") %>
-        </p>
-        <%= link(gettext("Details"),
-            to: conversations_path(Endpoint, :closing_time),
-            class: "btn btn-primary") %>
       </div>
     </div>
   </div>
+
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col"><%= gettext("Klant") %></th>
+        <th scope="col"><%= gettext("Gemiddelde eerste reactietijd") %></th>
+        <th scope="col"><%= gettext("Gemiddelde sluittijd") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for group <- @model.averages_per_company do %>
+        <tr>
+          <th scope="row"><%= group.company_name %></th>
+          <td><%= group.average_first_response %></td>
+          <td><%= group.average_closing_time %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

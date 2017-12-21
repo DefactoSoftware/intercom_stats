@@ -7,9 +7,18 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Intercom.Conversation
   alias IntercomStats.Repo
 
-  def list_all_conversations(%{company_name: company_name}) do
-    company = "%#{company_name}%"
-    Repo.all(from c in Conversation, where: like(c.company_name, ^company))
+  def list_all_conversations(filter) do
+    filter
+    |> Enum.reduce(Conversation, fn
+        {_, nil}, query -> query
+        {:company_name, company_name}, query ->
+          from c in query, where: ilike(c.company_name, ^"%#{company_name}%")
+        {:from_date, from_date}, query ->
+          from c in query, where: c.open_timestamp >= ^string_date_to_unix(from_date)
+        {:to_date, to_date}, query ->
+          from c in query, where: c.closed_timestamp <= ^string_date_to_unix(to_date)
+      end)
+    |> Repo.all
   end
   def list_all_conversations(%{}), do: list_all_conversations()
   def list_all_conversations() do
@@ -26,8 +35,10 @@ defmodule IntercomStats.Repository.Conversations do
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
-  def conversation_averages_by_company() do
-    list_all_conversations()
+  def conversation_averages_by_company(),
+    do: conversation_averages_by_company(%{})
+  def conversation_averages_by_company(filter) do
+    list_all_conversations(filter)
     |> Enum.group_by(&(&1.company_name))
     |> Enum.map(fn {key, value} ->
       %{
@@ -55,6 +66,13 @@ defmodule IntercomStats.Repository.Conversations do
   def calculate_average(_, []), do: nil
   def calculate_average(total, list) do
     round(total / Enum.count(list))
+  end
+
+  def string_date_to_unix(date) do
+    date
+    |> Timex.parse!("{YYYY}-{0M}-{0D}")
+    |> Timex.to_datetime
+    |> DateTime.to_unix
   end
 
   defp to_readable_time(seconds) when seconds == nil,
