@@ -17,6 +17,7 @@ defmodule IntercomStats.Intercom.Conversations do
 
     #The statement to update the last_update should be moved elsewhere eventually
     Repo.insert %IntercomConversation{last_update: DateTime.utc_now}
+    :ets.delete(:tags_list)
   end
 
   defp save_page_api(pid, state, max_pages) when state == :init do
