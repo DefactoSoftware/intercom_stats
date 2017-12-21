@@ -54,10 +54,7 @@ defmodule IntercomStatsWeb.Router do
     get "/", PageController, :index
     get "/get_from_api", PageController, :get_from_api
 
-    get "/conversations/first_response", ConversationsController, :first_response
-    get "/conversations/closing_time", ConversationsController, :closing_time
-
-    post "/search", PageController, :search
+    post "/", PageController, :search
   end
 
   scope "/" do
