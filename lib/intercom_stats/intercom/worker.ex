@@ -199,12 +199,22 @@ defmodule IntercomStats.Intercom.Worker do
 
   def insert_conversation(attrs) do
     {:ok, conversation} =
-      Repo.insert(Conversation.changeset(%Conversation{}, attrs))
+      attrs["id"]
+      |> check_conversation_availability
+      |> Conversation.changeset(attrs)
+      |> Repo.insert_or_update
 
     conversation
     |> Repo.preload(:tags)
     |> Ecto.Changeset.change
     |> Ecto.Changeset.put_assoc(:tags, attrs["tags"])
     |> Repo.update!
+  end
+
+  defp check_conversation_availability(conversation_id) do
+    case Repo.get(Conversation, conversation_id) do
+      nil -> %Conversation{}
+      conversation -> conversation
+    end
   end
 end
