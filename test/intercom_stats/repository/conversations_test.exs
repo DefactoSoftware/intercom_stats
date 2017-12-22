@@ -74,7 +74,13 @@ defmodule IntercomStats.Repository.ConversationsTest do
         |> Timex.shift(days: -13)
         |> Date.to_string
 
-      assert 1512691200 == Conversations.string_date_to_unix(date)
+      expectation =
+        Timex.today
+        |> Timex.shift(days: -13)
+        |> Timex.to_datetime
+        |> DateTime.to_unix
+
+      assert expectation == Conversations.string_date_to_unix(date)
     end
 
     test "get all conversations between a selected date range" do

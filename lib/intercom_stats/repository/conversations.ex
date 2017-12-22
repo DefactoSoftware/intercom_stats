@@ -7,7 +7,7 @@ defmodule IntercomStats.Repository.Conversations do
   alias IntercomStats.Intercom.Conversation
   alias IntercomStats.Repo
 
-  def list_all_conversations(filter) do
+  def list_all_conversations(filter \\ %{}) do
     filter
     |> Enum.reduce(Conversation, fn
         {_, nil}, query -> query
@@ -20,10 +20,6 @@ defmodule IntercomStats.Repository.Conversations do
       end)
     |> Repo.all
   end
-  def list_all_conversations(%{}), do: list_all_conversations()
-  def list_all_conversations() do
-    Repo.all(Conversation)
-  end
 
   def list_conversations_by_tags(:or, tags_list) do
     query = from t in "tags",
@@ -35,9 +31,7 @@ defmodule IntercomStats.Repository.Conversations do
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
-  def conversation_averages_by_company(),
-    do: conversation_averages_by_company(%{})
-  def conversation_averages_by_company(filter) do
+  def conversation_averages_by_company(filter \\ %{}) do
     list_all_conversations(filter)
     |> Enum.group_by(&(&1.company_name))
     |> Enum.map(fn {key, value} ->
