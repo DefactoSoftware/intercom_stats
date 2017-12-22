@@ -1,6 +1,8 @@
 defmodule IntercomStatsWeb.Router do
   use IntercomStatsWeb, :router
   use Coherence.Router
+  use Plug.ErrorHandler
+  use Sentry.Plug
 
   pipeline :browser do
     plug :accepts, ["html"]

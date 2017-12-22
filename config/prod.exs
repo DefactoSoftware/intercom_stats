@@ -61,6 +61,16 @@ config :logger, level: :info
 #     config :intercom_stats, IntercomStatsWeb.Endpoint, server: true
 #
 
+config :sentry,
+  dsn: "https://#{System.get_env("SENTRY_PUBLIC_KEY")}:#{System.get_env("SENTRY_SECRET_KEY")}@#{System.get_env("SENTRY_APP")}.getsentry.com/1",
+  environment_name: :prod,
+  enable_source_code_context: true,
+  root_source_code_path: File.cwd!,
+  tags: %{
+    env: "production"
+  },
+  included_environments: [:prod]
+
 config :intercom_stats, IntercomStats.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),

@@ -52,6 +52,7 @@ defmodule IntercomStats.Mixfile do
       {:absinthe_plug, "~> 1.4.0-beta", override: true},
       {:absinthe_phoenix, "~> 1.4.0-beta", override: true},
       {:absinthe_ecto, ">= 0.0.0"},
+      {:sentry, "~> 6.0.0"}
     ]
   end
 
