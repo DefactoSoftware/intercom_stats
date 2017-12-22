@@ -33,25 +33,26 @@ defmodule IntercomStats.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:absinthe, "~> 1.4.0-beta", override: true},
+      {:absinthe_ecto, ">= 0.0.0"},
+      {:absinthe_phoenix, "~> 1.4.0-beta", override: true},
+      {:absinthe_plug, "~> 1.4.0-beta", override: true},
+      {:coherence, "~> 0.5"},
+      {:cowboy, "~> 1.0"},
+      {:credo, "~> 0.8", only: [:dev, :test]},
+      {:ex_machina, "~> 2.1", only: :test},
+      {:gettext, "~> 0.11"},
+      {:httpoison, "~> 0.13"},
+      {:json, "~> 1.0"},
       {:phoenix, "~> 1.3.0"},
-      {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
-      {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
-      {:json, "~> 1.0"},
+      {:phoenix_pubsub, "~> 1.0"},
       {:poison, "~> 3.0", override: true},
-      {:httpoison, "~> 0.13"},
+      {:postgrex, ">= 0.0.0"},
       {:quantum, ">= 2.1.0"},
       {:timex, "~> 3.0"},
-      {:ex_machina, "~> 2.1", only: :test},
-      {:coherence, "~> 0.5"},
-      {:absinthe, "~> 1.4.0-beta", override: true},
-      {:absinthe_plug, "~> 1.4.0-beta", override: true},
-      {:absinthe_phoenix, "~> 1.4.0-beta", override: true},
-      {:absinthe_ecto, ">= 0.0.0"},
     ]
   end
 
