@@ -1,8 +1,11 @@
 defmodule IntercomStats.Intercom.Conversations do
   alias IntercomStats.Repo
-  alias IntercomStats.Intercom.{Conversation, API, Worker, IntercomConversation}
+  alias IntercomStats.Intercom.{Conversation, API, Worker, IntercomConversation, Tag}
 
   def save_from_api() do
+    :ets.new(:tags_list, [:named_table])
+    :ets.insert(:tags_list, {"tags", Repo.all(Tag)})
+
     {:ok, pid} = Worker.start_link()
 
     {:ok, %{body: body}} = API.get("/conversations",
@@ -14,6 +17,7 @@ defmodule IntercomStats.Intercom.Conversations do
 
     #The statement to update the last_update should be moved elsewhere eventually
     Repo.insert %IntercomConversation{last_update: DateTime.utc_now}
+    :ets.delete(:tags_list)
   end
 
   defp save_page_api(pid, state, max_pages) when state == :init do
