@@ -12,7 +12,7 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     Conversations.save_from_api
 
     result = Repo.all(Conversation)
-    assert Enum.count(result) == 5
+    assert Enum.count(result) == 4
   end
 
   test "correct values are stored for conversation/3" do

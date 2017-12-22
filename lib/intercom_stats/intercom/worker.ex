@@ -218,13 +218,8 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   def insert_conversation(attrs) do
-    {:ok, conversation} =
-      attrs["id"]
-      |> check_conversation_availability
-      |> Conversation.changeset(attrs)
-      |> Repo.insert_or_update
-
-    conversation
+    attrs
+    |> insert_or_update()
     |> Repo.preload(:tags)
     |> Ecto.Changeset.change
     |> Ecto.Changeset.put_assoc(:tags, attrs["tags"])
@@ -233,10 +228,17 @@ defmodule IntercomStats.Intercom.Worker do
     attrs
   end
 
-  defp check_conversation_availability(conversation_id) do
-    case Repo.get(Conversation, conversation_id) do
-      nil -> %Conversation{}
-      conversation -> conversation
+  defp insert_or_update(attrs) do
+    conversation =
+      case Repo.get(Conversation, attrs["id"]) do
+        nil -> %Conversation{}
+        existing_conversation -> existing_conversation
+      end
+
+    with {:ok, updated_conversation} <- conversation
+                                        |> Conversation.changeset(attrs)
+                                        |> Repo.insert_or_update! do
+      updated_conversation
     end
   end
 end
