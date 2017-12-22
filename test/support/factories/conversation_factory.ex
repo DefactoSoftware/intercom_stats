@@ -5,7 +5,7 @@ defmodule IntercomStats.ConversationFactory do
         %IntercomStats.Intercom.Conversation{
           id: sequence("conversation_id"),
           tags: insert_list(2, :tag),
-          time_to_first_response: 10,
+          time_to_first_response: 300,
           closing_time: 10,
           total_response_time: 10,
           average_response_time: 10
@@ -16,7 +16,7 @@ defmodule IntercomStats.ConversationFactory do
         %IntercomStats.Intercom.Conversation{
           id: sequence("conversation_id"),
           tags: insert_list(1, :tag_bug),
-          time_to_first_response: 10,
+          time_to_first_response: 300,
           closing_time: 10,
           total_response_time: 10,
           average_response_time: 10
@@ -27,7 +27,7 @@ defmodule IntercomStats.ConversationFactory do
         %IntercomStats.Intercom.Conversation{
           id: sequence("conversation_id"),
           tags: insert_list(1, :tag_support),
-          time_to_first_response: 10,
+          time_to_first_response: 300,
           closing_time: 10,
           total_response_time: 10,
           average_response_time: 10
