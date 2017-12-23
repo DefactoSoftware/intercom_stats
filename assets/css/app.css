@@ -10,5 +10,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 10px;
-  grid-auto-rows: minmax(200px, auto);
+  grid-auto-rows: minmax(100px, auto);
+}
+
+body {
+  padding-top: 100px;
 }
