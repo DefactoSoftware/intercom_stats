@@ -234,11 +234,7 @@ defmodule IntercomStats.Intercom.Worker do
         nil -> %Conversation{}
         existing_conversation -> existing_conversation
       end
-
-    with {:ok, updated_conversation} <- conversation
-                                        |> Conversation.changeset(attrs)
-                                        |> Repo.insert_or_update! do
-      updated_conversation
-    end
+      |> Conversation.changeset(attrs)
+      |> Repo.insert_or_update!
   end
 end
