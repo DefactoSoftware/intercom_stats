@@ -2,8 +2,8 @@ defmodule IntercomStatsWeb.PageController do
   use IntercomStatsWeb, :controller
   use Timex
 
-  alias IntercomStats.Intercom
-  alias IntercomStats.Repository
+  alias Intercom.{Conversations, Tags}
+  alias IntercomStats.{Intercom, Repository}
 
   def index(conn, _params) do
     conn
@@ -12,8 +12,8 @@ defmodule IntercomStatsWeb.PageController do
   end
 
   def get_from_api(conn, _params) do
-    Intercom.Tags.save_from_api
-    Task.start(fn -> Intercom.Conversations.save_from_api end)
+    Tags.save_from_api
+    Task.start(fn -> Conversations.save_from_api end)
 
     conn
     |> assign(:model, model())

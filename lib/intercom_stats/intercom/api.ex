@@ -3,7 +3,7 @@ defmodule IntercomStats.Intercom.API do
   @token Application.get_env(:intercom_stats, __MODULE__)[:token]
 
   def get(url, params \\ []) do
-    options = params ++ [timeout: 50000, recv_timeout: 50000]
+    options = params ++ [timeout: 50_000, recv_timeout: 50_000]
     @adapter.start
     @adapter.get(
       url,

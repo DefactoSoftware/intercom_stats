@@ -14,8 +14,9 @@ defmodule IntercomStatsWeb.Coherence.Messages do
 
   import IntercomStatsWeb.Gettext
 
-  # Change this to override the "coherence" gettext domain. If you would like
-  # the coherence message to be part of your projects domain change it to "default"
+  # Change this to override the "coherence" gettext domain.
+  # If you would like the coherence message to be part of your projects domain
+  # change it to "default"
   @domain "coherence"
 
   ##################
@@ -75,5 +76,5 @@ defmodule IntercomStatsWeb.Coherence.Messages do
     do: dgettext(@domain, "You are using an invalid security token for this site! This security\n" <>
       "violation has been logged.\n")
   def mailer_required, do: dgettext(@domain, "Mailer configuration required!")
-  def account_is_inactive(), do: dgettext(@domain, "Account is inactive!")
+  def account_is_inactive, do: dgettext(@domain, "Account is inactive!")
 end

@@ -21,10 +21,12 @@ defmodule IntercomStats.Intercom.Tags do
   end
 
   defp insert_or_update_tag(id, changes) do
-    case Repo.get(Tag, id) do
-      nil -> %Tag{id: id}
-      tag -> tag
-    end
+    result = case Repo.get(Tag, id) do
+               nil -> %Tag{id: id}
+               tag -> tag
+             end
+
+    result
     |> Tag.changeset(changes)
     |> Repo.insert_or_update
   end

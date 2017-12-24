@@ -1,5 +1,6 @@
 defmodule IntercomStats.Intercom.Worker do
   use GenServer
+  alias Ecto.Changeset
   alias IntercomStats.Intercom.API
   alias IntercomStats.Intercom.{Tag, Conversation, IntercomConversation}
   alias IntercomStats.Repo
@@ -17,7 +18,7 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   def save_page_from_api(pid, page) do
-    GenServer.call(pid, {:page, page}, 60000000)
+    GenServer.call(pid, {:page, page}, 60_000_000)
   end
 
   def init(:ok) do
@@ -177,13 +178,13 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   defp is_response_type(%{"author" => %{"type" => type}, "body" => body}, types) do
-    cond do
-      type in types ->
-        case body do
-          nil -> :empty_response
-          _ -> :ok
-        end
-      true -> :not_found
+    if type in types do
+      case body do
+        nil -> :empty_response
+        _ -> :ok
+      end
+    else
+      :not_found
     end
   end
   defp is_response_type(%{}, _), do: :not_found
@@ -205,7 +206,10 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   defp retrieve_last_update() do
-    intercom_conversation = from(i in IntercomConversation, limit: 1, order_by: [desc: i.id]) |> Repo.one
+    intercom_conversation =
+      Repo.one(
+        from(i in IntercomConversation, limit: 1, order_by: [desc: i.id])
+      )
     case intercom_conversation do
       nil -> ~N[2000-01-01 00:00:00]
       _ -> intercom_conversation.last_update
@@ -221,8 +225,8 @@ defmodule IntercomStats.Intercom.Worker do
     attrs
     |> insert_or_update()
     |> Repo.preload(:tags)
-    |> Ecto.Changeset.change
-    |> Ecto.Changeset.put_assoc(:tags, attrs["tags"])
+    |> Changeset.change
+    |> Changeset.put_assoc(:tags, attrs["tags"])
     |> Repo.update!
 
     attrs
