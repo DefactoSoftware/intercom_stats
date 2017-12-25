@@ -13,7 +13,7 @@ defmodule IntercomStatsWeb.PageController do
 
   def get_from_api(conn, _params) do
     Intercom.Tags.save_from_api
-    Intercom.Conversations.save_from_api
+    Task.start(fn -> Intercom.Conversations.save_from_api end)
 
     conn
     |> assign(:model, model())

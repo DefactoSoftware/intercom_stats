@@ -95,6 +95,17 @@ defmodule IntercomStats.IntercomAPIAdapter do
                   "id" : "3"
                 },
                 "state": "closed"
+              },
+              {
+                "type": "conversation",
+                "id": "7",
+                "created_at" : 1500002000,
+                "updated_at" : 1500009000,
+                "user" : {
+                  "type": "user",
+                  "id" : "3"
+                },
+                "state": "closed"
               }
             ]
           }
@@ -414,6 +425,104 @@ defmodule IntercomStats.IntercomAPIAdapter do
                 }
               ],
               "total_count": 3
+            },
+            "state": "closed",
+            "tags":
+            {
+              "type": "tag.list",
+              "tags": [
+                  {
+                    "type": "tag",
+                    "id": "17513",
+                    "name": "bug"
+                  },
+                  {
+                    "type": "tag",
+                    "id": "17523",
+                    "name": "consultancy"
+                  }]
+            }
+          }
+          """
+        }
+      }
+      "/conversations/7" -> {:ok,
+        %{
+          status_code: 200,
+          body: """
+          {
+            "type": "conversation",
+            "id": "7",
+            "created_at": 1500002000,
+            "updated_at": 1500009000,
+            "conversation_message": {
+              "type": "conversation_message",
+              "id": "71",
+              "body": "<p> closed status </p>",
+              "author": {
+                "type": "user",
+                "id": "2"
+              }
+            },
+            "user": {
+              "type": "user",
+              "id": "2"
+            },
+            "conversation_parts":
+            {
+              "type": "conversation_part.list",
+              "conversation_parts":
+              [
+                {
+                  "type": "conversation_part",
+                  "id": "72",
+                  "part_type": "comment",
+                  "body": null,
+                  "created_at": 1500020001,
+                  "updated_at": 1500020002,
+                  "author": {
+                    "type": "user",
+                    "id": "2"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "73",
+                  "part_type": "comment",
+                  "body": "reply",
+                  "created_at": 1500020006,
+                  "updated_at": 1500020007,
+                  "author": {
+                    "type": "user",
+                    "id": "2"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "74",
+                  "part_type": "comment",
+                  "body": "user reply",
+                  "created_at": 1500030000,
+                  "updated_at": 1500030001,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "75",
+                  "part_type": "close",
+                  "body": "admin reply",
+                  "created_at": 1500030008,
+                  "updated_at": 1500030009,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                }
+              ],
+              "total_count": 4
             },
             "state": "closed",
             "tags":
