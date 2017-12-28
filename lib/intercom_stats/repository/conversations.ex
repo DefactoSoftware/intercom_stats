@@ -31,6 +31,8 @@ defmodule IntercomStats.Repository.Conversations do
             join: c in "conversations", on: ct.conversation_id == c.id,
             where: t.id in ^tags_list,
             select: %Conversation{id: c.id}
+
+    query
     |> Repo.all()
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end

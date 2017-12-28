@@ -2,8 +2,8 @@ defmodule IntercomStatsWeb.PageController do
   use IntercomStatsWeb, :controller
   use Timex
 
-  alias Intercom.{Conversations, Tags}
-  alias IntercomStats.{Intercom, Repository}
+  alias IntercomStats.Intercom.{Conversations, Tags}
+  alias IntercomStats.Repository
 
   def index(conn, _params) do
     conn
