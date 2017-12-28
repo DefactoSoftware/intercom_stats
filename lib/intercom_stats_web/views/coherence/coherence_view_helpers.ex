@@ -29,7 +29,6 @@ defmodule IntercomStatsWeb.Coherence.ViewHelpers do
   * create links for the new session page `:new_session`
   * create links for your layout template `:layout`
 
-
   Defaults are provided based on the options configured for Coherence.
   However, the defaults can be overridden by passing the following options.
 

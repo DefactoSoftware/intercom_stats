@@ -16,7 +16,8 @@ defmodule IntercomStats.Application do
       supervisor(IntercomStats.Repo, []),
       # Start the endpoint when the application starts
       supervisor(IntercomStatsWeb.Endpoint, []),
-      # Start your own worker by calling: IntercomStats.Worker.start_link(arg1, arg2, arg3)
+      # Start your own worker by calling:
+      # IntercomStats.Worker.start_link(arg1, arg2, arg3)
       # worker(IntercomStats.Worker, [arg1, arg2, arg3]),
     ]
 
