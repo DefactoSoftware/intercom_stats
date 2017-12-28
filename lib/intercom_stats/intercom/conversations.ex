@@ -1,4 +1,9 @@
 defmodule IntercomStats.Intercom.Conversations do
+  @moduledoc """
+  Module containing functions to initiate the process of saving Intercom
+  API Conversations per page
+  """
+
   alias IntercomStats.Repo
   alias IntercomStats.Intercom.{Conversation, API, Worker, IntercomConversation, Tag}
 

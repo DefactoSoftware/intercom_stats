@@ -1,4 +1,7 @@
 defmodule IntercomStats.Intercom.Adapter do
+  @moduledoc """
+  """
+
   use HTTPoison.Base
 
   def process_url(url) do

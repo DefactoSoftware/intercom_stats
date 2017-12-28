@@ -1,4 +1,7 @@
 defmodule IntercomStatsWeb.Resolvers.Conversation do
+  @moduledoc """
+  """
+
   alias IntercomStats.Repository.Conversations
 
   def get_conversations(_, arg, _) do

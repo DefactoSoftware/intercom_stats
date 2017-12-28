@@ -1,4 +1,8 @@
 defmodule IntercomStats.Intercom.API do
+  @moduledoc """
+  Module containing functions to perform API requests and decode JSON
+  """
+
   @adapter Application.get_env(:intercom_stats, __MODULE__)[:adapter]
   @token Application.get_env(:intercom_stats, __MODULE__)[:token]
 

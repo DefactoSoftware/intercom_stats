@@ -1,4 +1,7 @@
 defmodule IntercomStatsWeb.Context do
+  @moduledoc """
+  """
+
   @behaviour Plug
   import Plug.Conn
   alias IntercomStats.Coherence.User

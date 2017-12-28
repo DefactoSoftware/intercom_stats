@@ -1,4 +1,6 @@
 defmodule IntercomStats.Coherence.Schemas do
+  @moduledoc"""
+  """
 
   use Coherence.Config
 

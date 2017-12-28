@@ -1,4 +1,9 @@
 defmodule IntercomStats.Intercom.Worker do
+  @moduledoc """
+  This module contains all functions required to process requested
+  conversations from the Intercom API using the GenServer module
+  """
+
   use GenServer
   alias Ecto.Changeset
   alias IntercomStats.Intercom.API

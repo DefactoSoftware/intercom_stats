@@ -1,4 +1,9 @@
 defmodule IntercomStats.Intercom.Tags do
+  @moduledoc """
+  Module containing functions to retrieve and save tags using the
+  Intercom API
+  """
+
   alias IntercomStats.Intercom.API
   alias IntercomStats.Repo
   alias IntercomStats.Intercom.Tag

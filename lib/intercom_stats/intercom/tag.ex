@@ -1,4 +1,8 @@
 defmodule IntercomStats.Intercom.Tag do
+  @moduledoc """
+  Schema representing an Intercom Tag
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias IntercomStats.Intercom.Tag

@@ -1,4 +1,6 @@
 defmodule IntercomStatsWeb.Schema do
+  @moduledoc"""
+  """
   use Absinthe.Schema
   use Absinthe.Ecto, repo: IntercomStats.Repo
   import Ecto.Query
