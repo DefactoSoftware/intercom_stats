@@ -12,7 +12,7 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     Conversations.save_from_api
 
     result = Repo.all(Conversation)
-    assert Enum.count(result) == 4
+    assert Enum.count(result) == 5
   end
 
   test "correct values are stored for conversation/3" do
@@ -75,7 +75,7 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     Tags.save_from_api
     Conversations.save_from_api
 
-    {:ok, updated_conversation} = 
+    {:ok, updated_conversation} =
       Repo.get(Conversation, "3")
       |> Ecto.Changeset.change(%{closing_time: 2000})
       |> Repo.update()
@@ -114,6 +114,24 @@ defmodule IntercomStats.Intercom.ConversationsTest do
     assert conversation.average_response_time == 9994
     assert conversation.total_response_time == 9994
     assert conversation.closed_timestamp == 1500030008
+    assert conversation.open_timestamp == 1500002000
+  end
+
+  test "correct values are stored for conversation/8" do
+    insert :intercom_conversation
+
+    Tags.save_from_api
+    Conversations.save_from_api
+
+    conversation = Repo.get(Conversation, "8")
+
+    assert conversation.id == "8"
+    assert conversation.company_name == "company_name_2"
+    assert conversation.closing_time == 28009
+    assert conversation.time_to_first_response == 18002
+    assert conversation.average_response_time == 9005
+    assert conversation.total_response_time == 18010
+    assert conversation.closed_timestamp == 1500030009
     assert conversation.open_timestamp == 1500002000
   end
 end

@@ -160,14 +160,16 @@ defmodule IntercomStats.Intercom.Worker do
   defp calculate_response_times(
       %{"created_at" => created_at,
         "conversation_message" => %{"author" => author, "body" => body},
-        "conversation_parts" => %{"conversation_parts" => parts}}) do
+        "conversation_parts" => %{"conversation_parts" => unfiltered_parts}}) do
 
+    parts = Enum.reject(unfiltered_parts,
+                        fn part -> part["part_type"] == "note" end)
     {response_times, _} = Enum.flat_map_reduce(
                             [%{"created_at" => created_at, "author" => author,
                                "body" => body} | parts],
                             %{}, fn(i, acc) ->
-    with :ok <- is_response_type(i, ["admin", "bot"]),
-         :ok <- is_response_type(acc, ["user", "lead"]) do
+      with :ok <- is_response_type(i, ["admin", "bot"]),
+           :ok <- is_response_type(acc, ["user", "lead"]) do
         {[calculate_response_time(i, acc)], i}
       else
         :empty_response -> {[], acc}
