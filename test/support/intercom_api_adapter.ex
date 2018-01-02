@@ -117,6 +117,17 @@ defmodule IntercomStats.IntercomAPIAdapter do
                   "id" : "2"
                 },
                 "state": "closed"
+              },
+              {
+                "type": "conversation",
+                "id": "9",
+                "created_at" : 1500002000,
+                "updated_at" : 1500009000,
+                "user" : {
+                  "type": "user",
+                  "id" : "2"
+                },
+                "state": "closed"
               }
             ]
           }
@@ -680,6 +691,128 @@ defmodule IntercomStats.IntercomAPIAdapter do
                 }
               ],
               "total_count": 8
+            },
+            "state": "closed",
+            "tags":
+            {
+              "type": "tag.list",
+              "tags": [
+                  {
+                    "type": "tag",
+                    "id": "17513",
+                    "name": "bug"
+                  },
+                  {
+                    "type": "tag",
+                    "id": "17523",
+                    "name": "consultancy"
+                  }]
+            }
+          }
+          """
+        }
+      }
+      "/conversations/9" -> {:ok,
+        %{
+          status_code: 200,
+          body: """
+          {
+            "type": "conversation",
+            "id": "9",
+            "created_at": 1500002000,
+            "updated_at": 1500009000,
+            "conversation_message": {
+              "type": "conversation_message",
+              "id": "91",
+              "body": "<p> closed status </p>",
+              "author": {
+                "type": "user",
+                "id": "2"
+              }
+            },
+            "user": {
+              "type": "user",
+              "id": "2"
+            },
+            "conversation_parts":
+            {
+              "type": "conversation_part.list",
+              "conversation_parts":
+              [
+                {
+                  "type": "conversation_part",
+                  "id": "92",
+                  "part_type": "comment",
+                  "body": null,
+                  "created_at": 1500020001,
+                  "updated_at": 1500020002,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "94",
+                  "part_type": "snoozed",
+                  "body": null,
+                  "created_at": 1500020002,
+                  "updated_at": 1500020002,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "93",
+                  "part_type": "comment",
+                  "body": "reply",
+                  "created_at": 1500020006,
+                  "updated_at": 1500020007,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "94",
+                  "part_type": "snoozed",
+                  "body": null,
+                  "created_at": 1500020008,
+                  "updated_at": 1500020008,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "95",
+                  "part_type": "comment",
+                  "body": "user reply",
+                  "created_at": 1500030000,
+                  "updated_at": 1500030001,
+                  "author": {
+                    "type": "user",
+                    "id": "2"
+                  }
+                },
+                {
+                  "type": "conversation_part",
+                  "id": "96",
+                  "part_type": "close",
+                  "body": "admin reply",
+                  "created_at": 1500030008,
+                  "updated_at": 1500030009,
+                  "author": {
+                    "type": "admin",
+                    "id": "100"
+                  }
+                }
+              ],
+              "total_count": 5
             },
             "state": "closed",
             "tags":
