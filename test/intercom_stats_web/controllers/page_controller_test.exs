@@ -8,11 +8,6 @@ defmodule IntercomStatsWeb.PageControllerTest do
       conn = get conn, "/"
       assert html_response(conn, 302)
     end
-
-    test "GET /get_from_api", %{conn: conn} do
-      conn = get conn, "/get_from_api"
-      assert html_response(conn, 302)
-    end
   end
 
   describe "Route to pages when logged in" do
@@ -26,12 +21,6 @@ defmodule IntercomStatsWeb.PageControllerTest do
     test "GET /", %{conn: conn} do
       insert :conversation_support
       conn = get(conn, "/")
-      assert html_response(conn, 200) =~ gettext("Intercom gegevens")
-    end
-
-    test "GET /get_from_api", %{conn: conn} do
-      insert :intercom_conversation
-      conn = get(conn, "/get_from_api")
       assert html_response(conn, 200) =~ gettext("Intercom gegevens")
     end
 

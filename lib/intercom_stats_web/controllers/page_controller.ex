@@ -11,15 +11,6 @@ defmodule IntercomStatsWeb.PageController do
     |> render("index.html")
   end
 
-  def get_from_api(conn, _params) do
-    Tags.save_from_api
-    Task.start(fn -> Conversations.save_from_api end)
-
-    conn
-    |> assign(:model, model())
-    |> render("index.html")
-  end
-
   def search(conn,
       %{"search" => %{"from_date" => from_date, "to_date" => to_date}}) do
     conn
