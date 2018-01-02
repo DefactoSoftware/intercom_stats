@@ -1,4 +1,9 @@
 defmodule IntercomStats.Intercom.IntercomConversation do
+  @moduledoc """
+  Schema representing the timestamp of the last moment conversation
+  data was retrieved from the Intercom API
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias IntercomStats.Intercom.IntercomConversation

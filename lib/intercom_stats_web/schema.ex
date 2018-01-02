@@ -1,33 +1,36 @@
 defmodule IntercomStatsWeb.Schema do
+  @moduledoc"""
+  """
   use Absinthe.Schema
   use Absinthe.Ecto, repo: IntercomStats.Repo
-
   import Ecto.Query
 
+  alias Absinthe.Resolution
   alias IntercomStatsWeb.Resolvers
+  alias Resolvers.{Conversation, Tag, User}
 
   query do
     @desc "Get all tags"
     field :tags, list_of(:tag) do
       arg :name, :string
-      resolve authorize(&Resolvers.Tag.get_tags/3)
+      resolve authorize(&Tag.get_tags/3)
     end
 
     @desc "Get all conversations"
     field :conversations, list_of(:conversation) do
       arg :company_name, :string
-      resolve authorize(&Resolvers.Conversation.get_conversations/3)
+      resolve authorize(&Conversation.get_conversations/3)
     end
 
     @desc "Get an App User by ID"
     field :user, type: :user do
       arg :id, non_null(:id)
-      resolve authorize(&Resolvers.User.find/2)
+      resolve authorize(&User.find/2)
     end
 
     @desc "Get current App User"
     field :current_user, type: :user do
-      resolve authorize(&Resolvers.User.current/2)
+      resolve authorize(&User.current/2)
     end
   end
 
@@ -61,7 +64,7 @@ defmodule IntercomStatsWeb.Schema do
     fn (source, args, %{context: %{current_user: user} = info}) ->
       case user do
         nil -> {:error, :unauthorized}
-        _ -> Absinthe.Resolution.call(fun, source, args, info)
+        _ -> Resolution.call(fun, source, args, info)
       end
     end
   end

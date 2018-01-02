@@ -1,4 +1,8 @@
 defmodule IntercomStats.Repository.Conversations do
+  @moduledoc """
+  This module provides functions to retrieve persisted conversation information
+  from the database
+  """
   use Timex
 
   import Ecto.Query
@@ -14,9 +18,11 @@ defmodule IntercomStats.Repository.Conversations do
         {:company_name, company_name}, query ->
           from c in query, where: ilike(c.company_name, ^"%#{company_name}%")
         {:from_date, from_date}, query ->
-          from c in query, where: c.open_timestamp >= ^string_date_to_unix(from_date)
+          from c in query, where: c.open_timestamp >=
+            ^string_date_to_unix(from_date)
         {:to_date, to_date}, query ->
-          from c in query, where: c.closed_timestamp <= ^string_date_to_unix(to_date)
+          from c in query, where: c.closed_timestamp <=
+            ^string_date_to_unix(to_date)
       end)
     |> Repo.all
   end
@@ -27,12 +33,15 @@ defmodule IntercomStats.Repository.Conversations do
             join: c in "conversations", on: ct.conversation_id == c.id,
             where: t.id in ^tags_list,
             select: %Conversation{id: c.id}
-    Repo.all(query)
+
+    query
+    |> Repo.all()
     |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
   def conversation_averages_by_company(filter \\ %{}) do
-    list_all_conversations(filter)
+    filter
+    |> list_all_conversations()
     |> Enum.group_by(&(&1.company_name))
     |> Enum.map(fn {key, value} ->
       %{
