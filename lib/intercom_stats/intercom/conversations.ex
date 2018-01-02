@@ -1,8 +1,19 @@
 defmodule IntercomStats.Intercom.Conversations do
-  alias IntercomStats.Repo
-  alias IntercomStats.Intercom.{Conversation, API, Worker, IntercomConversation, Tag}
+  @moduledoc """
+  Module containing functions to initiate the process of saving Intercom
+  API Conversations per page
+  """
 
-  def save_from_api() do
+  alias IntercomStats.Repo
+  alias IntercomStats.Intercom.{
+    API,
+    Conversation,
+    IntercomConversation,
+    Tag,
+    Worker
+  }
+
+  def save_from_api do
     :ets.new(:tags_list, [:named_table])
     :ets.insert(:tags_list, {"tags", Repo.all(Tag)})
 
@@ -15,7 +26,6 @@ defmodule IntercomStats.Intercom.Conversations do
     %{"pages" => %{"total_pages" => total_pages}} = API.decode_json(body)
     save_page_api(pid, :init, total_pages)
 
-    #The statement to update the last_update should be moved elsewhere eventually
     Repo.insert %IntercomConversation{last_update: DateTime.utc_now}
     :ets.delete(:tags_list)
   end
@@ -23,10 +33,12 @@ defmodule IntercomStats.Intercom.Conversations do
   defp save_page_api(pid, state, max_pages) when state == :init do
     {page, state}  = Worker.save_page_from_api(pid, 1)
 
-    cond do
-      page == max_pages -> Worker.stop(pid)
-      true -> save_page_api(pid, state, page + 1, max_pages)
+    if page == max_pages do
+      Worker.stop(pid)
+    else
+      save_page_api(pid, state, page + 1, max_pages)
     end
+
     state
   end
 

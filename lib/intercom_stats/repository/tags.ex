@@ -1,4 +1,8 @@
 defmodule IntercomStats.Repository.Tags do
+  @moduledoc """
+  Module containing fucntions to retrieve persisted tags from the database
+  """
+
   import Ecto.Query
 
   alias IntercomStats.Intercom.Tag

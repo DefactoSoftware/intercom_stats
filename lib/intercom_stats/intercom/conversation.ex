@@ -1,4 +1,9 @@
 defmodule IntercomStats.Intercom.Conversation do
+  @moduledoc """
+  Schema representing determined statistics of conversations retrieved
+  from the Intercom API
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias IntercomStats.Intercom.{Tag, Conversation}

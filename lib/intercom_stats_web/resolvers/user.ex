@@ -1,4 +1,7 @@
 defmodule IntercomStatsWeb.Resolvers.User do
+  @moduledoc """
+  """
+
   alias IntercomStats.Coherence.User
   alias IntercomStats.Repo
 
