@@ -94,6 +94,8 @@ defmodule IntercomStats.Intercom.Worker do
     conversation = request_conversation(item)
     response_times = calculate_response_times(conversation)
     closed_timestamp = determine_closed_timestamp(conversation)
+    snooze_time = determine_snooze_time(conversation)
+
     {total_response_time, average_response_time} =
       average_response_time(response_times)
 
@@ -106,7 +108,9 @@ defmodule IntercomStats.Intercom.Worker do
       item_with_tags
       |> Map.put("time_to_first_response", first_response_time(response_times))
       |> Map.put("closing_time",
-                 calculate_closing_time(conversation, closed_timestamp))
+                 calculate_closing_time(conversation,
+                                        closed_timestamp,
+                                        snooze_time))
       |> Map.put("average_response_time", average_response_time)
       |> Map.put("total_response_time", total_response_time)
       |> Map.put("closed_timestamp", closed_timestamp)
@@ -153,8 +157,27 @@ defmodule IntercomStats.Intercom.Worker do
     end
   end
 
-  defp calculate_closing_time(%{"created_at" => created}, close_timestamp) do
-    close_timestamp - created
+  defp calculate_closing_time(
+      %{"created_at" => created}, close_timestamp, snooze_time) do
+    (close_timestamp - created) - snooze_time
+  end
+
+  defp determine_snooze_time(
+      %{"conversation_parts" => %{"conversation_parts" => parts}}) do
+    {result, _} =
+      Enum.flat_map_reduce(parts, %{}, fn(i, acc) ->
+        with "snoozed" <- acc["part_type"] do
+          {[calculate_snooze_time(i, acc)] , i}
+        else
+          _ -> {[], i}
+        end
+      end)
+
+    Enum.sum(result)
+  end
+
+  defp calculate_snooze_time(part, snoozed_part) do
+    part["created_at"] - snoozed_part["created_at"]
   end
 
   defp calculate_response_times(
@@ -163,7 +186,9 @@ defmodule IntercomStats.Intercom.Worker do
         "conversation_parts" => %{"conversation_parts" => unfiltered_parts}}) do
 
     parts = Enum.reject(unfiltered_parts,
-                        fn part -> part["part_type"] == "note" end)
+                        fn part ->
+                          part["part_type"] in ["note", "snoozed"]
+                        end)
     {response_times, _} = Enum.flat_map_reduce(
                             [%{"created_at" => created_at, "author" => author,
                                "body" => body} | parts],
