@@ -22,10 +22,6 @@
         <%= submit gettext("Search"), class: "btn btn-primary" %>
       </div>
     <% end %>
-
-    <%= link gettext("Importeer Intercom gesprekken"),
-        to: page_path(Endpoint, :get_from_api),
-        class: "btn btn-sm btn-primary align-self-end mb-2 ml-auto" %>
   </div>
 
   <div class="content mt-3 mb-3">
