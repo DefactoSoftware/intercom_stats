@@ -77,7 +77,8 @@ defmodule IntercomStats.Intercom.Worker do
       _ -> {:reply, {page, :done}, page}
     end
   rescue
-    error -> error
+    exception ->
+      Sentry.capture_exception(exception, [stacktrace: System.stacktrace()])
   end
 
   defp get_conversation_properties(item) do
@@ -114,7 +115,8 @@ defmodule IntercomStats.Intercom.Worker do
       |> insert_conversation
     end
   rescue
-    error -> error
+    exception -> exception
+      Sentry.capture_exception(exception, [stacktrace: System.stacktrace()])
   end
 
   defp request_conversation(%{"id" => id}) do
