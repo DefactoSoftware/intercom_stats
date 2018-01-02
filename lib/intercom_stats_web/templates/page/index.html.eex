@@ -1,15 +1,8 @@
-<div class="container">
-  <h2 class="w-100">
-    <%= gettext("Intercom gegevens") %>
-    <%= link gettext("Importeer Intercom gesprekken"),
-        to: page_path(Endpoint, :get_from_api),
-        class: "btn btn-sm btn-primary float-right" %>
-  </h2>
 
-  <div>
-    <%= form_for @conn, page_path(@conn, :search), [as: :search], fn f -> %>
-      <label>
-        <%= gettext("Van") %>
+  <div class="w-100 d-flex">
+    <%= form_for @conn, page_path(@conn, :search), [as: :search, class: "d-flex align-items-md-center"], fn f -> %>
+      <label class="align-self-end mr-2">
+        <div><%= gettext("Van") %></div>
         <%= text_input f,
           :from_date,
           type: :date,
@@ -17,34 +10,36 @@
           value: @model.search.from_date,
           class: "form-control" %>
       </label>
-      <label>
-        <%= gettext("tot") %>
+      <label class="align-self-end mr-2">
+        <div><%= gettext("tot") %></div>
         <%= text_input f,
           :to_date,
           type: :date,
           value: @model.search.to_date,
           class: "form-control" %>
       </label>
-      <%= submit gettext("Search"), class: "btn btn-primary" %>
+      <div class="d-flex align-self-end mb-2">
+        <%= submit gettext("Search"), class: "btn btn-primary" %>
+      </div>
     <% end %>
+
+    <%= link gettext("Importeer Intercom gesprekken"),
+        to: page_path(Endpoint, :get_from_api),
+        class: "btn btn-sm btn-primary align-self-end mb-2 ml-auto" %>
   </div>
 
-  <div class="content">
+  <div class="content mt-3 mb-3">
     <div class="card">
+      <div class="card-header"><%= gettext("Gemiddelde eerste reactietijd") %></div>
       <div class="card-body">
-        <h4 class="card-title"><%= gettext("Gemiddelde eerste reactietijd") %></h4>
-        <h6 class="card-subtitle mb-2 text-muted">
-          <%= @model.average_response_time %>
-        </h6>
+        <h5 class="card-title"><%= @model.average_response_time %></h5>
       </div>
     </div>
 
     <div class="card">
+      <div class="card-header"><%= gettext("Gemiddelde sluittijd") %></div>
       <div class="card-body">
-        <h4 class="card-title"><%= gettext("Gemiddelde sluittijd") %></h4>
-        <h6 class="card-subtitle mb-2 text-muted">
-          <%= @model.average_closing_time %>
-        </h6>
+        <h5 class="card-title"><%= @model.average_closing_time %></h5>
       </div>
     </div>
   </div>
@@ -67,4 +62,3 @@
       <% end %>
     </tbody>
   </table>
-</div>

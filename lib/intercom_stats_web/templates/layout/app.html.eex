@@ -13,39 +13,43 @@
   </head>
 
   <body>
-    <div class="container">
-      <header class="header">
-        <nav class="navbar navbar-expand-md navbar-light">
-          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <a class="navbar-brand" href="/">Defacto intercom statistics</a>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <%= if Coherence.current_user_name(@conn) do %>
-                <li class="nav-item">
-                  <%= link "Check api",
-                      to: "/graphiql",
-                      class: "nav-link" %>
-                </li>
-                <li class="nav-item"><%= link("Logout", to: "/sessions", method: :delete, class: "nav-link") %>
-                </li>
-              <% else %>
-                <li class="nav-item"><%= link("Login", to: "/sessions/new", class: "nav-link") %></li>
-              <% end %>
-            </ul>
-          </div>
-        </nav>
-      </header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <header class="header">
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="/"><%= gettext("Intercom gegevens") %></a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ">
+                <%= if Coherence.current_user_name(@conn) do %>
+                  <li class="nav-item">
+                    <%= link "Check api",
+                        to: "/graphiql",
+                        class: "nav-link" %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link("Logout", to: "/sessions", method: :delete, class: "nav-link") %>
+                  </li>
+                <% else %>
+                  <li class="nav-item">
+                    <%= link("Login", to: "/sessions/new", class: "nav-link") %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </nav>
+        </header>
+      </div>
+    </nav>
 
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
-
-    </div> <!-- /container -->
+    <main role="main" class="container">
+      <%= render @view_module, @view_template, assigns %>
+    </main>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
