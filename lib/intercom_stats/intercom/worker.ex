@@ -7,7 +7,7 @@ defmodule IntercomStats.Intercom.Worker do
   use GenServer
   alias Ecto.Changeset
   alias IntercomStats.Intercom.API
-  alias IntercomStats.Intercom.{Tag, Conversation, IntercomConversation}
+  alias IntercomStats.Intercom.{Conversation, IntercomConversation}
   alias IntercomStats.Repo
 
   import Ecto.Query

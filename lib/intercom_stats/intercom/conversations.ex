@@ -7,7 +7,6 @@ defmodule IntercomStats.Intercom.Conversations do
   alias IntercomStats.Repo
   alias IntercomStats.Intercom.{
     API,
-    Conversation,
     IntercomConversation,
     Tag,
     Worker
@@ -47,7 +46,7 @@ defmodule IntercomStats.Intercom.Conversations do
     save_page_api(pid, state, page + 1, max_pages)
   end
 
-  defp save_page_api(pid, state, page, max_pages) when state == :done do
+  defp save_page_api(pid, state, _, _) when state == :done do
     Worker.stop(pid)
   end
 end

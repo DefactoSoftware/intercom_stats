@@ -3,7 +3,6 @@ defmodule IntercomStatsWeb.Schema do
   """
   use Absinthe.Schema
   use Absinthe.Ecto, repo: IntercomStats.Repo
-  import Ecto.Query
 
   alias Absinthe.Resolution
   alias IntercomStatsWeb.Resolvers
