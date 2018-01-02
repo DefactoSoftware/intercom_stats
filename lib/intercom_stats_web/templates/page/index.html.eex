@@ -30,16 +30,16 @@
 
   <div class="content mt-3 mb-3">
     <div class="card">
-      <h3 class="card-header"><%= gettext("Gemiddelde eerste reactietijd") %></h3>
+      <div class="card-header"><%= gettext("Gemiddelde eerste reactietijd") %></div>
       <div class="card-body">
-        <h4 class="card-title"><%= @model.average_response_time %></h4>
+        <h5 class="card-title"><%= @model.average_response_time %></h5>
       </div>
     </div>
 
     <div class="card">
-      <h3 class="card-header"><%= gettext("Gemiddelde sluittijd") %></h3>
+      <div class="card-header"><%= gettext("Gemiddelde sluittijd") %></div>
       <div class="card-body">
-        <h4 class="card-title"><%= @model.average_closing_time %></h4>
+        <h5 class="card-title"><%= @model.average_closing_time %></h5>
       </div>
     </div>
   </div>
