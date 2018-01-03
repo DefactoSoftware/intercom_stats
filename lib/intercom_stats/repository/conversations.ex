@@ -56,13 +56,16 @@ defmodule IntercomStats.Repository.Conversations do
   end
 
   def get_average(key, conversations) do
-    conversations
-    |> Enum.map(fn(conversation) ->
-        Map.get(conversation, key)
-      end)
-    |> Enum.filter(fn(time) -> time != nil end)
+    filtered_conversations =
+      conversations
+      |> Enum.map(fn(conversation) ->
+          Map.get(conversation, key)
+        end)
+      |> Enum.filter(fn(time) -> time != nil end)
+
+    filtered_conversations
     |> Enum.sum()
-    |> calculate_average(conversations)
+    |> calculate_average(filtered_conversations)
     |> to_readable_time()
   end
 
