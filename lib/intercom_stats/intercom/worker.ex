@@ -66,6 +66,7 @@ defmodule IntercomStats.Intercom.Worker do
            [get_conversation_properties(item) | acc] end)
       |> Enum.reduce([], fn (item, acc) ->
            [get_conversation_specific_properties(item) | acc] end)
+      |> Enum.reject(fn conversation -> conversation == nil end)
 
     case List.last(result) do
       %{"updated_at" => last_update_in_list} ->

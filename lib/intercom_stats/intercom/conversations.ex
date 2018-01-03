@@ -30,7 +30,7 @@ defmodule IntercomStats.Intercom.Conversations do
   end
 
   defp save_page_api(pid, state, max_pages) when state == :init do
-    {page, state}  = Worker.save_page_from_api(pid, 1)
+    {page, state} = Worker.save_page_from_api(pid, 1)
 
     if page == max_pages do
       Worker.stop(pid)
