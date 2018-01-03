@@ -2,8 +2,7 @@ defmodule IntercomStatsWeb.PageController do
   use IntercomStatsWeb, :controller
   use Timex
 
-  alias IntercomStats.Intercom.{Conversations, Tags}
-  alias IntercomStats.Repository
+  alias IntercomStats.Repository.Conversations
 
   def index(conn, _params) do
     conn
@@ -24,17 +23,16 @@ defmodule IntercomStatsWeb.PageController do
       from_date: from_date,
       to_date: to_date
     }
-    conversations = Repository.Conversations.list_all_conversations(filter)
+    conversations = Conversations.list_all_conversations(filter)
 
     %{
       search: filter,
       average_response_time:
-        Repository.Conversations.get_average(:time_to_first_response,
-                                             conversations),
+        Conversations.get_average(:time_to_first_response, conversations),
       average_closing_time:
-        Repository.Conversations.get_average(:closing_time, conversations),
+        Conversations.get_average(:closing_time, conversations),
       averages_per_company:
-        Repository.Conversations.conversation_averages_by_company(filter)
+        Conversations.conversation_averages_by_company(filter)
     }
   end
 end

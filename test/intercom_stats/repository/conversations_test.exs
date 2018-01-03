@@ -58,12 +58,12 @@ defmodule IntercomStats.Repository.ConversationsTest do
 
     test "calculate_average returns the average time in seconds" do
       times = [20, 10, 30]
-      assert 20 == Conversations.calculate_average(Enum.sum(times), times)
+      assert 20 == Conversations.calculate_average(times)
     end
 
     test "calculate_average without conversations" do
       times = []
-      assert nil == Conversations.calculate_average(Enum.sum(times), times)
+      assert nil == Conversations.calculate_average(times)
     end
   end
 

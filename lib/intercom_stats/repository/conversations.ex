@@ -61,14 +61,13 @@ defmodule IntercomStats.Repository.Conversations do
         Map.get(conversation, key)
       end)
     |> Enum.filter(fn(time) -> time != nil end)
-    |> Enum.sum()
-    |> calculate_average(conversations)
+    |> calculate_average()
     |> to_readable_time()
   end
 
-  def calculate_average(_, []), do: nil
-  def calculate_average(total, list) do
-    round(total / Enum.count(list))
+  def calculate_average([]), do: nil
+  def calculate_average(list) do
+    round(Enum.sum(list) / Enum.count(list))
   end
 
   def string_date_to_unix(date) do
