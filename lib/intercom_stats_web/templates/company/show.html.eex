@@ -1,0 +1,1 @@
+<h2><%= @model.company_name %></h2>
