@@ -51,7 +51,7 @@
     <tbody>
       <%= for group <- @model.averages_per_company do %>
         <tr>
-          <th scope="row"><%= group.company_name %></th>
+          <th scope="row"><%= link(group.company_name, to: company_path(@conn, :show, group.company_name)) %></th>
           <td><%= group.average_first_response %></td>
           <td><%= group.average_closing_time %></td>
         </tr>
