@@ -4,10 +4,14 @@ defmodule IntercomStatsWeb.CompanyController do
   alias IntercomStats.Repository.Conversations
 
   def show(conn, %{"name" => name}) do
-    conversations = Conversations.list_all_conversations(%{company_name: name})
-
-    model = %{
+    bug_averages = Conversations.conversation_averages_by_tag_and_company(%{
+      tag: "bug",
       company_name: name
+    })
+    
+    model = %{
+      company_name: name,
+      bug_averages: bug_averages
     }
 
     conn
