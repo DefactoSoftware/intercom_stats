@@ -1,31 +1,38 @@
 <h2><%= @model.company_name %></h2>
 
-<h3>Bugs</h3>
-<table class="table">
-  <thead class="thead-light">
-    <tr>
-      <th scope="col"><%= gettext("Gemiddelde eerste reactietijd") %></th>
-      <th scope="col"><%= gettext("Gemiddelde sluittijd") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><%= @model.bug_averages.average_first_response %></td>
-      <td><%= @model.bug_averages.average_closing_time %></td>
-    </tr>
-  </tbody>
-</table>
+<p><%= gettext("In de periode van %{from_date} tot %{to_date}", from_date: @model.from_date, to_date: @model.to_date) %></p>
 
-<h3>Gebruikersondersteuning</h3>
 <table class="table">
   <thead class="thead-light">
     <tr>
+      <th scope="col">Tag</th>
       <th scope="col"><%= gettext("Gemiddelde eerste reactietijd") %></th>
       <th scope="col"><%= gettext("Gemiddelde sluittijd") %></th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td><%= gettext("Bug prio 1") %></td>
+      <td><%= @model.prio1_averages.average_first_response %></td>
+      <td><%= @model.prio1_averages.average_closing_time %></td>
+    </tr>
+    <tr>
+      <td><%= gettext("Bug prio 2") %></td>
+      <td><%= @model.prio2_averages.average_first_response %></td>
+      <td><%= @model.prio2_averages.average_closing_time %></td>
+    </tr>
+    <tr>
+      <td><%= gettext("Bug prio 3") %></td>
+      <td><%= @model.prio3_averages.average_first_response %></td>
+      <td><%= @model.prio3_averages.average_closing_time %></td>
+    </tr>
+    <tr>
+      <td><%= gettext("Bug prio 4") %></td>
+      <td><%= @model.prio4_averages.average_first_response %></td>
+      <td><%= @model.prio4_averages.average_closing_time %></td>
+    </tr>
+    <tr>
+      <td><%= gettext("Gebruikersondersteuning") %></td>
       <td><%= @model.support_averages.average_first_response %></td>
       <td><%= @model.support_averages.average_closing_time %></td>
     </tr>
