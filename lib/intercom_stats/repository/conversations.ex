@@ -23,36 +23,35 @@ defmodule IntercomStats.Repository.Conversations do
         {:to_date, to_date}, query ->
           from c in query, where: c.closed_timestamp <=
             ^string_date_to_unix(to_date)
+        {:tag, tag}, query ->
+          join(query, :inner, [c], t in assoc(c, :tags))
+          |> where([c,t], t.name == ^tag)
       end)
     |> Repo.all
-  end
-
-  def list_conversations_by_tags(:or, tags_list) do
-    query = from t in "tags",
-            join: ct in "conversations_tags", on: t.id == ct.tag_id,
-            join: c in "conversations", on: ct.conversation_id == c.id,
-            where: t.id in ^tags_list,
-            select: %Conversation{id: c.id}
-
-    query
-    |> Repo.all()
-    |> Enum.uniq_by(fn %{id: id} -> id end)
   end
 
   def conversation_averages_by_company(filter \\ %{}) do
     filter
     |> list_all_conversations()
     |> Enum.group_by(&(&1.company_name))
-    |> Enum.map(fn {key, value} ->
-      %{
-        company_name: key,
-        average_first_response: get_average(:time_to_first_response, value),
-        average_closing_time: get_average(:closing_time, value)
-      }
-    end)
+    |> Enum.map(fn {key, value} -> map_averages(value, key) end)
     |> Enum.sort(fn(%{company_name: a}, %{company_name: b}) ->
       String.capitalize(a) <= String.capitalize(b)
     end)
+  end
+
+  def conversation_averages_by_tag_and_company(filter) do
+    filter
+    |> list_all_conversations()
+    |> map_averages(filter.company_name)
+  end
+
+  defp map_averages(list, name) do
+    %{
+      company_name: name,
+      average_first_response: get_average(:time_to_first_response, list),
+      average_closing_time: get_average(:closing_time, list)
+    }
   end
 
   def get_average(key, conversations) do

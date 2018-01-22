@@ -114,4 +114,32 @@ defmodule IntercomStats.Repository.ConversationsTest do
       assert [%{average_first_response: "5 seconds"}] = conversations
     end
   end
+
+  test "conversations per tag and company" do
+    filter = %{
+      tag: "bug",
+      company_name: "CompanyX"
+    }
+    conversations = Conversations.list_all_conversations(filter)
+
+    assert Enum.count(conversations) == 2
+  end
+
+  test "averages per tag and company" do
+    filter = %{
+      tag: "bug",
+      company_name: "CompanyX",
+      from_date: from_date(-13),
+      to_date: Timex.today |> Date.to_string
+    }
+    conversations = Conversations.conversation_averages_by_tag_and_company(filter)
+
+    assert %{average_first_response: "5 seconds"} = conversations
+  end
+
+  defp from_date(days) do
+    Timex.today
+    |> Timex.shift(days: days)
+    |> Date.to_string
+  end
 end
