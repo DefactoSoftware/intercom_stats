@@ -24,8 +24,9 @@ defmodule IntercomStats.Repository.Conversations do
           from c in query, where: c.closed_timestamp <=
             ^string_date_to_unix(to_date)
         {:tag, tag}, query ->
-          join(query, :inner, [c], t in assoc(c, :tags))
-          |> where([c,t], t.name == ^tag)
+          query
+          |> join(:inner, [c], t in assoc(c, :tags))
+          |> where([c, t], t.name == ^tag)
       end)
     |> Repo.all
   end
