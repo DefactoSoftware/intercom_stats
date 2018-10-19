@@ -9,21 +9,21 @@ defmodule IntercomStats.Repository.ConversationsTest do
   setup do
     insert(
       :conversation,
-      company_name: "STMR",
+      company_name: "CompanyX",
       time_to_first_response: 5,
       closing_time: 120,
       open_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -10)),
       closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -8)))
     insert(
       :conversation,
-      company_name: "STMR",
+      company_name: "CompanyX",
       time_to_first_response: 20,
       closing_time: 180,
       open_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -15)),
       closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -10)))
     insert(
       :conversation,
-      company_name: "STMR",
+      company_name: "CompanyX",
       time_to_first_response: 35,
       closing_time: 60,
       open_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -18)),
@@ -34,12 +34,12 @@ defmodule IntercomStats.Repository.ConversationsTest do
 
   describe "conversation_averages_by_company" do
     test "returns the first response average" do
-      assert [%{company_name: "STMR", average_first_response: "20 seconds" }] =
+      assert [%{company_name: "CompanyX", average_first_response: "20 seconds" }] =
         Conversations.conversation_averages_by_company()
     end
 
     test "returns closing time average" do
-      assert [%{company_name: "STMR", average_closing_time: "2 minutes" }] =
+      assert [%{company_name: "CompanyX", average_closing_time: "2 minutes" }] =
         Conversations.conversation_averages_by_company()
     end
   end
