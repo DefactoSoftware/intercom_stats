@@ -15,7 +15,7 @@ defmodule IntercomStats.Application do
       # Start the Ecto repository
       supervisor(IntercomStats.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(IntercomStatsWeb.Endpoint, []),
+      supervisor(IntercomStatsWeb.Endpoint, [])
       # Start your own worker by calling:
       # IntercomStats.Worker.start_link(arg1, arg2, arg3)
       # worker(IntercomStats.Worker, [arg1, arg2, arg3]),
@@ -24,6 +24,7 @@ defmodule IntercomStats.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: IntercomStats.Supervisor]
+    {:ok, _} = Logger.add_backend(Sentry.LoggerBackend)
     Supervisor.start_link(children, opts)
   end
 

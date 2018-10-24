@@ -5,7 +5,7 @@ defmodule IntercomStats.Mixfile do
     [
       app: :intercom_stats,
       version: "0.0.1",
-      elixir: "~> 1.4",
+      elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
@@ -52,7 +52,7 @@ defmodule IntercomStats.Mixfile do
       {:poison, "~> 3.0", override: true},
       {:postgrex, ">= 0.0.0"},
       {:quantum, ">= 2.1.0"},
-      {:sentry, "~> 6.0.0"},
+      {:sentry, "~> 7.0.0"},
       {:timex, "~> 3.0"}
     ]
   end
