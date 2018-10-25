@@ -49,7 +49,7 @@ defmodule IntercomStats.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:phoenix_pubsub, "~> 1.0"},
-      {:poison, "~> 3.0", override: true},
+      {:poison, "~> 4.0", override: true},
       {:postgrex, ">= 0.0.0"},
       {:quantum, ">= 2.1.0"},
       {:sentry, "~> 7.0.0"},
