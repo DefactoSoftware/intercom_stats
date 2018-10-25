@@ -42,7 +42,7 @@ defmodule IntercomStats.Mixfile do
       {:credo, "~> 0.8", only: [:dev, :test]},
       {:ex_machina, "~> 2.1", only: :test},
       {:gettext, "~> 0.11"},
-      {:httpoison, "~> 0.13"},
+      {:httpoison, "~> 1.4"},
       {:json, "~> 1.0"},
       {:phoenix, "~> 1.3.0"},
       {:phoenix_ecto, "~> 3.2"},
