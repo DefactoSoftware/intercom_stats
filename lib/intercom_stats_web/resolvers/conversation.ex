@@ -1,5 +1,6 @@
 defmodule IntercomStatsWeb.Resolvers.Conversation do
   @moduledoc """
+  Conversation resolver
   """
 
   alias IntercomStats.Repository.Conversations

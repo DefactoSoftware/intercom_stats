@@ -7,53 +7,54 @@ defmodule IntercomStats.Repository.ConversationsTest do
   alias IntercomStats.Repository.Conversations
 
   setup do
-    insert(
-      :conversation,
+    insert(:conversation,
       company_name: "CompanyX",
       time_to_first_response: 5,
       closing_time: 120,
-      open_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -10)),
-      closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -8)))
-    insert(
-      :conversation,
+      open_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -10)),
+      closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -8))
+    )
+
+    insert(:conversation,
       company_name: "CompanyX",
       time_to_first_response: 20,
       closing_time: 180,
-      open_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -15)),
-      closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -10)))
-    insert(
-      :conversation,
+      open_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -15)),
+      closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -10))
+    )
+
+    insert(:conversation,
       company_name: "CompanyX",
       time_to_first_response: 35,
       closing_time: 60,
-      open_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -18)),
-      closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now, days: -17)))
+      open_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -18)),
+      closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -17))
+    )
 
     :ok
   end
 
   describe "conversation_averages_by_company" do
     test "returns the first response average" do
-      assert [%{company_name: "CompanyX", average_first_response: "20 seconds" }] =
-        Conversations.conversation_averages_by_company()
+      assert [%{company_name: "CompanyX", average_first_response: "20 seconds"}] =
+               Conversations.conversation_averages_by_company()
     end
 
     test "returns closing time average" do
-      assert [%{company_name: "CompanyX", average_closing_time: "2 minutes" }] =
-        Conversations.conversation_averages_by_company()
+      assert [%{company_name: "CompanyX", average_closing_time: "2 minutes"}] =
+               Conversations.conversation_averages_by_company()
     end
   end
 
   describe "calculate average" do
     test "get_average returns a readable time" do
       conversations = Conversations.list_all_conversations()
-      assert "20 seconds" ==
-        Conversations.get_average(:time_to_first_response, conversations)
+      assert "20 seconds" == Conversations.get_average(:time_to_first_response, conversations)
     end
 
     test "get_average returns no conversations available" do
       assert "Er zijn geen gesprekken beschikbaar" ==
-        Conversations.get_average(:time_to_first_response, [])
+               Conversations.get_average(:time_to_first_response, [])
     end
 
     test "calculate_average returns the average time in seconds" do
@@ -70,28 +71,28 @@ defmodule IntercomStats.Repository.ConversationsTest do
   describe "date selection" do
     test "string_date_to_unix" do
       date =
-        Timex.today
+        Timex.today()
         |> Timex.shift(days: -13)
-        |> Date.to_string
+        |> Date.to_string()
 
       expectation =
-        Timex.today
+        Timex.today()
         |> Timex.shift(days: -13)
-        |> Timex.to_datetime
-        |> DateTime.to_unix
+        |> Timex.to_datetime()
+        |> DateTime.to_unix()
 
       assert expectation == Conversations.string_date_to_unix(date)
     end
 
     test "get all conversations between a selected date range" do
       from_date =
-        Timex.today
+        Timex.today()
         |> Timex.shift(days: -13)
-        |> Date.to_string
+        |> Date.to_string()
 
       date_range = %{
         from_date: from_date,
-        to_date: Timex.today |> Date.to_string
+        to_date: Timex.today() |> Date.to_string()
       }
 
       conversations = Conversations.list_all_conversations(date_range)
@@ -100,13 +101,13 @@ defmodule IntercomStats.Repository.ConversationsTest do
 
     test "conversations per company" do
       from_date =
-        Timex.today
+        Timex.today()
         |> Timex.shift(days: -13)
-        |> Date.to_string
+        |> Date.to_string()
 
       date_range = %{
         from_date: from_date,
-        to_date: Timex.today |> Date.to_string
+        to_date: Timex.today() |> Date.to_string()
       }
 
       conversations = Conversations.conversation_averages_by_company(date_range)

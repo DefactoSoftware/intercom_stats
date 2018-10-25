@@ -15,8 +15,10 @@ defmodule IntercomStatsWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
   alias IntercomStats.Coherence.User
   alias IntercomStats.Repo
+  alias Phoenix.ConnTest
 
   using do
     quote do
@@ -27,26 +29,35 @@ defmodule IntercomStatsWeb.ConnCase do
       # The default endpoint for testing
       @endpoint IntercomStatsWeb.Endpoint
 
-      @user_attrs %{name: "some name", email: "some@email.com", "password": "secret", "password_confirmation": "secret"}
+      @user_attrs %{
+        name: "some name",
+        email: "some@email.com",
+        password: "secret",
+        password_confirmation: "secret"
+      }
       def login(conn) do
         create_user()
         post(conn, session_path(conn, :create), %{session: @user_attrs})
       end
 
       defp create_user do
-        user = User.changeset(%User{}, @user_attrs)
-               |> Repo.insert!
+        user =
+          %User{}
+          |> User.changeset(@user_attrs)
+          |> Repo.insert!()
+
         {:ok, user: user}
       end
     end
   end
 
-
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(IntercomStats.Repo)
+    :ok = Sandbox.checkout(IntercomStats.Repo)
+
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(IntercomStats.Repo, {:shared, self()})
+      Sandbox.mode(IntercomStats.Repo, {:shared, self()})
     end
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+
+    {:ok, conn: ConnTest.build_conn()}
   end
 end

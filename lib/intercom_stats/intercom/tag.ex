@@ -4,14 +4,15 @@ defmodule IntercomStats.Intercom.Tag do
   """
 
   use Ecto.Schema
+
   import Ecto.Changeset
-  alias IntercomStats.Intercom.Tag
-  alias IntercomStats.Intercom.Conversation
+
+  alias IntercomStats.Intercom.{Conversation, Tag}
 
   @primary_key {:id, :string, []}
   schema "tags" do
-    field :name, :string
-    many_to_many :conversations, Conversation, join_through: "conversations_tags"
+    field(:name, :string)
+    many_to_many(:conversations, Conversation, join_through: "conversations_tags")
 
     timestamps()
   end
