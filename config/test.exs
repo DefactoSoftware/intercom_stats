@@ -18,5 +18,4 @@ config :intercom_stats, IntercomStats.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :intercom_stats, IntercomStats.Intercom.API,
-  adapter: IntercomStats.IntercomAPIAdapter
+config :intercom_stats, IntercomStats.Intercom.API, adapter: IntercomStats.IntercomAPIAdapter

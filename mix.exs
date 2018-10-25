@@ -5,7 +5,7 @@ defmodule IntercomStats.Mixfile do
     [
       app: :intercom_stats,
       version: "0.0.1",
-      elixir: "~> 1.4",
+      elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
@@ -38,7 +38,7 @@ defmodule IntercomStats.Mixfile do
       {:absinthe_phoenix, "~> 1.4.0-beta", override: true},
       {:absinthe_plug, "~> 1.4.0-beta", override: true},
       {:coherence, "~> 0.5"},
-      {:cowboy, "~> 1.0"},
+      {:plug_cowboy, "~> 1.0"},
       {:credo, "~> 0.8", only: [:dev, :test]},
       {:ex_machina, "~> 2.1", only: :test},
       {:gettext, "~> 0.11"},
@@ -52,7 +52,7 @@ defmodule IntercomStats.Mixfile do
       {:poison, "~> 3.0", override: true},
       {:postgrex, ">= 0.0.0"},
       {:quantum, ">= 2.1.0"},
-      {:sentry, "~> 6.0.0"},
+      {:sentry, "~> 7.0.0"},
       {:timex, "~> 3.0"}
     ]
   end
