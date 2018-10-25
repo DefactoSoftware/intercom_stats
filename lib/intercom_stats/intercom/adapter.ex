@@ -1,5 +1,6 @@
 defmodule IntercomStats.Intercom.Adapter do
   @moduledoc """
+  Adapter to connect to the Intercom api
   """
 
   use HTTPoison.Base
@@ -9,6 +10,6 @@ defmodule IntercomStats.Intercom.Adapter do
   end
 
   defp process_request_headers(headers) do
-    Enum.into(headers, [Accept: "application/json"])
+    Enum.into(headers, Accept: "application/json")
   end
 end

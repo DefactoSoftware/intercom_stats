@@ -1,5 +1,6 @@
 defmodule IntercomStatsWeb.Resolvers.Tag do
   @moduledoc """
+  Tag resolver
   """
 
   alias IntercomStats.Repository.Tags

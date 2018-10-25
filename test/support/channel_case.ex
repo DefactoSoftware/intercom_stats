@@ -15,6 +15,8 @@ defmodule IntercomStatsWeb.ChannelCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       # Import conveniences for testing with channels
@@ -25,13 +27,13 @@ defmodule IntercomStatsWeb.ChannelCase do
     end
   end
 
-
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(IntercomStats.Repo)
+    :ok = Sandbox.checkout(IntercomStats.Repo)
+
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(IntercomStats.Repo, {:shared, self()})
+      Sandbox.mode(IntercomStats.Repo, {:shared, self()})
     end
+
     :ok
   end
-
 end

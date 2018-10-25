@@ -1,4 +1,5 @@
 defmodule IntercomStats.TagFactory do
+  @moduledoc false
   defmacro __using__(_opts) do
     quote do
       def tag_factory do

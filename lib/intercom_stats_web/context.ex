@@ -1,5 +1,6 @@
 defmodule IntercomStatsWeb.Context do
   @moduledoc """
+  A plug to add current user to the context.
   """
 
   @behaviour Plug
@@ -12,6 +13,7 @@ defmodule IntercomStatsWeb.Context do
     case build_context(conn) do
       {:ok, context} ->
         put_private(conn, :absinthe, %{context: context})
+
       {:error, _} ->
         put_private(conn, :absinthe, %{context: %{current_user: nil}})
     end

@@ -8,14 +8,14 @@ defmodule Mix.Tasks.ImportIntercomData do
 
   import Mix.Ecto
 
-  alias IntercomStats.Intercom.{Tags, Conversations}
+  alias IntercomStats.Intercom.{Conversations, Tags}
 
   @impl true
   def run(_) do
     # start the Repo for interacting with data
     ensure_started(IntercomStats.Repo, [])
 
-    Tags.save_from_api
-    Conversations.save_from_api
+    Tags.save_from_api()
+    Conversations.save_from_api()
   end
 end

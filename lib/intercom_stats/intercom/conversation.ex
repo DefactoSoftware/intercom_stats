@@ -5,20 +5,22 @@ defmodule IntercomStats.Intercom.Conversation do
   """
 
   use Ecto.Schema
+
   import Ecto.Changeset
-  alias IntercomStats.Intercom.{Tag, Conversation}
+
+  alias IntercomStats.Intercom.{Conversation, Tag}
 
   @primary_key {:id, :string, []}
   schema "conversations" do
-    many_to_many :tags, Tag, join_through: "conversations_tags"
-    field :time_to_first_response, :integer
-    field :closing_time, :integer
-    field :total_response_time, :integer
-    field :average_response_time, :integer
-    field :company_name, :string
+    many_to_many(:tags, Tag, join_through: "conversations_tags")
+    field(:time_to_first_response, :integer)
+    field(:closing_time, :integer)
+    field(:total_response_time, :integer)
+    field(:average_response_time, :integer)
+    field(:company_name, :string)
 
-    field :open_timestamp, :integer
-    field :closed_timestamp, :integer
+    field(:open_timestamp, :integer)
+    field(:closed_timestamp, :integer)
   end
 
   @doc false

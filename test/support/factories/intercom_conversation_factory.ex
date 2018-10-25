@@ -1,4 +1,5 @@
 defmodule IntercomStats.IntercomConversationFactory do
+  @moduledoc false
   defmacro __using__(_opts) do
     quote do
       def intercom_conversation_factory do

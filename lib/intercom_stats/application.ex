@@ -1,6 +1,5 @@
 defmodule IntercomStats.Application do
-  @moduledoc """
-  """
+  @moduledoc false
 
   use Application
   alias IntercomStatsWeb.Endpoint
