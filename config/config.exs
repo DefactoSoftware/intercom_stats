@@ -46,7 +46,7 @@ config :coherence,
   web_module: IntercomStatsWeb,
   router: IntercomStatsWeb.Router,
   messages_backend: IntercomStatsWeb.Coherence.Messages,
-  logged_out_url: "/",
+  logged_out_url: "/sessions/new",
   opts: [:authenticatable]
 
 # %% End Coherence Configuration %%
