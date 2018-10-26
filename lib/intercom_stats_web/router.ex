@@ -5,69 +5,71 @@ defmodule IntercomStatsWeb.Router do
   use Sentry.Plug
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug Coherence.Authentication.Session
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(Coherence.Authentication.Session)
   end
 
   pipeline :protected do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug Coherence.Authentication.Session, protected: true
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(Coherence.Authentication.Session, protected: true)
   end
 
   pipeline :graphql do
-    plug Plug.Parsers,
+    plug(Plug.Parsers,
       parsers: [:urlencoded, :multipart, :json],
       pass: ["*/*"],
-      json_decoder: Poison
-    plug :fetch_session
-    plug Coherence.Authentication.Session
-    plug IntercomStatsWeb.Context
+      json_decoder: Jason
+    )
+
+    plug(:fetch_session)
+    plug(Coherence.Authentication.Session)
+    plug(IntercomStatsWeb.Context)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/" do
-    pipe_through :browser
+    pipe_through(:browser)
     coherence_routes()
   end
 
   scope "/" do
-    pipe_through :protected
-    coherence_routes :protected
+    pipe_through(:protected)
+    coherence_routes(:protected)
   end
 
   scope "/", IntercomStatsWeb do
-    pipe_through :browser
+    pipe_through(:browser)
   end
 
   scope "/", IntercomStatsWeb do
-    pipe_through :protected
+    pipe_through(:protected)
 
-    get "/", PageController, :index
-    get "/get_from_api", PageController, :get_from_api
+    get("/", PageController, :index)
+    get("/get_from_api", PageController, :get_from_api)
 
-    post "/", PageController, :search
+    post("/", PageController, :search)
   end
 
   scope "/" do
-    pipe_through :graphql
+    pipe_through(:graphql)
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL,
+    forward("/graphiql", Absinthe.Plug.GraphiQL,
       schema: IntercomStatsWeb.Schema,
       interface: :simple,
       socket: IntercomStatsWeb.UserSocket
+    )
 
-    forward "/", Absinthe.Plug,
-      schema: IntercomStatsWeb.Schema
+    forward("/", Absinthe.Plug, schema: IntercomStatsWeb.Schema)
   end
 end
