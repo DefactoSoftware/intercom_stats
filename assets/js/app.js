@@ -19,3 +19,7 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+
+// CSS
+import css from "../css/app.css"
+import phoenix from "../css/phoenix.css"
