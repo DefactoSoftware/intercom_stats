@@ -1,7 +1,12 @@
 defmodule IntercomStatsWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :intercom_stats
 
-  socket("/socket", IntercomStatsWeb.UserSocket)
+  socket(
+    "/socket",
+    IntercomStatsWeb.UserSocket,
+    websocket: [],
+    longpoll: []
+  )
 
   # Serve at "/" the static files from "priv/static" directory.
   #

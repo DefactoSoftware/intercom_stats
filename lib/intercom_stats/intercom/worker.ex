@@ -43,63 +43,68 @@ defmodule IntercomStats.Intercom.Worker do
   end
 
   def terminate(reason, _state) do
-    IO.puts "Server terminated because of #{inspect reason}"
+    IO.puts("Server terminated because of #{inspect(reason)}")
     :ok
   end
 
   defp process_api_records(page) do
-    {:ok, %{body: body}} = API.get("/conversations",
-                                   params: %{per_page: "60",
-                                   page: page,
-                                   sort: "updated_at"})
+    {:ok, %{body: body}} =
+      API.get("/conversations",
+        params: %{per_page: "60", page: page, sort: "updated_at"}
+      )
 
     last_update = retrieve_last_update()
 
     result =
       body
-      |> API.decode_json
+      |> API.decode_json()
       |> Map.get("conversations")
       |> Enum.filter(fn %{"state" => value} -> value == "closed" end)
-      |> Enum.filter(fn %{"updated_at" => value} -> NaiveDateTime.compare(
-           last_update, from_unix_to_datetime(value)) == :lt end)
-      |> Enum.reduce([], fn (item, acc) ->
-           [get_conversation_properties(item) | acc] end)
-      |> Enum.reduce([], fn (item, acc) ->
-           [get_conversation_specific_properties(item) | acc] end)
+      |> Enum.filter(fn %{"updated_at" => value} ->
+        NaiveDateTime.compare(last_update, from_unix_to_datetime(value)) == :lt
+      end)
+      |> Enum.reduce([], fn item, acc ->
+        [get_conversation_properties(item) | acc]
+      end)
+      |> Enum.reduce([], fn item, acc ->
+        [get_conversation_specific_properties(item) | acc]
+      end)
       |> Enum.reject(fn conversation -> conversation == nil end)
 
     case List.last(result) do
       %{"updated_at" => last_update_in_list} ->
-        case NaiveDateTime.compare(
-               last_update, from_unix_to_datetime(last_update_in_list)) do
+        case NaiveDateTime.compare(last_update, from_unix_to_datetime(last_update_in_list)) do
           :lt -> {:reply, {page, :not_done}, page}
           _ -> {:reply, {page, :done}, page}
         end
-      _ -> {:reply, {page, :done}, page}
+
+      _ ->
+        {:reply, {page, :done}, page}
     end
   rescue
     exception ->
-      Sentry.capture_exception(exception, [stacktrace: System.stacktrace()])
+      Sentry.capture_exception(exception, stacktrace: System.stacktrace())
   end
 
   defp get_conversation_properties(item) do
     item
     |> Map.take(@conversation_properties)
   end
+
   defp get_conversation_specific_properties(item) do
     Task.await(
       Task.async(fn -> get_conversation_specific_properties_in_task(item) end),
       60_000
     )
   end
+
   defp get_conversation_specific_properties_in_task(item) do
     conversation = request_conversation(item)
     response_times = calculate_response_times(conversation)
     closed_timestamp = determine_closed_timestamp(conversation)
     snooze_time = determine_snooze_time(conversation)
 
-    {total_response_time, average_response_time} =
-      average_response_time(response_times)
+    {total_response_time, average_response_time} = average_response_time(response_times)
 
     item_with_tags =
       item
@@ -109,10 +114,14 @@ defmodule IntercomStats.Intercom.Worker do
     if Enum.any?(item_with_tags["tags"]) do
       item_with_tags
       |> Map.put("time_to_first_response", first_response_time(response_times))
-      |> Map.put("closing_time",
-                 calculate_closing_time(conversation,
-                                        closed_timestamp,
-                                        snooze_time))
+      |> Map.put(
+        "closing_time",
+        calculate_closing_time(
+          conversation,
+          closed_timestamp,
+          snooze_time
+        )
+      )
       |> Map.put("average_response_time", average_response_time)
       |> Map.put("total_response_time", total_response_time)
       |> Map.put("closed_timestamp", closed_timestamp)
@@ -120,8 +129,7 @@ defmodule IntercomStats.Intercom.Worker do
       |> insert_conversation
     end
   rescue
-    exception -> exception
-      Sentry.capture_exception(exception, [stacktrace: System.stacktrace()])
+    exception -> Sentry.capture_exception(exception, stacktrace: System.stacktrace())
   end
 
   defp request_conversation(%{"id" => id}) do
@@ -131,6 +139,7 @@ defmodule IntercomStats.Intercom.Worker do
 
   def retrieve_company_name(%{"user" => %{"id" => id}}) do
     {:ok, %{body: body}} = API.get("/users/#{id}")
+
     case API.decode_json(body) do
       %{"companies" => %{"companies" => [%{"name" => name} | _]}} -> name
       _ -> "Unknown"
@@ -142,8 +151,8 @@ defmodule IntercomStats.Intercom.Worker do
 
     [{"tags", available_tags}] = :ets.lookup(:tags_list, "tags")
 
-    Enum.map(tags, fn(%{"id" => id}) ->
-      Enum.find(available_tags, fn(tag) -> tag.id == id end)
+    Enum.map(tags, fn %{"id" => id} ->
+      Enum.find(available_tags, fn tag -> tag.id == id end)
     end)
   end
 
@@ -153,24 +162,21 @@ defmodule IntercomStats.Intercom.Worker do
 
   defp average_response_time(response_times) do
     with [_ | _] <- response_times do
-      {Enum.sum(response_times),
-       round(Enum.sum(response_times) / Enum.count(response_times))}
+      {Enum.sum(response_times), round(Enum.sum(response_times) / Enum.count(response_times))}
     else
       _ -> {nil, nil}
     end
   end
 
-  defp calculate_closing_time(
-      %{"created_at" => created}, close_timestamp, snooze_time) do
-    (close_timestamp - created) - snooze_time
+  defp calculate_closing_time(%{"created_at" => created}, close_timestamp, snooze_time) do
+    close_timestamp - created - snooze_time
   end
 
-  defp determine_snooze_time(
-      %{"conversation_parts" => %{"conversation_parts" => parts}}) do
+  defp determine_snooze_time(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
     {result, _} =
-      Enum.flat_map_reduce(parts, %{}, fn(i, acc) ->
+      Enum.flat_map_reduce(parts, %{}, fn i, acc ->
         with "snoozed" <- acc["part_type"] do
-          {[calculate_snooze_time(i, acc)] , i}
+          {[calculate_snooze_time(i, acc)], i}
         else
           _ -> {[], i}
         end
@@ -183,27 +189,33 @@ defmodule IntercomStats.Intercom.Worker do
     part["created_at"] - snoozed_part["created_at"]
   end
 
-  defp calculate_response_times(
-      %{"created_at" => created_at,
-        "conversation_message" => %{"author" => author, "body" => body},
-        "conversation_parts" => %{"conversation_parts" => unfiltered_parts}}) do
+  defp calculate_response_times(%{
+         "created_at" => created_at,
+         "conversation_message" => %{"author" => author, "body" => body},
+         "conversation_parts" => %{"conversation_parts" => unfiltered_parts}
+       }) do
+    parts =
+      Enum.reject(
+        unfiltered_parts,
+        fn part ->
+          part["part_type"] in ["note", "snoozed"]
+        end
+      )
 
-    parts = Enum.reject(unfiltered_parts,
-                        fn part ->
-                          part["part_type"] in ["note", "snoozed"]
-                        end)
-    {response_times, _} = Enum.flat_map_reduce(
-                            [%{"created_at" => created_at, "author" => author,
-                               "body" => body} | parts],
-                            %{}, fn(i, acc) ->
-      with :ok <- is_response_type(i, ["admin", "bot"]),
-           :ok <- is_response_type(acc, ["user", "lead"]) do
-        {[calculate_response_time(i, acc)], i}
-      else
-        :empty_response -> {[], acc}
-        _ -> {[], i}
-      end
-    end)
+    {response_times, _} =
+      Enum.flat_map_reduce(
+        [%{"created_at" => created_at, "author" => author, "body" => body} | parts],
+        %{},
+        fn i, acc ->
+          with :ok <- is_response_type(i, ["admin", "bot"]),
+               :ok <- is_response_type(acc, ["user", "lead"]) do
+            {[calculate_response_time(i, acc)], i}
+          else
+            :empty_response -> {[], acc}
+            _ -> {[], i}
+          end
+        end
+      )
 
     response_times
   end
@@ -218,29 +230,28 @@ defmodule IntercomStats.Intercom.Worker do
       :not_found
     end
   end
+
   defp is_response_type(%{}, _), do: :not_found
 
   defp calculate_response_time(%{"created_at" => new_time}, %{"created_at" => old_time}) do
     new_time - old_time
   end
 
-  defp determine_closed_timestamp(
-      %{"conversation_parts" => %{"conversation_parts" => parts}}) do
+  defp determine_closed_timestamp(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
     closing_part =
       parts
-      |> Enum.filter(fn(%{"part_type" => type}) ->
-           type == "close"
-         end)
-      |> List.last
+      |> Enum.filter(fn %{"part_type" => type} ->
+        type == "close"
+      end)
+      |> List.last()
 
     closing_part["created_at"]
   end
 
   defp retrieve_last_update do
     intercom_conversation =
-      Repo.one(
-        from(i in IntercomConversation, limit: 1, order_by: [desc: i.id])
-      )
+      Repo.one(from(i in IntercomConversation, limit: 1, order_by: [desc: i.id]))
+
     case intercom_conversation do
       nil -> ~N[2000-01-01 00:00:00]
       _ -> intercom_conversation.last_update
@@ -256,9 +267,9 @@ defmodule IntercomStats.Intercom.Worker do
     attrs
     |> insert_or_update()
     |> Repo.preload(:tags)
-    |> Changeset.change
+    |> Changeset.change()
     |> Changeset.put_assoc(:tags, attrs["tags"])
-    |> Repo.update!
+    |> Repo.update!()
 
     attrs
   end
@@ -272,6 +283,6 @@ defmodule IntercomStats.Intercom.Worker do
 
     conversation
     |> Conversation.changeset(attrs)
-    |> Repo.insert_or_update!
+    |> Repo.insert_or_update!()
   end
 end

@@ -5,6 +5,6 @@ defmodule IntercomStats.Intercom.AdapterTest do
 
   test "process url gives the right url" do
     full_url = "https://api.intercom.io/tags"
-    assert full_url == Adapter.process_url("/tags")
+    assert full_url == Adapter.process_request_url("/tags")
   end
 end
