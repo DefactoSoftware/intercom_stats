@@ -7,7 +7,7 @@ defmodule IntercomStats.Repository.ConversationsTest do
   alias IntercomStats.Repository.Conversations
 
   setup do
-    insert(:conversation,
+    insert(:conversation_bug,
       company_name: "CompanyX",
       time_to_first_response: 5,
       closing_time: 120,
@@ -15,7 +15,7 @@ defmodule IntercomStats.Repository.ConversationsTest do
       closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -8))
     )
 
-    insert(:conversation,
+    insert(:conversation_support,
       company_name: "CompanyX",
       time_to_first_response: 20,
       closing_time: 180,
@@ -23,7 +23,7 @@ defmodule IntercomStats.Repository.ConversationsTest do
       closed_timestamp: DateTime.to_unix(Timex.shift(Timex.now(), days: -10))
     )
 
-    insert(:conversation,
+    insert(:conversation_bug,
       company_name: "CompanyX",
       time_to_first_response: 35,
       closing_time: 60,
@@ -113,5 +113,33 @@ defmodule IntercomStats.Repository.ConversationsTest do
       conversations = Conversations.conversation_averages_by_company(date_range)
       assert [%{average_first_response: "5 seconds"}] = conversations
     end
+  end
+
+  test "conversations per tag and company" do
+    filter = %{
+      tag: "bug",
+      company_name: "CompanyX"
+    }
+    conversations = Conversations.list_all_conversations(filter)
+
+    assert Enum.count(conversations) == 2
+  end
+
+  test "averages per tag and company" do
+    filter = %{
+      tag: "bug",
+      company_name: "CompanyX",
+      from_date: from_date(-13),
+      to_date: Timex.today() |> Date.to_string()
+    }
+    conversations = Conversations.conversation_averages_by_tag_and_company(filter)
+
+    assert %{average_first_response: "5 seconds"} = conversations
+  end
+
+  defp from_date(days) do
+    Timex.today
+    |> Timex.shift(days: days)
+    |> Date.to_string
   end
 end

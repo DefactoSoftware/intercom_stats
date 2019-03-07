@@ -59,6 +59,8 @@ defmodule IntercomStatsWeb.Router do
     get("/get_from_api", PageController, :get_from_api)
 
     post("/", PageController, :search)
+
+    get "/company/:name", CompanyController, :show
   end
 
   scope "/" do
