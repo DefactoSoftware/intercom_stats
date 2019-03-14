@@ -1,6 +1,7 @@
 <h2><%= @model.company_name %></h2>
 
 <p><%= gettext("In de periode van %{from_date} tot %{to_date}", from_date: @model.from_date, to_date: @model.to_date) %></p>
+<p><%= gettext("Aantal meldingen %{meldingen} ", meldingen: @model.message_number.number ) %> </p>
 
 <table class="table">
   <thead class="thead-light">
