@@ -139,7 +139,7 @@ defmodule IntercomStats.Repository.ConversationsTest do
 
   test "Number of conversations total" do
     conversations = Conversations.list_all_conversations()
-    assert 3 == Conversations.get_number(conversations) 
+    assert 3 == Conversations.get_number(conversations)
   end
 
   test "Number of conversations per company" do
