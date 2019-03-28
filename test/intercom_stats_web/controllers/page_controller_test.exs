@@ -22,6 +22,7 @@ defmodule IntercomStatsWeb.PageControllerTest do
       insert :conversation_support
       conn = get(conn, "/")
       assert html_response(conn, 200) =~ gettext("Intercom gegevens")
+      assert html_response(conn, 200) =~ gettext("Aantal Meldingen")
     end
 
     test "GET / without conversations", %{conn: conn} do

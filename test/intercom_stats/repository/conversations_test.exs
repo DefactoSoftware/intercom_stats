@@ -137,6 +137,18 @@ defmodule IntercomStats.Repository.ConversationsTest do
     assert %{average_first_response: "5 seconds"} = conversations
   end
 
+  test "Number of conversations total" do
+    conversations = Conversations.list_all_conversations()
+    assert 3 == Conversations.get_number(conversations) 
+  end
+
+  test "Number of conversations per company" do
+    filter = %{
+      company_name: "CompanyX"
+    }
+    assert %{company_name: "CompanyX", number: 3} == Conversations.conversation_number_by_company(filter)
+  end
+
   defp from_date(days) do
     Timex.today
     |> Timex.shift(days: days)
