@@ -59,7 +59,10 @@ defmodule IntercomStats.Intercom.Worker do
       body
       |> API.decode_json()
       |> Map.get("conversations")
-      |> Enum.filter(fn %{"state" => value} -> value == "closed" end)
+      |> Enum.filter(fn %{"state" => value} -> 
+        value == "closed" end)
+      |> Enum.filter(fn conversation -> 
+        has_closed_part(conversation) == true end)
       |> Enum.filter(fn %{"updated_at" => value} ->
         NaiveDateTime.compare(last_update, from_unix_to_datetime(value)) == :lt
       end)
@@ -91,6 +94,18 @@ defmodule IntercomStats.Intercom.Worker do
     |> Map.take(@conversation_properties)
   end
 
+  defp has_closed_part(item) do
+    conversation = request_conversation(item)
+    contains_closed_part(conversation)
+  end
+
+  defp contains_closed_part(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
+    parts
+    |> Enum.any?(fn %{"part_type" => type} ->
+     type == "close"
+      end)
+  end
+
   defp get_conversation_specific_properties(item) do
     Task.await(
       Task.async(fn -> get_conversation_specific_properties_in_task(item) end),
@@ -111,7 +126,7 @@ defmodule IntercomStats.Intercom.Worker do
       |> Map.put("company_name", retrieve_company_name(conversation))
       |> Map.put("tags", retrieve_tags_for_conversation(conversation))
 
-    if Enum.any?(item_with_tags["tags"]) do
+    #if Enum.any?(item_with_tags["tags"]) do
       item_with_tags
       |> Map.put("time_to_first_response", first_response_time(response_times))
       |> Map.put(
@@ -127,7 +142,7 @@ defmodule IntercomStats.Intercom.Worker do
       |> Map.put("closed_timestamp", closed_timestamp)
       |> Map.put("open_timestamp", item["created_at"])
       |> insert_conversation
-    end
+    #end
   rescue
     exception -> Sentry.capture_exception(exception, stacktrace: System.stacktrace())
   end
