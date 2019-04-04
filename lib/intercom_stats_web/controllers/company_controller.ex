@@ -62,8 +62,7 @@ defmodule IntercomStatsWeb.CompanyController do
       |> Map.merge(filter)
       |> Conversations.conversation_averages_by_tag_and_company()
     message_number =
-      filter
-      |> Conversations.conversation_number_by_company()
+      Conversations.conversation_number_by_company(filter)
 
     model = %{
       company_name: filter.company_name,
