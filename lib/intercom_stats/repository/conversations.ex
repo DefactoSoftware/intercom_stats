@@ -84,8 +84,7 @@ defmodule IntercomStats.Repository.Conversations do
   end
 
   def get_number(conversations) do
-    conversations
-    |> count_messages()
+    count_messages(conversations)
   end
 
   def count_messages([]), do: nil
