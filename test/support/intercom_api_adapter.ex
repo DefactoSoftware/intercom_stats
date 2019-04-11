@@ -351,7 +351,6 @@ defmodule IntercomStats.IntercomAPIAdapter do
      }}
   end
 
-
   defp conversation4 do
        {:ok,
      %{
@@ -451,7 +450,6 @@ defmodule IntercomStats.IntercomAPIAdapter do
        """
      }}
   end
-
 
   defp conversation5 do
     {:ok,

@@ -59,9 +59,9 @@ defmodule IntercomStats.Intercom.Worker do
       body
       |> API.decode_json()
       |> Map.get("conversations")
-      |> Enum.filter(fn %{"state" => value} -> 
+      |> Enum.filter(fn %{"state" => value} ->
         value == "closed" end)
-      |> Enum.filter(fn conversation -> 
+      |> Enum.filter(fn conversation ->
         has_closed_part(conversation) == true end)
       |> Enum.filter(fn %{"updated_at" => value} ->
         NaiveDateTime.compare(last_update, from_unix_to_datetime(value)) == :lt

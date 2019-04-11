@@ -26,7 +26,7 @@ defmodule IntercomStats.Repository.Conversations do
         {:tag, tag}, query ->
           query
           |> join(:inner, [c], t in assoc(c, :tags))
-          |> where([c, t], t.name == ^tag)
+          |> where([c, t], t.name == ^tag) 
       end)
     |> Repo.all
   end

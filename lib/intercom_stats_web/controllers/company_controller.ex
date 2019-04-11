@@ -64,6 +64,13 @@ defmodule IntercomStatsWeb.CompanyController do
     message_number =
       Conversations.conversation_number_by_company(filter)
 
+    total_averages =
+      %{tag: nil}
+      |> Map.merge(filter)
+      |> Conversations.conversation_averages_by_tag_and_company()
+    message_number =
+      Conversations.conversation_number_by_company(filter)
+
     model = %{
       company_name: filter.company_name,
       from_date: filter.from_date,
@@ -73,6 +80,7 @@ defmodule IntercomStatsWeb.CompanyController do
       prio3_averages: prio3_averages,
       prio4_averages: prio4_averages,
       support_averages: support_averages,
+      total_averages: total_averages,
       message_number: message_number
     }
   end
