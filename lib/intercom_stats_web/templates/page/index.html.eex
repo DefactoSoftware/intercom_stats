@@ -38,6 +38,13 @@
         <h5 class="card-title"><%= @model.average_closing_time %></h5>
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-header"><%= gettext("Aantal Meldingen") %></div>
+      <div class="card-body">
+        <h5 class="card-title"><%= @model.number_of_messages %></h5>
+      </div>
+    </div>
   </div>
 
   <table class="table">

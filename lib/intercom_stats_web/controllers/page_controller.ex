@@ -32,7 +32,9 @@ defmodule IntercomStatsWeb.PageController do
       average_closing_time:
         Conversations.get_average(:closing_time, conversations),
       averages_per_company:
-        Conversations.conversation_averages_by_company(filter)
+        Conversations.conversation_averages_by_company(filter),
+      number_of_messages:
+        Conversations.get_number(conversations)
     }
   end
 end

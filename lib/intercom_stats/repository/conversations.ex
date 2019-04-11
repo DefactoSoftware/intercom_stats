@@ -70,6 +70,28 @@ defmodule IntercomStats.Repository.Conversations do
     round(Enum.sum(list) / Enum.count(list))
   end
 
+  def conversation_number_by_company(filter) do
+    filter
+    |> list_all_conversations()
+    |> map_number(filter.company_name)
+  end
+
+  defp map_number(list, name) do
+    %{
+      company_name: name,
+      number: get_number(list),
+    }
+  end
+
+  def get_number(conversations) do
+    count_messages(conversations)
+  end
+
+  def count_messages([]), do: nil
+  def count_messages(list) do
+    Enum.count(list)
+  end
+
   def string_date_to_unix(date) do
     date
     |> Timex.parse!("{YYYY}-{0M}-{0D}")
