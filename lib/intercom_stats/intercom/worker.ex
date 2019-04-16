@@ -116,6 +116,7 @@ defmodule IntercomStats.Intercom.Worker do
     response_times = calculate_response_times(conversation)
     closed_timestamp = determine_closed_timestamp(conversation)
     snooze_time = determine_snooze_time(conversation)
+
     {total_response_time, average_response_time} = average_response_time(response_times)
 
     item_with_tags =

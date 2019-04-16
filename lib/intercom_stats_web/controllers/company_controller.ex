@@ -63,14 +63,12 @@ defmodule IntercomStatsWeb.CompanyController do
       |> Conversations.conversation_averages_by_tag_and_company()
 
     untagged_averages =
-    %{tag: "gebruikersondersteuning"}
-      |> Map.merge(filter)
-      |> Conversations.untagged_conversation_averages_by_company()
-
-    total_averages =
-      %{tag: nil}
+    %{tag: nil}
       |> Map.merge(filter)
       |> Conversations.conversation_averages_by_tag_and_company()
+
+    total_averages =
+      Conversations.conversation_averages_by_tag_and_company(filter)
 
     message_number =
       Conversations.conversation_number_by_company(filter)

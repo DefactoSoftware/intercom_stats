@@ -14,6 +14,10 @@ defmodule IntercomStats.Repository.Conversations do
   def list_all_conversations(filter \\ %{}) do
     filter
     |> Enum.reduce(Conversation, fn
+        {:tag, nil}, query ->
+          query
+          |> join(:left, [c], t in assoc(c, :tags))
+          |> where([c, t], is_nil(t.id))
         {_, nil}, query -> query
         {:company_name, company_name}, query ->
           from c in query, where: ilike(c.company_name, ^"%#{company_name}%")
@@ -31,26 +35,6 @@ defmodule IntercomStats.Repository.Conversations do
     |> Repo.all
   end
 
-def list_untagged_conversations(filter \\ %{}) do
-    filter
-    |> Enum.reduce(Conversation, fn
-        {_, nil}, query -> query
-        {:company_name, company_name}, query ->
-          from c in query, where: ilike(c.company_name, ^"%#{company_name}%")
-        {:from_date, from_date}, query ->
-          from c in query, where: c.open_timestamp >=
-            ^string_date_to_unix(from_date)
-        {:to_date, to_date}, query ->
-          from c in query, where: c.closed_timestamp <=
-            ^string_date_to_unix(to_date)
-        {:tag, _tag}, query ->
-          query
-          |> join(:left, [c], t in assoc(c, :tags))
-          |> where([c, t], is_nil(t.id))
-      end)
-    |> Repo.all
-  end
-
   def conversation_averages_by_company(filter \\ %{}) do
     filter
     |> list_all_conversations()
@@ -64,12 +48,6 @@ def list_untagged_conversations(filter \\ %{}) do
   def conversation_averages_by_tag_and_company(filter) do
     filter
     |> list_all_conversations()
-    |> map_averages(filter.company_name)
-  end
-
-  def untagged_conversation_averages_by_company(filter) do
-    filter
-    |> list_untagged_conversations()
     |> map_averages(filter.company_name)
   end
 
