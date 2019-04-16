@@ -89,10 +89,6 @@ defmodule IntercomStats.Intercom.Worker do
       Sentry.capture_exception(exception, stacktrace: System.stacktrace())
   end
 
-  defp get_time_for_parts(parts,parttype) do
-
-  end
-
   defp get_conversation_properties(item) do
     item
     |> Map.take(@conversation_properties)
