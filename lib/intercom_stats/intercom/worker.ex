@@ -89,21 +89,23 @@ defmodule IntercomStats.Intercom.Worker do
       Sentry.capture_exception(exception, stacktrace: System.stacktrace())
   end
 
+  defp get_time_for_parts(parts,parttype) do
+
+  end
+
   defp get_conversation_properties(item) do
     item
     |> Map.take(@conversation_properties)
   end
 
   defp has_closed_part(item) do
-    conversation = request_conversation(item)
-    contains_closed_part(conversation)
+    item
+    |>request_conversation()
+    |>contains_closed_part()
   end
 
   defp contains_closed_part(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
-    parts
-    |> Enum.any?(fn %{"part_type" => type} ->
-     type == "close"
-      end)
+    Enum.any?(parts, fn %{"part_type" => type} -> type == "close" end)
   end
 
   defp get_conversation_specific_properties(item) do
@@ -118,15 +120,12 @@ defmodule IntercomStats.Intercom.Worker do
     response_times = calculate_response_times(conversation)
     closed_timestamp = determine_closed_timestamp(conversation)
     snooze_time = determine_snooze_time(conversation)
-
     {total_response_time, average_response_time} = average_response_time(response_times)
 
     item_with_tags =
       item
       |> Map.put("company_name", retrieve_company_name(conversation))
       |> Map.put("tags", retrieve_tags_for_conversation(conversation))
-
-    #if Enum.any?(item_with_tags["tags"]) do
       item_with_tags
       |> Map.put("time_to_first_response", first_response_time(response_times))
       |> Map.put(
@@ -142,7 +141,6 @@ defmodule IntercomStats.Intercom.Worker do
       |> Map.put("closed_timestamp", closed_timestamp)
       |> Map.put("open_timestamp", item["created_at"])
       |> insert_conversation
-    #end
   rescue
     exception -> Sentry.capture_exception(exception, stacktrace: System.stacktrace())
   end
