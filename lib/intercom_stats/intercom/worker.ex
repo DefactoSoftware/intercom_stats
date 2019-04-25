@@ -61,8 +61,7 @@ defmodule IntercomStats.Intercom.Worker do
       |> Map.get("conversations")
       |> Enum.filter(fn %{"state" => value} ->
         value == "closed" end)
-      |> Enum.filter(fn conversation ->
-        has_closed_part(conversation) == true end)
+      |> Enum.filter(&(closed_part?(&1)))
       |> Enum.filter(fn %{"updated_at" => value} ->
         NaiveDateTime.compare(last_update, from_unix_to_datetime(value)) == :lt
       end)
@@ -94,13 +93,13 @@ defmodule IntercomStats.Intercom.Worker do
     |> Map.take(@conversation_properties)
   end
 
-  defp has_closed_part(item) do
+  defp closed_part?(item) do
     item
     |>request_conversation()
-    |>contains_closed_part()
+    |>contains_closed_part?()
   end
 
-  defp contains_closed_part(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
+  defp contains_closed_part?(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
     Enum.any?(parts, fn %{"part_type" => type} -> type == "close" end)
   end
 
