@@ -39,23 +39,24 @@ defmodule IntercomStats.Repository.Conversations do
     filter
     |> list_all_conversations()
     |> Enum.group_by(&(&1.company_name))
-    |> Enum.map(fn {key, value} -> map_averages(value, key) end)
+    |> Enum.map(fn {key, value} -> map_stats(value, key) end)
     |> Enum.sort(fn(%{company_name: a}, %{company_name: b}) ->
       String.capitalize(a) <= String.capitalize(b)
     end)
   end
 
-  def conversation_averages_by_tag_and_company(filter) do
+  def conversation_stats_by_tag_and_company(filter) do
     filter
     |> list_all_conversations()
-    |> map_averages(filter.company_name)
+    |> map_stats(filter.company_name)
   end
 
-  defp map_averages(list, name) do
+  defp map_stats(list, name) do
     %{
       company_name: name,
       average_first_response: get_average(:time_to_first_response, list),
-      average_closing_time: get_average(:closing_time, list)
+      average_closing_time: get_average(:closing_time, list),
+      number: get_number(list)
     }
   end
 

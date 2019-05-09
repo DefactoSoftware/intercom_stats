@@ -9,6 +9,7 @@
       <th scope="col">Tag</th>
       <th scope="col"><%= gettext("Gemiddelde eerste reactietijd") %></th>
       <th scope="col"><%= gettext("Gemiddelde sluittijd") %></th>
+      <th scope="col"><%=gettext("Aantal Meldingen") %></th>
     </tr>
   </thead>
   <tbody>
@@ -16,36 +17,43 @@
       <td><%= gettext("Bug prio 1") %></td>
       <td><%= @model.prio1_averages.average_first_response %></td>
       <td><%= @model.prio1_averages.average_closing_time %></td>
+      <td><%= @model.prio1_averages.number %></td>
     </tr>
     <tr>
       <td><%= gettext("Bug prio 2") %></td>
       <td><%= @model.prio2_averages.average_first_response %></td>
       <td><%= @model.prio2_averages.average_closing_time %></td>
+      <td><%= @model.prio2_averages.number %></td>
     </tr>
     <tr>
       <td><%= gettext("Bug prio 3") %></td>
       <td><%= @model.prio3_averages.average_first_response %></td>
       <td><%= @model.prio3_averages.average_closing_time %></td>
+      <td><%= @model.prio3_averages.number %></td>
     </tr>
     <tr>
       <td><%= gettext("Bug prio 4") %></td>
       <td><%= @model.prio4_averages.average_first_response %></td>
       <td><%= @model.prio4_averages.average_closing_time %></td>
+      <td><%= @model.prio4_averages.number %></td>
     </tr>
     <tr>
       <td><%= gettext("Gebruikersondersteuning") %></td>
       <td><%= @model.support_averages.average_first_response %></td>
       <td><%= @model.support_averages.average_closing_time %></td>
+      <td><%= @model.support_averages.number %></td>
     </tr>
     <tr>
       <td><%= gettext("Geen Tags") %></td>
       <td><%= @model.untagged_averages.average_first_response %></td>
       <td><%= @model.untagged_averages.average_closing_time %></td>
+      <td><%= @model.untagged_averages.number %></td>
     </tr>
     <tr>
       <td><%= gettext("Totaal gesprekken") %></td>
       <td><%= @model.total_averages.average_first_response %></td>
       <td><%= @model.total_averages.average_closing_time %></td>
+      <td><%= @model.total_averages.number %></td>
     </tr>
   </tbody>
 </table>
