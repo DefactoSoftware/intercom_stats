@@ -13,37 +13,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td><%= gettext("Bug prio 1") %></td>
-      <td><%= @model.prio1_averages.average_first_response %></td>
-      <td><%= @model.prio1_averages.average_closing_time %></td>
-      <td><%= @model.prio1_averages.number %></td>
-    </tr>
-    <tr>
-      <td><%= gettext("Bug prio 2") %></td>
-      <td><%= @model.prio2_averages.average_first_response %></td>
-      <td><%= @model.prio2_averages.average_closing_time %></td>
-      <td><%= @model.prio2_averages.number %></td>
-    </tr>
-    <tr>
-      <td><%= gettext("Bug prio 3") %></td>
-      <td><%= @model.prio3_averages.average_first_response %></td>
-      <td><%= @model.prio3_averages.average_closing_time %></td>
-      <td><%= @model.prio3_averages.number %></td>
-    </tr>
-    <tr>
-      <td><%= gettext("Bug prio 4") %></td>
-      <td><%= @model.prio4_averages.average_first_response %></td>
-      <td><%= @model.prio4_averages.average_closing_time %></td>
-      <td><%= @model.prio4_averages.number %></td>
-    </tr>
-    <tr>
-      <td><%= gettext("Gebruikersondersteuning") %></td>
-      <td><%= @model.support_averages.average_first_response %></td>
-      <td><%= @model.support_averages.average_closing_time %></td>
-      <td><%= @model.support_averages.number %></td>
-    </tr>
-    <tr>
+    <%= for item <- ["prio1", "prio2", "prio3", "prio4", "prio5", "gebruikersondersteuning"] do %>
+      <tr>
+        <td><%= gettext(item) %></td>
+        <td><%= @model.untagged_averages.average_first_response %></td>
+        <td><%= @model.untagged_averages.average_closing_time %></td>
+        <td><%= @model.untagged_averages.number %></td>
+      </tr>
+    <% end &>
+     <tr>
       <td><%= gettext("Geen Tags") %></td>
       <td><%= @model.untagged_averages.average_first_response %></td>
       <td><%= @model.untagged_averages.average_closing_time %></td>
