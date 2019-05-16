@@ -40,35 +40,35 @@ defmodule IntercomStatsWeb.CompanyController do
     prio1_averages =
       %{tag: "prio 1"}
       |> Map.merge(filter)
-      |> Conversations.conversation_averages_by_tag_and_company()
+      |> Conversations.conversation_stats_by_tag_and_company()
 
     prio2_averages =
       %{tag: "prio 2"}
       |> Map.merge(filter)
-      |> Conversations.conversation_averages_by_tag_and_company()
+      |> Conversations.conversation_stats_by_tag_and_company()
 
     prio3_averages =
       %{tag: "prio 3"}
       |> Map.merge(filter)
-      |> Conversations.conversation_averages_by_tag_and_company()
+      |> Conversations.conversation_stats_by_tag_and_company()
 
     prio4_averages =
       %{tag: "prio 4"}
       |> Map.merge(filter)
-      |> Conversations.conversation_averages_by_tag_and_company()
+      |> Conversations.conversation_stats_by_tag_and_company()
 
     support_averages =
       %{tag: "gebruikersondersteuning"}
       |> Map.merge(filter)
-      |> Conversations.conversation_averages_by_tag_and_company()
+      |> Conversations.conversation_stats_by_tag_and_company()
 
     untagged_averages =
     %{tag: nil}
       |> Map.merge(filter)
-      |> Conversations.conversation_averages_by_tag_and_company()
+      |> Conversations.conversation_stats_by_tag_and_company()
 
     total_averages =
-      Conversations.conversation_averages_by_tag_and_company(filter)
+      Conversations.conversation_stats_by_tag_and_company(filter)
 
     message_number =
       Conversations.conversation_number_by_company(filter)

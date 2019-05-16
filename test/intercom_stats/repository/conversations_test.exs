@@ -132,7 +132,7 @@ defmodule IntercomStats.Repository.ConversationsTest do
       from_date: from_date(-13),
       to_date: Timex.today() |> Date.to_string()
     }
-    conversations = Conversations.conversation_averages_by_tag_and_company(filter)
+    conversations = Conversations.conversation_stats_by_tag_and_company(filter)
 
     assert %{average_first_response: "5 seconds"} = conversations
   end
