@@ -60,8 +60,9 @@ defmodule IntercomStats.Intercom.Worker do
       |> API.decode_json()
       |> Map.get("conversations")
       |> Enum.filter(fn %{"state" => value} ->
-        value == "closed" end)
-      |> Enum.filter(&(closed_part?(&1)))
+        value == "closed"
+      end)
+      |> Enum.filter(&closed_part?(&1))
       |> Enum.filter(fn %{"updated_at" => value} ->
         NaiveDateTime.compare(last_update, from_unix_to_datetime(value)) == :lt
       end)
@@ -95,8 +96,8 @@ defmodule IntercomStats.Intercom.Worker do
 
   defp closed_part?(item) do
     item
-    |>request_conversation()
-    |>contains_closed_part?()
+    |> request_conversation()
+    |> contains_closed_part?()
   end
 
   defp contains_closed_part?(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
@@ -115,28 +116,25 @@ defmodule IntercomStats.Intercom.Worker do
     response_times = calculate_response_times(conversation)
     closed_timestamp = determine_closed_timestamp(conversation)
     snooze_time = determine_snooze_time(conversation)
-
     {total_response_time, average_response_time} = average_response_time(response_times)
 
-    item_with_tags =
-      item
-      |> Map.put("company_name", retrieve_company_name(conversation))
-      |> Map.put("tags", retrieve_tags_for_conversation(conversation))
-      item_with_tags
-      |> Map.put("time_to_first_response", first_response_time(response_times))
-      |> Map.put(
-        "closing_time",
-        calculate_closing_time(
-          conversation,
-          closed_timestamp,
-          snooze_time
-        )
+    item
+    |> Map.put("company_name", retrieve_company_name(conversation))
+    |> Map.put("tags", retrieve_tags_for_conversation(conversation))
+    |> Map.put("time_to_first_response", first_response_time(response_times))
+    |> Map.put(
+      "closing_time",
+      calculate_closing_time(
+        conversation,
+        closed_timestamp,
+        snooze_time
       )
-      |> Map.put("average_response_time", average_response_time)
-      |> Map.put("total_response_time", total_response_time)
-      |> Map.put("closed_timestamp", closed_timestamp)
-      |> Map.put("open_timestamp", item["created_at"])
-      |> insert_conversation
+    )
+    |> Map.put("average_response_time", average_response_time)
+    |> Map.put("total_response_time", total_response_time)
+    |> Map.put("closed_timestamp", closed_timestamp)
+    |> Map.put("open_timestamp", item["created_at"])
+    |> insert_conversation
   rescue
     exception -> Sentry.capture_exception(exception, stacktrace: System.stacktrace())
   end
