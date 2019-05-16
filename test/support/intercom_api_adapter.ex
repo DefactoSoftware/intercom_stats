@@ -5,6 +5,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
   def get("/conversations", _header, _options), do: conversations()
   def get("/conversations/3", _header, _options), do: conversation3()
   def get("/conversations/2", _header, _options), do: conversation2()
+  def get("/conversations/4", _header, _options), do: conversation4()
   def get("/conversations/5", _header, _options), do: conversation5()
   def get("/conversations/6", _header, _options), do: conversation6()
   def get("/conversations/7", _header, _options), do: conversation7()
@@ -127,11 +128,11 @@ defmodule IntercomStats.IntercomAPIAdapter do
            {
              "type": "conversation",
              "id": "4",
-             "created_at" : 1400000000,
-             "updated_at" : 1400000000,
+             "created_at" : 1500002000,
+             "updated_at" : 1500009000,
              "user" : {
-               "type": "user",
-               "id" : "3"
+               "type": "admin",
+               "id" : "4"
              },
              "state": "closed"
            },
@@ -344,6 +345,106 @@ defmodule IntercomStats.IntercomAPIAdapter do
                  "id": "17523",
                  "name": "consultancy"
                }]
+         }
+       }
+       """
+     }}
+  end
+
+  defp conversation4 do
+       {:ok,
+     %{
+       status_code: 200,
+       body: """
+       {
+         "type": "conversation",
+         "id": "4",
+         "created_at": 1500002000,
+         "updated_at": 1500009000,
+         "conversation_message": {
+           "type": "conversation_message",
+           "id": "41",
+           "body": "<p> closed status </p>",
+           "author": {
+             "type": "admin",
+             "id": "100"
+           }
+         },
+         "user": {
+           "type": "user",
+           "id": "2"
+         },
+         "conversation_parts":
+         {
+           "type": "conversation_part.list",
+           "conversation_parts":
+           [
+             {
+               "type": "conversation_part",
+               "id": "32",
+               "part_type": "note",
+               "body": null,
+               "created_at": 1500020001,
+               "updated_at": 1500020002,
+               "author": {
+                 "type": "admin",
+                 "id": "100"
+               }
+             },
+             {
+               "type": "conversation_part",
+               "id": "33",
+               "part_type": "note",
+               "body": "reply",
+               "created_at": 1500020006,
+               "updated_at": 1500020007,
+               "author": {
+                 "type": "admin",
+                 "id": "100"
+               }
+             },
+             {
+               "type": "conversation_part",
+               "id": "34",
+               "part_type": "note",
+               "body": "Admin reply",
+               "created_at": 1500030000,
+               "updated_at": 1500030001,
+               "author": {
+                 "type": "admin",
+                 "id": "100"
+               }
+             },
+             {
+               "type": "conversation_part",
+               "id": "35",
+               "part_type": "note",
+               "body": "admin reply",
+               "created_at": 1500030008,
+               "updated_at": 1500030009,
+               "author": {
+                 "type": "admin",
+                 "id": "100"
+               }
+             }
+           ],
+           "total_count": 4
+         },
+         "state": "closed",
+         "tags":
+         {
+           "type": "tag.list",
+           "tags": [ {
+                 "type": "tag",
+                 "id": "17513",
+                 "name": "bug"
+               },
+               {
+                 "type": "tag",
+                 "id": "17523",
+                 "name": "consultancy"
+               }
+               ]
          }
        }
        """
@@ -909,4 +1010,5 @@ defmodule IntercomStats.IntercomAPIAdapter do
        """
      }}
   end
+
 end

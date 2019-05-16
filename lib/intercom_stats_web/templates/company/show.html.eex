@@ -37,5 +37,15 @@
       <td><%= @model.support_averages.average_first_response %></td>
       <td><%= @model.support_averages.average_closing_time %></td>
     </tr>
+    <tr>
+      <td><%= gettext("Geen Tags") %></td>
+      <td><%= @model.untagged_averages.average_first_response %></td>
+      <td><%= @model.untagged_averages.average_closing_time %></td>
+    </tr>
+    <tr>
+      <td><%= gettext("Totaal gesprekken") %></td>
+      <td><%= @model.total_averages.average_first_response %></td>
+      <td><%= @model.total_averages.average_closing_time %></td>
+    </tr>
   </tbody>
 </table>

@@ -61,6 +61,15 @@ defmodule IntercomStatsWeb.CompanyController do
       %{tag: "gebruikersondersteuning"}
       |> Map.merge(filter)
       |> Conversations.conversation_averages_by_tag_and_company()
+
+    untagged_averages =
+    %{tag: nil}
+      |> Map.merge(filter)
+      |> Conversations.conversation_averages_by_tag_and_company()
+
+    total_averages =
+      Conversations.conversation_averages_by_tag_and_company(filter)
+
     message_number =
       Conversations.conversation_number_by_company(filter)
 
@@ -73,6 +82,8 @@ defmodule IntercomStatsWeb.CompanyController do
       prio3_averages: prio3_averages,
       prio4_averages: prio4_averages,
       support_averages: support_averages,
+      total_averages: total_averages,
+      untagged_averages: untagged_averages,
       message_number: message_number
     }
   end

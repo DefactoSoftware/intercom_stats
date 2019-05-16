@@ -14,6 +14,10 @@ defmodule IntercomStats.Repository.Conversations do
   def list_all_conversations(filter \\ %{}) do
     filter
     |> Enum.reduce(Conversation, fn
+        {:tag, nil}, query ->
+          query
+          |> join(:left, [c], t in assoc(c, :tags))
+          |> where([c, t], is_nil(t.id))
         {_, nil}, query -> query
         {:company_name, company_name}, query ->
           from c in query, where: ilike(c.company_name, ^"%#{company_name}%")
