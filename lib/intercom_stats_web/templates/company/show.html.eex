@@ -1,7 +1,7 @@
-<h2><%= @model.company_name %></h2>
+<h2><%= @total_model.company_name %></h2>
 
-<p><%= gettext("In de periode van %{from_date} tot %{to_date}", from_date: @model.from_date, to_date: @model.to_date) %></p>
-<p><%= gettext("Aantal meldingen %{meldingen} ", meldingen: @model.message_number.number ) %> </p>
+<p><%= gettext("In de periode van %{from_date} tot %{to_date}", from_date: @total_model.from_date, to_date: @total_model.to_date) %></p>
+<p><%= gettext("Aantal meldingen %{meldingen} ", meldingen: @total_model.message_number.number ) %> </p>
 
 <table class="table">
   <thead class="thead-light">
@@ -13,25 +13,25 @@
     </tr>
   </thead>
   <tbody>
-    <%= for item <- ["prio1", "prio2", "prio3", "prio4", "prio5", "gebruikersondersteuning"] do %>
+    <%= for %{tag: name, stats: stats} <-@tag_models  do %>
       <tr>
-        <td><%= gettext(item) %></td>
-        <td><%= @model.untagged_averages.average_first_response %></td>
-        <td><%= @model.untagged_averages.average_closing_time %></td>
-        <td><%= @model.untagged_averages.number %></td>
+        <td><%= Gettext.gettext(IntercomStatsWeb.Gettext, name) %></td>
+        <td><%= stats.average_first_response %></td>
+        <td><%= stats.average_closing_time %></td>
+        <td><%= stats.number %></td>
       </tr>
-    <% end &>
+    <% end %>
      <tr>
       <td><%= gettext("Geen Tags") %></td>
-      <td><%= @model.untagged_averages.average_first_response %></td>
-      <td><%= @model.untagged_averages.average_closing_time %></td>
-      <td><%= @model.untagged_averages.number %></td>
+      <td><%= @total_model.untagged_averages.average_first_response %></td>
+      <td><%= @total_model.untagged_averages.average_closing_time %></td>
+      <td><%= @total_model.untagged_averages.number %></td>
     </tr>
     <tr>
       <td><%= gettext("Totaal gesprekken") %></td>
-      <td><%= @model.total_averages.average_first_response %></td>
-      <td><%= @model.total_averages.average_closing_time %></td>
-      <td><%= @model.total_averages.number %></td>
+      <td><%= @total_model.total_averages.average_first_response %></td>
+      <td><%= @total_model.total_averages.average_closing_time %></td>
+      <td><%= @total_model.total_averages.number %></td>
     </tr>
   </tbody>
 </table>
