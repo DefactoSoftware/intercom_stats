@@ -15,9 +15,5 @@ jobs:
       - run: mix deps.get
       - run: mix local.rebar --force
       - run: mix ecto.create
-      - run: 
-          name: Perform tests
-          command: mix test
-          environment:
-            TAGS: ["BUGS", "prio 1"]
+      - run: mix test
       - run: mix credo --strict

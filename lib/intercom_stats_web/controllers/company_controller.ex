@@ -3,7 +3,25 @@ defmodule IntercomStatsWeb.CompanyController do
   use Timex
 
   alias IntercomStats.Repository.Conversations
-  @taglist System.get_env("TAGS")
+
+  versiontags = %{
+    "CAPP11" => [
+      "prio 1",
+      "prio 2",
+      "prio 3",
+      "prio 4",
+      "prio 5",
+      "support",
+      "gebruikersondersteuning",
+      "consultancy"
+    ],
+    "CAPP12" => ["Bug hoog", "Bug midden", "Bug laag", "Gebruikersondersteuning", "Wens"]
+  }
+
+  @taglist Map.get(versiontags, System.get_env("TAGS"))
+
+  IO.puts(@taglist)
+
   def show(
         conn,
         %{"name" => name, "from_date" => from_date, "to_date" => to_date}
