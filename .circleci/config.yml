@@ -9,6 +9,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: intercom_stats_test
+          TAGS: ["Bug"]
     steps:
       - checkout
       - run: mix local.hex --force
