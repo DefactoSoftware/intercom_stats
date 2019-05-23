@@ -9,12 +9,15 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: intercom_stats_test
-          TAGS: ["Bug"]
     steps:
       - checkout
       - run: mix local.hex --force
       - run: mix deps.get
       - run: mix local.rebar --force
       - run: mix ecto.create
-      - run: mix test
+      - run: 
+          name: Perform tests
+          command: mix test
+          environment:
+            TAGS: ["BUGS", "prio 1"]
       - run: mix credo --strict
