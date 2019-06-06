@@ -11,8 +11,6 @@ defmodule IntercomStatsWeb.CompanyControllerTest do
     {:ok, conn: conn}
   end
 
-  System.put_env("TAGS", "CAPP11")
-
   test "GET /", %{conn: conn} do
     company_name = "Company"
     conversations = insert_list(3, :conversation_support, company_name: company_name)

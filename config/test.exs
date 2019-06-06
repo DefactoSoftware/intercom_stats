@@ -9,6 +9,8 @@ config :intercom_stats, IntercomStatsWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
+System.put_env("TAGS", "CAPP11")
+
 # Configure your database
 config :intercom_stats, IntercomStats.Repo,
   adapter: Ecto.Adapters.Postgres,
