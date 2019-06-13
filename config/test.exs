@@ -9,7 +9,10 @@ config :intercom_stats, IntercomStatsWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-System.put_env("TAGS", "CAPP11")
+System.put_env(
+  "TAGLIST",
+  "prio 1, prio 2, prio 3, prio 4, prio 5, support, gebruikersondersteuning, consultancy"
+)
 
 # Configure your database
 config :intercom_stats, IntercomStats.Repo,

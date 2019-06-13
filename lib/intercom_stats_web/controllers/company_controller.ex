@@ -4,23 +4,7 @@ defmodule IntercomStatsWeb.CompanyController do
 
   alias IntercomStats.Repository.Conversations
 
-  versiontags = %{
-    "CAPP11" => [
-      "prio 1",
-      "prio 2",
-      "prio 3",
-      "prio 4",
-      "prio 5",
-      "support",
-      "gebruikersondersteuning",
-      "consultancy"
-    ],
-    "CAPP12" => ["Bug hoog", "Bug midden", "Bug laag", "Gebruikersondersteuning", "Wens"]
-  }
-
-  @taglist Map.get(versiontags, System.get_env("TAGS"))
-
-  IO.puts(@taglist)
+  @taglist String.split(System.get_env("TAGLIST"), ",")
 
   def show(
         conn,
