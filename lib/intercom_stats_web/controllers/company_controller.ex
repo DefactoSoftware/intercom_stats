@@ -49,7 +49,9 @@ defmodule IntercomStatsWeb.CompanyController do
   end
 
   defp create_tag_models(filter) do
-    default_tags(System.get_env("TAGLIST"))
+    tags = default_tags(System.get_env("TAGLIST"))
+
+    tags
     |> String.split(",")
     |> Enum.map(fn tag ->
       %{tag: tag, stats: generate_stats(filter, tag)}
