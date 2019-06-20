@@ -115,21 +115,14 @@ defmodule IntercomStats.Intercom.Worker do
     conversation = request_conversation(item)
     response_times = calculate_response_times(conversation)
     closed_timestamp = determine_closed_timestamp(conversation)
-    snooze_time = determine_snooze_time(conversation)
+    closing_time = determine_open_time(conversation)
     {total_response_time, average_response_time} = average_response_time(response_times)
 
     item
     |> Map.put("company_name", retrieve_company_name(conversation))
     |> Map.put("tags", retrieve_tags_for_conversation(conversation))
     |> Map.put("time_to_first_response", first_response_time(response_times))
-    |> Map.put(
-      "closing_time",
-      calculate_closing_time(
-        conversation,
-        closed_timestamp,
-        snooze_time
-      )
-    )
+    |> Map.put("closing_time", closing_time)
     |> Map.put("average_response_time", average_response_time)
     |> Map.put("total_response_time", total_response_time)
     |> Map.put("closed_timestamp", closed_timestamp)
@@ -175,25 +168,47 @@ defmodule IntercomStats.Intercom.Worker do
     end
   end
 
-  defp calculate_closing_time(%{"created_at" => created}, close_timestamp, snooze_time) do
-    close_timestamp - created - snooze_time
-  end
-
-  defp determine_snooze_time(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
+  defp determine_open_time(%{
+         "conversation_parts" => %{"conversation_parts" => parts},
+         "created_at" => created_at
+       }) do
     {result, _} =
       Enum.flat_map_reduce(parts, %{}, fn i, acc ->
-        with "snoozed" <- acc["part_type"] do
-          {[calculate_snooze_time(i, acc)], i}
-        else
-          _ -> {[], i}
+        cond do
+          is_not_open(i) and acc == %{} ->
+            {[i["created_at"] - created_at], i}
+
+          is_not_open(i) and is_open(acc) ->
+            {[calculate_open_time(i, acc)], i}
+
+          is_open(i) and is_not_open(acc) ->
+            {[], i}
+
+          true ->
+            {[], acc}
         end
       end)
 
     Enum.sum(result)
   end
 
-  defp calculate_snooze_time(part, snoozed_part) do
-    part["created_at"] - snoozed_part["created_at"]
+  defp is_open(part) do
+    part["part_type"] in [
+      "comment",
+      "note_and_reopen",
+      "open",
+      "unsnoozed",
+      "assign_and_unsnooze",
+      "timer_unsnooze"
+    ]
+  end
+
+  defp is_not_open(part) do
+    part["part_type"] in ["close", "snoozed"]
+  end
+
+  defp calculate_open_time(closed_part, open_part) do
+    closed_part["created_at"] - open_part["created_at"]
   end
 
   defp calculate_response_times(%{
