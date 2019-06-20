@@ -4,8 +4,6 @@ defmodule IntercomStatsWeb.CompanyController do
 
   alias IntercomStats.Repository.Conversations
 
-  @taglist String.split(System.get_env("TAGLIST"), ",")
-
   def show(
         conn,
         %{"name" => name, "from_date" => from_date, "to_date" => to_date}
@@ -41,12 +39,18 @@ defmodule IntercomStatsWeb.CompanyController do
   defp default_to_date(nil), do: Date.to_string(Date.utc_today())
   defp default_to_date(date), do: date
 
+  defp default_tags(nil),
+    do: "prio 1, prio 2, prio 3, prio 4, prio 5, support, gebruikersondersteuning, consultancy"
+
+  defp default_tags(tags), do: tags
+
   defp add_to_model(key, value, tagmodel) do
     Map.put(tagmodel, key, value)
   end
 
   defp create_tag_models(filter) do
-    @taglist
+    default_tags(System.get_env("TAGLIST"))
+    |> String.split(",")
     |> Enum.map(fn tag ->
       %{tag: tag, stats: generate_stats(filter, tag)}
     end)
