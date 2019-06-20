@@ -40,7 +40,7 @@ defmodule IntercomStatsWeb.CompanyController do
   defp default_to_date(date), do: date
 
   defp default_tags(nil),
-    do: "prio 1, prio 2, prio 3, prio 4, prio 5, support, gebruikersondersteuning, consultancy"
+    do: "prio 1,prio 2,prio 3,prio 4,prio 5,support,gebruikersondersteuning,consultancy"
 
   defp default_tags(tags), do: tags
 
@@ -49,9 +49,9 @@ defmodule IntercomStatsWeb.CompanyController do
   end
 
   defp create_tag_models(filter) do
-    tags = default_tags(System.get_env("TAGLIST"))
-
-    tags
+    "TAGLIST"
+    |> System.get_env()
+    |> default_tags()
     |> String.split(",")
     |> Enum.map(fn tag ->
       %{tag: tag, stats: generate_stats(filter, tag)}
