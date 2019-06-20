@@ -4,9 +4,10 @@ defmodule IntercomStatsWeb.CompanyController do
 
   alias IntercomStats.Repository.Conversations
 
-  def show(conn,
-      %{"name" => name, "from_date" => from_date, "to_date" => to_date}) do
-
+  def show(
+        conn,
+        %{"name" => name, "from_date" => from_date, "to_date" => to_date}
+      ) do
     filter = %{
       company_name: name,
       from_date: default_from_date(from_date),
@@ -14,7 +15,8 @@ defmodule IntercomStatsWeb.CompanyController do
     }
 
     conn
-    |> assign(:model, create_model(filter))
+    |> assign(:total_model, create_total_model(filter))
+    |> assign(:tag_models, create_tag_models(filter))
     |> render("show.html")
   end
 
@@ -26,7 +28,8 @@ defmodule IntercomStatsWeb.CompanyController do
     }
 
     conn
-    |> assign(:model, create_model(filter))
+    |> assign(:total_model, create_total_model(filter))
+    |> assign(:tag_models, create_tag_models(filter))
     |> render("show.html")
   end
 
@@ -36,52 +39,42 @@ defmodule IntercomStatsWeb.CompanyController do
   defp default_to_date(nil), do: Date.to_string(Date.utc_today())
   defp default_to_date(date), do: date
 
-  defp create_model(filter) do
-    prio1_averages =
-      %{tag: "prio 1"}
-      |> Map.merge(filter)
-      |> Conversations.conversation_stats_by_tag_and_company()
+  defp default_tags(nil),
+    do: "prio 1,prio 2,prio 3,prio 4,prio 5,support,gebruikersondersteuning,consultancy"
 
-    prio2_averages =
-      %{tag: "prio 2"}
-      |> Map.merge(filter)
-      |> Conversations.conversation_stats_by_tag_and_company()
+  defp default_tags(tags), do: tags
 
-    prio3_averages =
-      %{tag: "prio 3"}
-      |> Map.merge(filter)
-      |> Conversations.conversation_stats_by_tag_and_company()
+  defp add_to_model(key, value, tagmodel) do
+    Map.put(tagmodel, key, value)
+  end
 
-    prio4_averages =
-      %{tag: "prio 4"}
-      |> Map.merge(filter)
-      |> Conversations.conversation_stats_by_tag_and_company()
+  defp create_tag_models(filter) do
+    "TAGLIST"
+    |> System.get_env()
+    |> default_tags()
+    |> String.split(",")
+    |> Enum.map(fn tag ->
+      %{tag: tag, stats: generate_stats(filter, tag)}
+    end)
+  end
 
-    support_averages =
-      %{tag: "gebruikersondersteuning"}
-      |> Map.merge(filter)
-      |> Conversations.conversation_stats_by_tag_and_company()
+  defp generate_stats(filter, tag) do
+    %{tag: tag}
+    |> Map.merge(filter)
+    |> Conversations.conversation_stats_by_tag_and_company()
+  end
 
-    untagged_averages =
-    %{tag: nil}
-      |> Map.merge(filter)
-      |> Conversations.conversation_stats_by_tag_and_company()
+  defp create_total_model(filter) do
+    untagged_averages = generate_stats(filter, nil)
 
-    total_averages =
-      Conversations.conversation_stats_by_tag_and_company(filter)
+    total_averages = Conversations.conversation_stats_by_tag_and_company(filter)
 
-    message_number =
-      Conversations.conversation_number_by_company(filter)
+    message_number = Conversations.conversation_number_by_company(filter)
 
-    model = %{
+    %{
       company_name: filter.company_name,
       from_date: filter.from_date,
       to_date: filter.to_date,
-      prio1_averages: prio1_averages,
-      prio2_averages: prio2_averages,
-      prio3_averages: prio3_averages,
-      prio4_averages: prio4_averages,
-      support_averages: support_averages,
       total_averages: total_averages,
       untagged_averages: untagged_averages,
       message_number: message_number

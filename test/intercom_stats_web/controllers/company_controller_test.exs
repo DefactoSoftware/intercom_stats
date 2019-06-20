@@ -4,8 +4,9 @@ defmodule IntercomStatsWeb.CompanyControllerTest do
   import IntercomStats.Factory
 
   setup do
-    conn = build_conn()
-           |> login()
+    conn =
+      build_conn()
+      |> login()
 
     {:ok, conn: conn}
   end
