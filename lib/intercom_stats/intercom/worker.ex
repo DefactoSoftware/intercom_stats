@@ -163,17 +163,13 @@ defmodule IntercomStats.Intercom.Worker do
     end)
   end
 
-  defp first_response_time(response_times) do
-    with [head | _] <- response_times, do: head, else: (_ -> nil)
-  end
+  defp first_response_time([head | _]), do: head
+  defp first_response_time(_), do: nil
 
-  defp average_response_time(response_times) do
-    with [_ | _] <- response_times do
-      {Enum.sum(response_times), round(Enum.sum(response_times) / Enum.count(response_times))}
-    else
-      _ -> {nil, nil}
-    end
-  end
+  defp average_response_time([_ | _] = response_times),
+    do: {Enum.sum(response_times), round(Enum.sum(response_times) / Enum.count(response_times))}
+
+  defp average_response_time(_), do: {nil, nil}
 
   defp calculate_closing_time(%{"created_at" => created}, close_timestamp, snooze_time) do
     close_timestamp - created - snooze_time
@@ -182,9 +178,8 @@ defmodule IntercomStats.Intercom.Worker do
   defp determine_snooze_time(%{"conversation_parts" => %{"conversation_parts" => parts}}) do
     {result, _} =
       Enum.flat_map_reduce(parts, %{}, fn i, acc ->
-        with "snoozed" <- acc["part_type"] do
-          {[calculate_snooze_time(i, acc)], i}
-        else
+        case acc["part_type"] do
+          "snoozed" -> {[calculate_snooze_time(i, acc)], i}
           _ -> {[], i}
         end
       end)
