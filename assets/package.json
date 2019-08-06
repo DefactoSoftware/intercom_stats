@@ -2,7 +2,6 @@
   "repository": {},
   "license": "MIT",
   "scripts": {
-    "heroku-postbuild": "npm run-script build",
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch"
   },
