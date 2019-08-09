@@ -13,9 +13,9 @@
     </tr>
   </thead>
   <tbody>
-    <%= for %{tag: name, stats: stats} <-@tag_models  do %>
+    <%= for %{tag: name, stats: stats} <- @tag_models  do %>
       <tr>
-        <td><%= Gettext.gettext(IntercomStatsWeb.Gettext, name) %></td>
+        <td><%= name %></td>
         <td><%= stats.average_first_response %></td>
         <td><%= stats.average_closing_time %></td>
         <td><%= stats.number %></td>

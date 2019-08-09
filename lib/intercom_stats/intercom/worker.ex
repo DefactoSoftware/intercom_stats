@@ -156,17 +156,13 @@ defmodule IntercomStats.Intercom.Worker do
     end)
   end
 
-  defp first_response_time(response_times) do
-    with [head | _] <- response_times, do: head, else: (_ -> nil)
-  end
+  defp first_response_time([head | _]), do: head
+  defp first_response_time(_), do: nil
 
-  defp average_response_time(response_times) do
-    with [_ | _] <- response_times do
-      {Enum.sum(response_times), round(Enum.sum(response_times) / Enum.count(response_times))}
-    else
-      _ -> {nil, nil}
-    end
-  end
+  defp average_response_time([_ | _] = response_times),
+    do: {Enum.sum(response_times), round(Enum.sum(response_times) / Enum.count(response_times))}
+
+  defp average_response_time(_), do: {nil, nil}
 
   defp closing_time(%{
          "conversation_parts" => %{"conversation_parts" => parts},
@@ -174,6 +170,7 @@ defmodule IntercomStats.Intercom.Worker do
        }) do
     {result, _} =
       Enum.flat_map_reduce(parts, %{}, fn i, acc ->
+
         cond do
           closed?(i) and acc == %{} ->
             {[i["created_at"] - created_at], i}
