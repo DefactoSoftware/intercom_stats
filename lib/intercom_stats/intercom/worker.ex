@@ -113,9 +113,9 @@ defmodule IntercomStats.Intercom.Worker do
 
   defp get_conversation_specific_properties_in_task(item) do
     conversation = request_conversation(item)
-    response_times = calculate_response_times(conversation)
+    response_times = response_times(conversation)
     closed_timestamp = determine_closed_timestamp(conversation)
-    closing_time = determine_open_time(conversation)
+    closing_time = closing_time(conversation)
     {total_response_time, average_response_time} = average_response_time(response_times)
 
     item
@@ -168,20 +168,20 @@ defmodule IntercomStats.Intercom.Worker do
     end
   end
 
-  defp determine_open_time(%{
+  defp closing_time(%{
          "conversation_parts" => %{"conversation_parts" => parts},
          "created_at" => created_at
        }) do
     {result, _} =
       Enum.flat_map_reduce(parts, %{}, fn i, acc ->
         cond do
-          is_not_open(i) and acc == %{} ->
+          closed?(i) and acc == %{} ->
             {[i["created_at"] - created_at], i}
 
-          is_not_open(i) and is_open(acc) ->
-            {[calculate_open_time(i, acc)], i}
+          closed?(i) and open?(acc) ->
+            {[open_time(i, acc)], i}
 
-          is_open(i) and is_not_open(acc) ->
+          open?(i) and closed?(acc) ->
             {[], i}
 
           true ->
@@ -192,7 +192,7 @@ defmodule IntercomStats.Intercom.Worker do
     Enum.sum(result)
   end
 
-  defp is_open(part) do
+  defp open?(part) do
     part["part_type"] in [
       "comment",
       "note_and_reopen",
@@ -203,15 +203,15 @@ defmodule IntercomStats.Intercom.Worker do
     ]
   end
 
-  defp is_not_open(part) do
+  defp closed?(part) do
     part["part_type"] in ["close", "snoozed"]
   end
 
-  defp calculate_open_time(closed_part, open_part) do
+  defp open_time(closed_part, open_part) do
     closed_part["created_at"] - open_part["created_at"]
   end
 
-  defp calculate_response_times(%{
+  defp response_times(%{
          "created_at" => created_at,
          "conversation_message" => %{"author" => author, "body" => body},
          "conversation_parts" => %{"conversation_parts" => unfiltered_parts}
