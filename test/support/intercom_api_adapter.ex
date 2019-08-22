@@ -352,7 +352,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
   end
 
   defp conversation4 do
-       {:ok,
+    {:ok,
      %{
        status_code: 200,
        body: """
@@ -939,6 +939,17 @@ defmodule IntercomStats.IntercomAPIAdapter do
                  "id": "100"
                }
              },
+            {  "type": "conversation_part",
+               "id": "101",
+               "part_type": "note",
+               "body": "reply",
+               "created_at": 1500020003,
+               "updated_at": 1500020003,
+               "author": {
+                 "type": "admin",
+                 "id": "100"
+               }
+             },
              {
                "type": "conversation_part",
                "id": "93",
@@ -954,7 +965,7 @@ defmodule IntercomStats.IntercomAPIAdapter do
              {
                "type": "conversation_part",
                "id": "94",
-               "part_type": "snoozed",
+               "part_type": "close",
                "body": null,
                "created_at": 1500020008,
                "updated_at": 1500020008,
@@ -1010,5 +1021,4 @@ defmodule IntercomStats.IntercomAPIAdapter do
        """
      }}
   end
-
 end
