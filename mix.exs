@@ -52,7 +52,7 @@ defmodule IntercomStats.Mixfile do
       {:poison, "~> 3.0", override: true},
       {:postgrex, ">= 0.0.0"},
       {:quantum, ">= 2.1.0"},
-      {:sentry, "~> 7.1.0"},
+      {:sentry, "~> 8.0.4"},
       {:timex, "~> 3.0"}
     ]
   end
